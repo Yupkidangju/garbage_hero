@@ -20,9 +20,11 @@ TARGETS = {
     "windows": ("Windows x86_64", "GarbageHero.exe", ".zip"),
     "linux": ("Linux x86_64", "GarbageHero.x86_64", ".tar.gz"),
 }
-QA = ["game/tests/session_test.gd", "game/tests/world_test.gd",
+QA = ["game/tests/session_test.gd", "game/tests/progression_test.gd",
+      "game/tests/equipment_test.gd", "game/tests/quest_book_test.gd",
+      "game/tests/expansion_session_test.gd", "game/tests/arsenal_test.gd", "game/tests/world_test.gd",
       "game/tests/player_test.gd", "game/tests/enemy_test.gd",
-      "tests/retry_cleave.gd", "tests/mixed_groups.gd", "tests/forest_paths.gd"]
+      "tests/retry_cleave.gd", "tests/mixed_groups.gd", "tests/forest_paths.gd", "tests/progression_input.gd"]
 
 
 def version():

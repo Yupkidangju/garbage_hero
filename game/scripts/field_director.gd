@@ -6,6 +6,8 @@ signal save_failed(retry: Callable)
 
 const SPECIES := [5, 6, 5, 6, 5, 6]
 const POPULATION := [10, 14, 18, 24]
+const SPAWN_RADIUS := 39.0
+const RETIRE_RADIUS := 48.0
 # 지역마다 앞줄의 방어·근접형과 뒤에서 지원하는 원거리·회복형을 짝짓는다.
 const PARTNERS := [Vector2i(3, 1), Vector2i(3, 1), Vector2i(2, 3), Vector2i(4, 1), Vector2i(2, 4), Vector2i(2, 3)]
 const QUALITY_COLORS := ["beb4a1", "fae7b6", "99dd92", "86dce5", "b59ef3", "ffc06a", "ff92b0"]
@@ -106,6 +108,13 @@ func _retry_rest() -> bool:
 func _fill_slots() -> void:
 	if candidates.is_empty():
 		return
+	# 멀어진 일반 개체는 슬롯만 반납한다. 처치 거래와 보스의 고유 출현 번호는 건드리지 않는다.
+	for slot in enemies.size():
+		var actor = enemies[slot]
+		if is_instance_valid(actor) and actor.global_position.distance_squared_to(hero.global_position)>RETIRE_RADIUS*RETIRE_RADIUS:
+			remove_child(actor)
+			actor.queue_free()
+			enemies[slot]=null
 	for slot in enemies.size():
 		if is_instance_valid(enemies[slot]) or elapsed < vacant_at[slot]:
 			continue
@@ -121,21 +130,21 @@ func _fill_slots() -> void:
 				index = PARTNERS[region].x if first else PARTNERS[region].y
 		for offset in candidates.size():
 			var pos := candidates[(slot * 7 + spawn_counter * 3 + offset) % candidates.size()]
-			if pos.distance_squared_to(hero.global_position) < 64 or pos.distance_squared_to(world.entry_point()) < 20:
+			var from_hero:=pos.distance_to(hero.global_position)
+			if from_hero < 8.0 or from_hero > SPAWN_RADIUS:
 				continue
+			var score:=absf(from_hero-(10.0+slot%6*3.0))
+			if is_instance_valid(partner):
+				score=pos.distance_to(partner.position)+maxf(from_hero-32,0)
+			if score>=distance: continue
 			var clear := true
 			for other in enemies:
 				if is_instance_valid(other) and pos.distance_squared_to(other.position) < 2.25:
 					clear = false
 					break
 			if clear:
-				if not is_instance_valid(partner):
-					chosen = pos
-					break
-				var score := pos.distance_squared_to(partner.position)
-				if score < distance:
-					distance = score
-					chosen = pos
+				distance = score
+				chosen = pos
 		if chosen.is_finite():
 			spawn_counter += 1
 			enemies[slot] = _spawn("normal", index, field_id + "-" + str(spawn_counter), chosen, slot)
@@ -199,7 +208,7 @@ func _sync_loot() -> void:
 		var shard := MeshInstance3D.new()
 		shard.mesh = loot_mesh
 		shard.material_override = loot_materials[grade]
-		shard.position = item.pos + Vector3.UP * 0.35
+		shard.position = world.drop_point(item.pos) + Vector3.UP * 0.35
 		shard.rotation.z = 0.3
 		var label := Label3D.new()
 		label.font = preload("res://assets/fonts/NotoSansKR.ttf")

@@ -27,6 +27,7 @@ func _start() -> void:
 	main.session._data.routes[23].phase = "boss"
 	main.session._data.first_merge = true
 	main.session._data.routes[0].cleared = true
+	main.session._data.progression = preload("res://data/progression.gd").from_legacy(true, true)
 	if not main.session.act("depart", {"region":5,"difficulty":3}):
 		push_error("Performance scene could not open its test route")
 		quit(1)
@@ -98,6 +99,6 @@ func _finish() -> void:
 	await process_frame
 	await process_frame
 	for bank in [0,1]:
-		DirAccess.remove_absolute(slot.path_join("slot-%d.sav" % bank))
+		DirAccess.remove_absolute(slot.path_join("slot-v2-%d.sav" % bank))
 	DirAccess.remove_absolute(slot)
 	quit(0 if smallest_count == 25 else 3)

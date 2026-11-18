@@ -6,25 +6,36 @@ signal cue(kind: String)
 
 const MoveBook = preload("res://data/combat_moves.gd")
 const CombatFX = preload("res://scripts/combat_fx.gd")
+const Projectile = preload("res://scripts/hero_projectile.gd")
+const Growth = preload("res://data/progression.gd")
 const CharacterInk = preload("res://scripts/character_ink.gd")
 const HERO_PATH := "res://assets/models/hero.glb"
-const MAX_HP := 100
+const BASE_HP := 100
 const SPEED := 5.0
 const SCREEN_RIGHT := Vector3(0.70710678, 0.0, -0.70710678)
 const SCREEN_DOWN := Vector3(0.70710678, 0.0, 0.70710678)
 
-var hp := MAX_HP
-var max_hp := MAX_HP
+var hp := BASE_HP
+var max_hp := BASE_HP
 var facing := Vector3(0.2, 0.0, 0.98).normalized()
 var _power := 10
 var _critical := 3
+var _defense := 0
+var _speed := SPEED
+var _build_configured := false
+var _weapon_type := "sword"
+var _has_shield := false
 var _grade := 0
-var _spin_unlocked := false
-var _slam_unlocked := false
-var _timers := {"dodge":0.0, "hook":0.0, "spin":0.0, "slam":0.0}
+var _visible_grade := 0
+var _visible_weapon := "sword"
+var _ranks := {"hook":1}
+var _loadout: Array = ["hook","",""]
+var _timers := {"dodge":0.0, "hook":0.0, "spin":0.0, "slam":0.0, "volley":0.0, "nova":0.0, "rush":0.0}
 
 var _move := ""
 var _spec: Dictionary = {}
+var _strike_power := 0.0
+var _strike_critical := 0
 var _frame := 0
 var _chain := false
 var _hit_ids := {}
@@ -41,9 +52,12 @@ var _pivot := Node3D.new()
 var _camera := Camera3D.new()
 var _fx := CombatFX.new()
 var _skeleton: Skeleton3D
+var _grip_bone := -1
+var _nock_bone := -1
 var _base_bone := -1
 var _tip_bone := -1
 var _grade_nodes: Array[Node3D] = []
+var _equipment_meshes := {}
 var _tree: AnimationTree
 var _playback: AnimationNodeStateMachinePlayback
 var _clips := {}
@@ -96,20 +110,34 @@ func _ready() -> void:
 	_fx.top_level = true
 	add_child(_fx)
 	_fx.global_transform = Transform3D.IDENTITY
-	health_changed.emit(hp, MAX_HP)
+	health_changed.emit(hp, max_hp)
 
 
 func configure(gear: Dictionary, first_merge: bool, forest_clear: bool) -> void:
-	_power = maxi(1, int(gear.get("atk", 4)))
-	_critical = clampi(int(gear.get("crit", 0)), 0, 100)
-	var next_grade := int(gear.get("grade", -1))
-	if next_grade != _grade:
-		_grade = next_grade
+	var ranks := {"hook":1, "spin":int(first_merge), "slam":int(forest_clear)}
+	var slots := ["hook", "spin" if first_merge else "", "slam" if forest_clear else ""]
+	configure_build(gear, gear, {"ranks":ranks, "loadout":slots}, {})
+
+
+func configure_build(gear: Dictionary, stats: Dictionary, progression: Dictionary, equipment: Dictionary) -> void:
+	_power = maxi(1, int(stats.get("atk", 4)))
+	_critical = clampi(int(stats.get("crit", 0)), 0, 100)
+	_defense = maxi(0, int(stats.get("defense", 0)))
+	_speed = maxf(0.1, float(stats.get("speed", SPEED)))
+	var previous_max := max_hp
+	max_hp = maxi(1, int(stats.get("max_hp", BASE_HP)))
+	hp = mini(hp, max_hp) if _build_configured else max_hp
+	_build_configured = true
+	_weapon_type = str(gear.get("weapon_type", "sword"))
+	_grade = int(gear.get("grade", -1))
+	var shield: Dictionary = equipment.get("shield", {})
+	_has_shield = not shield.is_empty() and _weapon_type in ["sword", "mace"]
+	_ranks = progression.get("ranks", {}).duplicate()
+	_loadout = progression.get("loadout", []).duplicate()
+	if _move.is_empty():
 		_update_gear_mesh()
-		if _grade < 5:
-			_fx.enchanted_blade(_grade, Vector3.ZERO, Vector3.ZERO)
-	_spin_unlocked = first_merge
-	_slam_unlocked = forest_clear
+	if previous_max != max_hp:
+		health_changed.emit(hp, max_hp)
 
 
 func set_feedback(shake_enabled: bool, reduced_flash: bool) -> void:
@@ -118,7 +146,14 @@ func set_feedback(shake_enabled: bool, reduced_flash: bool) -> void:
 
 
 func cooldowns() -> Dictionary:
-	return _timers.duplicate()
+	var slots := {"dodge":_timers.dodge}
+	for i in MoveBook.SLOT_ACTIONS.size():
+		slots[MoveBook.SLOT_ACTIONS[i]] = _timers.get(_slot_skill(i), 0.0)
+	return slots
+
+
+func _slot_skill(index: int) -> String:
+	return str(_loadout[index]) if index < _loadout.size() else ""
 
 
 func _notification(what: int) -> void:
@@ -160,7 +195,7 @@ func _physics_process(delta: float) -> void:
 		var pressed := Input.is_action_just_pressed("attack") and not _wait_for_release
 		_handle_controls(walk, pressed)
 		if _move.is_empty():
-			motion = walk * SPEED
+			motion = walk * _speed
 			var aim := _aim(walk)
 			if not aim.is_zero_approx():
 				_turn_to(facing.slerp(aim, 1.0-exp(-22.0*delta)) if facing.dot(aim)>-0.98 else aim)
@@ -173,11 +208,17 @@ func _physics_process(delta: float) -> void:
 	velocity.y = minf(0.0, velocity.y) if is_on_floor() else maxf(-30.0, velocity.y-22.0*delta)
 	move_and_slide()
 	_animate(delta)
-	if (_fx.ribbon_live or _grade >= 5) and _base_bone >= 0 and _tip_bone >= 0:
+	if (_fx.ribbon_live or _visible_grade >= 5) and _base_bone >= 0 and _tip_bone >= 0:
 		var base := _bone_world(_base_bone)
 		var tip := _bone_world(_tip_bone)
+		if _visible_weapon in MoveBook.WEAPON_ATTACKS and _grip_bone >= 0:
+			base = _bone_world(_grip_bone)
+			if _visible_weapon == "bow" and _nock_bone >= 0:
+				tip = _bone_world(_nock_bone)
+			else:
+				tip = base.direction_to(tip) * _weapon_tip_length() + base
 		_fx.blade_sample(base, tip)
-		_fx.enchanted_blade(_grade, base, tip)
+		_fx.enchanted_blade(_visible_grade, base, tip)
 	if not _move.is_empty():
 		_frame += 1
 		if _frame >= int(_spec.windup)+int(_spec.active)+int(_spec.recovery):
@@ -190,15 +231,14 @@ func _handle_controls(walk: Vector3, attack_pressed: bool) -> void:
 		if dodge_pressed:
 			_start_move("dodge", walk.normalized() if not walk.is_zero_approx() else facing)
 			return
-		for skill in ["hook", "spin", "slam"]:
-			if skill == "spin" and not _spin_unlocked or skill == "slam" and not _slam_unlocked:
-				continue
-			if Input.is_action_just_pressed(skill) and _timers[skill] <= 0.0:
+		for i in MoveBook.SLOT_ACTIONS.size():
+			var skill := _slot_skill(i)
+			if Input.is_action_just_pressed(MoveBook.SLOT_ACTIONS[i]) and int(_ranks.get(skill, 0)) > 0 and _timers.get(skill, 1.0) <= 0.0:
 				_start_move(skill, _aim(facing))
 				return
 		if attack_pressed:
 			_start_move("attack1", _aim(facing))
-	elif _move.begins_with("attack"):
+	elif _move.begins_with("attack") or _move in MoveBook.WEAPON_ATTACKS:
 		var remaining := int(_spec.windup)+int(_spec.active)+int(_spec.recovery)-_frame
 		if remaining <= 6 and dodge_pressed:
 			_fx.interrupt()
@@ -234,8 +274,12 @@ func _turn_to(direction: Vector3) -> void:
 
 
 func _start_move(action: String, direction: Vector3) -> void:
+	if action == "attack1" and _weapon_type in MoveBook.WEAPON_ATTACKS:
+		action = _weapon_type
 	_move = action
 	_spec = MoveBook.MOVES[action]
+	_strike_power = _power * float(_spec.get("power", 0.0)) * Growth.damage_multiplier(int(_ranks.get(action, 1)))
+	_strike_critical = _critical
 	_frame = 0
 	_chain = false
 	_hit_ids.clear()
@@ -265,6 +309,30 @@ func _tick_move(delta: float) -> Vector3:
 		"hook":
 			if tick == 0:
 				_hook()
+		"bow", "staff", "volley":
+			if tick == 0:
+				_release_projectiles()
+		"nova":
+			if tick == 0:
+				_fx.nova(global_position, facing, _spec.range)
+				cue.emit("nova")
+				_sector_hits()
+		"rush":
+			if tick == 0:
+				cue.emit("rush")
+			if tick % 3 == 0:
+				_fx.dust(global_position, -facing)
+			_sector_hits()
+			return facing * float(_spec.distance)/(float(_spec.active)*delta)
+		"mace", "spear":
+			if tick == 0:
+				_fx.begin_ribbon()
+				if _move == "mace":
+					_fx.slam(global_position, facing)
+				else:
+					_fx.thrust(global_position, facing, _spec.range)
+				cue.emit(_move)
+			_sector_hits()
 		"spin":
 			if tick == 0 or tick == 9:
 				_hit_ids.clear()
@@ -289,10 +357,13 @@ func _tick_move(delta: float) -> Vector3:
 func _finish_move() -> void:
 	var next := ""
 	if _chain:
-		next = "attack2" if _move == "attack1" else "attack3"
+		next = "attack1"
+		if _weapon_type == "sword" and _move in ["attack1","attack2"]:
+			next = "attack2" if _move == "attack1" else "attack3"
 	_move = ""
 	_chain = false
 	_fx.end_ribbon()
+	_update_gear_mesh()
 	if next.is_empty():
 		_play("Locomotion")
 	else:
@@ -335,6 +406,64 @@ func _has_clear_path(enemy: Node3D) -> bool:
 	return get_world_3d().direct_space_state.intersect_ray(query).is_empty()
 
 
+func _release_projectiles() -> void:
+	var chest := global_position + Vector3.UP * 0.72
+	var origin := _bone_world(_grip_bone) if _grip_bone >= 0 else chest
+	if _move == "staff" and _tip_bone >= 0:
+		origin += origin.direction_to(_bone_world(_tip_bone)) * _weapon_tip_length()
+	# 무기 끝이 이미 벽이나 적 너머에 있을 때도 첫 장애물이 투사체를 받아낸다.
+	if not origin.is_equal_approx(chest):
+		var query := PhysicsRayQueryParameters3D.create(chest, origin, 1 | 4)
+		query.hit_from_inside = true
+		var contact := get_world_3d().direct_space_state.intersect_ray(query)
+		if not contact.is_empty():
+			var body := contact.collider as Node3D
+			if body != null and body.is_in_group("enemies"):
+				_projectile_hit(body, _strike_power, _strike_critical, chest.direction_to(origin))
+			cue.emit(_move)
+			return
+	var reach := maxf(0.05, float(_spec.range)-origin.distance_to(chest))
+	var spread := [-17.0, 0.0, 17.0] if _move == "volley" else [0.0]
+	for degrees in spread:
+		var heading := facing.rotated(Vector3.UP, deg_to_rad(degrees))
+		var direction := _shot_direction(origin, chest, heading, _spec.range)
+		var shot := Projectile.new()
+		add_child(shot)
+		shot.struck.connect(_projectile_hit.bind(_strike_power, _strike_critical, direction))
+		shot.launch(_move, origin, direction, _spec.speed, reach)
+	cue.emit(_move)
+
+
+func _shot_direction(origin: Vector3, chest: Vector3, heading: Vector3, reach: float) -> Vector3:
+	# 조준 방향을 유지하면서 경사 위 작은 몬스터의 실제 몸통 높이를 겨눈다.
+	var nearest := reach
+	var destination := chest + heading * reach
+	for enemy: Node3D in get_tree().get_nodes_in_group("enemies"):
+		var offset := enemy.global_position - chest
+		var along := offset.dot(heading)
+		if along <= 0.02 or along > nearest:
+			continue
+		var radius := _target_radius(enemy)
+		var flat := Vector3(offset.x, 0.0, offset.z)
+		if (flat - heading*along).length_squared() > radius*radius:
+			continue
+		nearest = along
+		destination = chest + heading * along + Vector3.UP * (offset.y + clampf(radius, 0.16, 1.45))
+	return origin.direction_to(destination)
+
+
+func _weapon_tip_length() -> float:
+	match _visible_weapon:
+		"spear": return 1.52
+		"staff": return 1.17
+		"mace": return 0.93
+	return 1.04
+
+
+func _projectile_hit(enemy: Node3D, power: float, crit: int, direction: Vector3) -> void:
+	_deal_hit(enemy, Vector3.ZERO, power, crit, direction, true)
+
+
 func _hook() -> void:
 	var reach := float(_spec.range)
 	var origin := global_position + Vector3.UP * 0.72
@@ -374,32 +503,42 @@ func _hook() -> void:
 
 func _hit(enemy: Node3D, pull: Vector3) -> void:
 	_hit_ids[enemy.get_instance_id()] = true
-	var critical := _rng.randf()*100.0 < _critical
-	var damage := maxi(1, roundi(_power*float(_spec.power)*(1.5 if critical else 1.0)))
+	if _deal_hit(enemy, pull, _strike_power, _strike_critical, facing) and _move in ["slam", "mace", "attack3"]:
+		_hold_impact_pose = true
+		_shake = maxf(_shake, 0.10 if _move == "slam" else 0.05)
+
+
+func _deal_hit(enemy: Node3D, pull: Vector3, power: float, crit: int, direction: Vector3, projectile := false) -> bool:
+	var critical := _rng.randf()*100.0 < crit
+	var damage := maxi(1, roundi(power*(1.5 if critical else 1.0)))
 	var at := enemy.global_position + Vector3.UP*clampf(_target_radius(enemy)*1.4,0.55,1.55)
-	var result: Variant = enemy.call("take_hit", damage, pull)
+	var result: Variant
+	if projectile:
+		result = enemy.call("take_hit", damage, pull, direction)
+	else:
+		result = enemy.call("take_hit", damage, pull)
 	if result is int:
 		damage = result
 	if damage <= 0:
-		return
+		return false
 	cue.emit("hit")
-	_fx.impact(at, facing, damage, critical)
-	if _move in ["slam", "attack3"]:
-		_hold_impact_pose = true
-		_shake = maxf(_shake, 0.10 if _move == "slam" else 0.05)
+	_fx.impact(at, direction, damage, critical)
+	return true
 
 
 func take_damage(amount: int) -> bool:
 	if hp <= 0 or amount <= 0 or _dodge_safe or _hurt_grace > 0.0:
 		return false
+	amount = maxi(1, amount - _defense)
 	hp = maxi(0, hp-amount)
 	_move = ""
 	_chain = false
 	_hitstop = 0
 	_hold_impact_pose = false
 	_fx.interrupt()
+	_update_gear_mesh()
 	_fx.impact(global_position+Vector3.UP, -facing, amount, false, true)
-	health_changed.emit(hp, MAX_HP)
+	health_changed.emit(hp, max_hp)
 	_shake = 0.08
 	if hp <= 0:
 		_death_time = 0.62
@@ -431,10 +570,14 @@ func _install_art() -> void:
 	for item in model.find_children("*", "Node3D", true, false):
 		if str(item.name).begins_with("Grade") or str(item.name).begins_with("WeaponBase"):
 			_grade_nodes.append(item)
+		elif str(item.name).begins_with("Loadout"):
+			_equipment_meshes[str(item.name).trim_prefix("Loadout").to_lower()] = item
 	_update_gear_mesh()
 	var skeletons := model.find_children("*", "Skeleton3D", true, false)
 	if not skeletons.is_empty():
 		_skeleton = skeletons[0]
+		_grip_bone = _skeleton.find_bone("WeaponGrip")
+		_nock_bone = _skeleton.find_bone("BowNock")
 		_base_bone = _skeleton.find_bone("SwordBase")
 		_tip_bone = _skeleton.find_bone("SwordTip")
 	var players := model.find_children("*", "AnimationPlayer", true, false)
@@ -443,10 +586,16 @@ func _install_art() -> void:
 
 
 func _update_gear_mesh() -> void:
+	_visible_weapon = _weapon_type
+	_visible_grade = _grade
+	if _visible_grade < 5:
+		_fx.enchanted_blade(_visible_grade, Vector3.ZERO, Vector3.ZERO)
 	for item in _grade_nodes:
 		var label := str(item.name)
 		var rank := label.substr(5,1).to_int() if label.begins_with("Grade") else 0
-		item.visible = _grade >= rank
+		item.visible = _weapon_type == "sword" and _grade >= rank
+	for key in _equipment_meshes:
+		_equipment_meshes[key].visible = _has_shield if key == "shield" else key == _weapon_type
 
 
 func _install_animations(player: AnimationPlayer) -> void:
@@ -456,7 +605,8 @@ func _install_animations(player: AnimationPlayer) -> void:
 	locomotion.max_space = 1.0
 	for name_key in player.get_animation_list():
 		var clip := str(name_key).get_slice("|",str(name_key).count("|")).get_file()
-		if clip not in ["Idle","Run","Dodge","Attack1","Attack2","Attack3","Hook","Spin","Slam","Hit","Death"]:
+		if clip not in ["Idle","Run","Dodge","Attack1","Attack2","Attack3","Hook","Spin","Slam","Hit","Death",
+				"BowDraw","StaffCast","MaceCrush","SpearThrust","Volley","Nova","Rush"]:
 			continue
 		var animation := player.get_animation(name_key)
 		_clips[clip] = animation.length

@@ -18,7 +18,7 @@ func _ready() -> void:
 	rebuild_keys()
 
 func rebuild_keys() -> void:
-	for action in SKILLS + ["inventory","interact","move_left","move_right","move_up","move_down"]:
+	for action in SKILLS + ["inventory","skills","interact","move_left","move_right","move_up","move_down"]:
 		keys[action] = S.binding(action)
 	queue_redraw()
 
@@ -52,7 +52,7 @@ func _draw() -> void:
 	_hero(margin, margin)
 	_location(margin,narrow)
 	_boss(margin)
-	_skills(narrow)
+	_skills()
 	_controls(margin, narrow)
 	var service := str(info.get("service",""))
 	if not service.is_empty():
@@ -73,12 +73,15 @@ func _draw() -> void:
 		for i in range(lines.size()):
 			_type(lines[i],(view.x-w)*0.5+14,y+4+i*row_height,17,S.GOLD,w-28,HORIZONTAL_ALIGNMENT_CENTER)
 
+func hero_height() -> float:
+	return 113*text_scale
+
 func _hero(x: float, y: float) -> void:
-	var h := 83 + (text_scale-1)*42
+	var h := hero_height()
 	var w := minf(304+(text_scale-1)*78,view.x*0.43)
 	_plate(Rect2(x,y,w,h),S.DEEP,S.LINE)
 	_rule(Vector2(x+10,y),Vector2(x+w*0.5,y),S.GOLD)
-	var center := Vector2(x+37,y+h*0.5)
+	var center := Vector2(x+37,y+42*text_scale)
 	var outer := PackedVector2Array([center+Vector2(0,-26),center+Vector2(24,-12),center+Vector2(21,14),center+Vector2(0,27),center+Vector2(-21,14),center+Vector2(-24,-12)])
 	draw_colored_polygon(outer,S.RAISED)
 	outer.append(outer[0])
@@ -86,7 +89,9 @@ func _hero(x: float, y: float) -> void:
 	S.icon(self,"attack",center-Vector2(17,17),34,S.GOLD)
 	var left := x+72
 	var width := w-88
-	_type(S.t("hero"),left,y+7,22,S.PAPER,width,HORIZONTAL_ALIGNMENT_LEFT,true)
+	var growth: Dictionary = info.get("progression",{})
+	_type(S.t("hero"),left,y+4,21,S.PAPER,width*0.70,HORIZONTAL_ALIGNMENT_LEFT,true)
+	_type(S.t("level")%int(growth.get("level",1)),x+3,center.y+27,12,S.GOLD,68,HORIZONTAL_ALIGNMENT_CENTER,true)
 	var gold_text := str(info.get("coins",0))
 	var gw := body_font.get_string_size(gold_text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(16*text_scale)).x
 	if gw < width*0.5:
@@ -94,13 +99,20 @@ func _hero(x: float, y: float) -> void:
 		_type(gold_text,x+w-gw-16,y+7,16,S.GOLD)
 	var hp := int(info.get("hp",100))
 	var maximum := maxi(1,int(info.get("max_hp",100)))
-	var bar_y := y+h-36
-	draw_rect(Rect2(left,bar_y,width,8),S.RAISED)
-	draw_rect(Rect2(left,bar_y,width*clampf(float(hp)/maximum,0,1),8),S.MINT if hp > maximum*0.3 else S.HOT)
+	var bar_y := y+55*text_scale
+	draw_rect(Rect2(left,bar_y,width,7),S.RAISED)
+	draw_rect(Rect2(left,bar_y,width*clampf(float(hp)/maximum,0,1),7),S.MINT if hp > maximum*0.3 else S.HOT)
 	for n in range(1,5):
 		_rule(Vector2(left+width*n/5.0,bar_y+1),Vector2(left+width*n/5.0,bar_y+7),S.DEEP)
-	_type(S.t("hp"),left,bar_y+9,13,S.MUTED)
-	_type("%d / %d" % [hp,maximum],left,bar_y+8,14,S.PAPER,width,HORIZONTAL_ALIGNMENT_RIGHT,true)
+	_type(S.t("hp"),left,y+32*text_scale,14,S.MUTED)
+	_type("%d / %d" % [hp,maximum],left,y+32*text_scale,14,S.PAPER,width,HORIZONTAL_ALIGNMENT_RIGHT,true)
+	var xp := int(growth.get("xp",0))
+	var xp_next := int(growth.get("xp_next",0))
+	var xp_y := y+95*text_scale
+	_type(S.t("xp"),left,y+69*text_scale,14,S.MUTED)
+	_type("%d / %d" % [xp,xp_next],left,y+69*text_scale,14,S.GOLD,width,HORIZONTAL_ALIGNMENT_RIGHT,true)
+	draw_rect(Rect2(left,xp_y,width,4),S.RAISED)
+	draw_rect(Rect2(left,xp_y,width*clampf(float(xp)/maxi(xp_next,1),0,1),4),S.GOLD)
 
 func _location(margin: float, narrow: bool) -> void:
 	var region := int(info.get("region",-1))
@@ -147,7 +159,7 @@ func _boss(margin: float) -> void:
 	var width := clampf(view.x*0.29,235,460)
 	var x := (view.x-width)*0.5
 	var right_edge := view.x-margin-minf(304+(text_scale-1)*150,view.x*0.48)
-	var y := margin if x >= margin+318+(text_scale-1)*78 and x+width+10 <= right_edge else margin + 111*text_scale
+	var y := margin if x >= margin+318+(text_scale-1)*78 and x+width+10 <= right_edge else margin + hero_height()+8
 	var h := 47*text_scale
 	_plate(Rect2(x,y,width,h),S.DEEP,S.BRASS)
 	_type(str(boss.get("name","")),x+7,y+3,17,S.GOLD,width-14,HORIZONTAL_ALIGNMENT_CENTER,true)
@@ -155,36 +167,46 @@ func _boss(margin: float) -> void:
 	draw_rect(Rect2(x+11,y+h-11,width-22,5),S.RAISED)
 	draw_rect(Rect2(x+11,y+h-11,(width-22)*ratio,5),S.HOT)
 
-func _skills(narrow: bool) -> void:
-	var width := clampf((view.x-20)/7,80,(99 if narrow else 114)+78*(text_scale-1))
-	var gap := 5.0
+func skill_row_rect(frame: Vector2) -> Rect2:
+	var ui_scale := clampf(frame.y / 780.0, 0.86, 1.35)
+	var virtual_size := frame/ui_scale
+	var width := minf((virtual_size.x-26)/5,(99 if virtual_size.x<1020 else 114)+78*(text_scale-1))
+	var w := width*5+20
 	var h := 75.0 + 22.0*(text_scale-1)
-	var y := view.y-h-18
-	var start := (view.x-(width*5+gap*4))*0.5
+	return Rect2(Vector2((virtual_size.x-w)*0.5,virtual_size.y-h-18)*ui_scale,Vector2(w,h)*ui_scale)
+
+func _skills() -> void:
+	var rect := skill_row_rect(size)
+	var width := (rect.size.x/factor-20)/5
+	var gap := 5.0
+	var h := rect.size.y/factor
+	var y := rect.position.y/factor
+	var start := rect.position.x/factor
 	var cds: Dictionary = info.get("cooldowns",{})
+	var loadout: Array = info.get("progression",{}).get("loadout",["hook","",""])
 	var locked_hint := ""
 	for i in range(SKILLS.size()):
-		var id: String = SKILLS[i]
+		var action: String = SKILLS[i]
+		var id := str(loadout[i-2]) if i>=2 else action
 		var x := start+i*(width+gap)
-		var locked: bool = (id=="spin" and not info.get("first_merge",false)) or (id=="slam" and not info.get("forest_clear",false))
-		var cd := float(cds.get(id,0))
+		var locked := id.is_empty()
+		var cd := float(cds.get(action,0))
 		var tint := S.MUTED if locked else (S.GOLD if i==0 else S.MINT)
 		_plate(Rect2(x,y,width,h),S.INK if locked else S.DEEP,S.LINE if locked else S.BRASS,5)
 		if not locked:
 			_rule(Vector2(x+6,y),Vector2(x+width-5,y),tint)
-		S.icon(self,id,Vector2(x+width*0.5-12,y+8),30,tint.darkened(0.35) if locked else tint)
-		var key: String = keys.get(id,"")
+		S.icon(self,"skills" if locked else id,Vector2(x+width*0.5-12,y+8),30,tint.darkened(0.35) if locked else tint)
+		var key: String = keys.get(action,"")
 		var cap_w := minf(width*0.51,maxf(18,body_font.get_string_size(key,HORIZONTAL_ALIGNMENT_LEFT,-1,13).x+6))
 		draw_rect(Rect2(x+4,y+4,cap_w,17),S.RAISED)
 		draw_string(body_font,Vector2(x+4,y+17),key,HORIZONTAL_ALIGNMENT_CENTER,cap_w,13,S.PAPER)
 		if locked:
-			S.icon(self,"lock",Vector2(x+width-17,y+6),13,S.MUTED)
-			if Rect2(x,y,width,h).has_point(get_local_mouse_position()/factor): locked_hint = S.t("lock_"+id)
+			if Rect2(x,y,width,h).has_point(get_local_mouse_position()/factor): locked_hint = S.t("empty_skill_hint")%keys.get("skills","K")
 		if cd > 0.01 and not locked:
 			draw_rect(Rect2(x+width*0.5-23,y+9,46,28),S.INK)
 			_type("%.1f" % cd,x+width*0.5-23,y+9,16,S.GOLD,46,HORIZONTAL_ALIGNMENT_CENTER,true)
-		var skill_name := S.t(id)
-		if i>=2 and body_font.get_string_size(skill_name,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(17*text_scale)).x > width-6:
+		var skill_name := S.t("empty_slot" if locked else id)
+		if i>=2 and not locked and body_font.get_string_size(skill_name,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(17*text_scale)).x > width-6:
 			skill_name = S.t("short_"+id)
 		_type(skill_name,x+3,y+h-30*text_scale,17,tint if not locked else S.MUTED,width-6,HORIZONTAL_ALIGNMENT_CENTER)
 

@@ -24,6 +24,7 @@ static func snapshot(world, player, director) -> Dictionary:
 		return {}
 	var inverse: Transform3D = data.transform.affine_inverse()
 	data["region"] = world.region
+	if world.region>=0: data["arena"]=_flat(inverse*world.boss_point())
 	data["footprints"] = _footprints(world, data, inverse)
 	data["player"] = _flat(inverse * player.global_position)
 	data["facing"] = _flat(inverse.basis * player.facing).normalized()
@@ -104,7 +105,7 @@ static func _chart(data: Dictionary) -> Texture2D:
 	var mask_size := mask.get_size()
 	var bounds: Rect2 = data.bounds
 	var extent: Rect2 = data.texture_bounds
-	var dimensions := Vector2i((bounds.size*9.0).round())
+	var dimensions := Vector2i((bounds.size*minf(9.0,384.0/bounds.size.x)).round())
 	var sheet := Image.create_empty(dimensions.x,dimensions.y,false,Image.FORMAT_RGB8)
 	var land := Color(PALETTES[region+1])
 	var slope_ink := land.darkened(0.27)
@@ -117,10 +118,10 @@ static func _chart(data: Dictionary) -> Texture2D:
 			var road := mask.get_pixelv(mask_xy).r
 			var h := Height.sample_height(p,region) if region>=0 else 0.0
 			var paper_noise := 0.014*sin(x*2.567+y*13.73)+0.012*cos(x*0.23+y*0.82)
-			var tint := land.lightened(clampf(h*0.26+paper_noise,0,1))
+			var tint := land.lightened(clampf(h*0.09+paper_noise,0,0.5))
 			if h>0.055:
-				var contour := absf(fposmod(h+0.065,0.13)-0.065)
-				tint = tint.lerp(slope_ink,(1.0-smoothstep(0.002,0.012,contour))*0.6)
+				var contour := absf(fposmod(h+.24,.48)-.24)
+				tint = tint.lerp(slope_ink,(1.0-smoothstep(.012,.047,contour))*0.6)
 			tint = tint.lerp(track_border,smoothstep(0.08,0.28,road))
 			tint = tint.lerp(ROAD,smoothstep(0.27,0.50,road))
 			sheet.set_pixel(x,y,tint)
@@ -150,6 +151,10 @@ func _draw() -> void:
 	_draw_terrain(chart)
 	_draw_footprints(chart)
 	_draw_grid(chart)
+	if map_data.has("arena"):
+		_mark(_at(map_data.arena,chart),"guardian",9.0)
+	for i in map_data.landmarks.size():
+		_number(_at(map_data.landmarks[i].pos,chart),i+1,9.0)
 	for key in map_data.points:
 		_mark(_at(map_data.points[key],chart),key,11.5)
 	if map_data.has("guardian"):
@@ -181,7 +186,7 @@ func _draw_terrain(chart: Rect2) -> void:
 			draw_polyline(coords,ink.darkened(0.22),width+2.1,true)
 			draw_polyline(coords,ink,width,true)
 	if int(map_data.region) in Height.BRIDGE_REGIONS:
-		var mid := _at(_flat(Height.BRIDGE_ORIGIN),chart)
+		var mid := _at(Height.Layout.bridge_at(int(map_data.region)),chart)
 		var arm := Vector2.RIGHT.rotated(-Height.BRIDGE_YAW)*Height.BRIDGE_HALF_LENGTH*chart.size.x/bounds.size.x
 		draw_line(mid-arm,mid+arm,INK,7.0,true)
 		draw_line(mid-arm,mid+arm,PAPER,4.0,true)
@@ -190,23 +195,28 @@ func _draw_terrain(chart: Rect2) -> void:
 func _draw_grid(chart: Rect2) -> void:
 	var bounds: Rect2 = map_data.bounds
 	var grid := Color(INK,0.16)
-	for x in range(ceili(bounds.position.x/5.0),ceili(bounds.end.x/5.0)):
-		var px := _at(Vector2(x*5.0,0),chart).x
+	var step:=20.0 if map_data.region>=0 else 5.0
+	for x in range(ceili(bounds.position.x/step),ceili(bounds.end.x/step)):
+		var px := _at(Vector2(x*step,0),chart).x
 		draw_line(Vector2(px,chart.position.y),Vector2(px,chart.end.y),grid,1)
-	for y in range(ceili(bounds.position.y/5.0),ceili(bounds.end.y/5.0)):
-		var py := _at(Vector2(0,y*5.0),chart).y
+	for y in range(ceili(bounds.position.y/step),ceili(bounds.end.y/step)):
+		var py := _at(Vector2(0,y*step),chart).y
 		draw_line(Vector2(chart.position.x,py),Vector2(chart.end.x,py),grid,1)
 	var px_per_meter := chart.size.x / bounds.size.x
 	var start := chart.position + Vector2(9,chart.size.y-10)
-	var end := start + Vector2(5*px_per_meter,0)
+	var end := start + Vector2(step*px_per_meter,0)
 	draw_line(start,end,INK,2.3)
 	draw_line(start,start-Vector2(0,4),INK,2)
 	draw_line(end,end-Vector2(0,4),INK,2)
-	draw_string(_font,start+Vector2(0,-6),Text.get_message("scale")%5,HORIZONTAL_ALIGNMENT_LEFT,-1,13,INK)
+	draw_string(_font,start+Vector2(0,-6),Text.get_message("scale")%int(step),HORIZONTAL_ALIGNMENT_LEFT,-1,13,INK)
 
 
 func _draw_footprints(chart: Rect2) -> void:
 	for item in map_data.footprints:
+		if map_data.region>=0 and item.small:
+			var center:Vector2=(item.polygon[0]+item.polygon[2])*.5
+			draw_circle(_at(center,chart),1.15,Color(INK,.30))
+			continue
 		var points := PackedVector2Array()
 		for p in item.polygon:
 			points.append(_at(p,chart))
@@ -232,6 +242,11 @@ func _mark(at: Vector2, kind: String, radius: float) -> void:
 	else:
 		S.icon(self,kind,at-Vector2.ONE*radius*.77,radius*1.54,S.DEEP)
 
+func _number(at:Vector2,index:int,radius:float) -> void:
+	draw_circle(at,radius+1.3,S.DEEP,true,-1,true)
+	draw_circle(at,radius,S.PAPER,true,-1,true)
+	var fs:=roundi(radius*1.55)
+	draw_string(_font,at+Vector2(-radius,fs*.35),str(index),HORIZONTAL_ALIGNMENT_CENTER,2*radius,fs,S.DEEP)
 
 func _legend(pos: Vector2, region: int) -> void:
 	var title := S.t("town" if region<0 else "region%d"%region)
@@ -253,6 +268,13 @@ func _legend(pos: Vector2, region: int) -> void:
 		if map_data.guardian.pending:
 			pos.y += row*.85
 			draw_string(_font,pos+Vector2(28,0),Text.get_message("pending"),HORIZONTAL_ALIGNMENT_LEFT,-1,fs,S.HOT)
+	elif map_data.has("arena"):
+		pos.y+=row
+		_legend_row(pos,"guardian",Text.get_message("arena"),fs)
+	for i in map_data.landmarks.size():
+		pos.y+=row
+		_number(pos+Vector2(12,-fs*.34),i+1,8.3*text_scale)
+		draw_string(_font,pos+Vector2(28*text_scale,0),Text.get_message(map_data.landmarks[i].label),HORIZONTAL_ALIGNMENT_LEFT,-1,fs,S.PAPER)
 	pos.y += row+6
 	draw_line(pos+Vector2(1,-5),pos+Vector2(22,-5),ROAD,4,true)
 	draw_string(_font,pos+Vector2(28,0),Text.get_message("way"),HORIZONTAL_ALIGNMENT_LEFT,-1,fs,S.MUTED)

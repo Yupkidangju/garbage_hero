@@ -228,7 +228,7 @@ func _recovery() -> void:
 		return
 	var folder := temp.get_current_dir().path_join("recovery")
 	# 한쪽 세대를 보존한 채 임시 파일과 같은 이름의 폴더를 만들어 쓰기 실패를 재현한다.
-	var target := folder.path_join("slot-1.sav.tmp")
+	var target := folder.path_join("slot-v2-1.sav.tmp")
 	check(DirAccess.make_dir_absolute(target) == OK, "inject save failure")
 	var before: Dictionary = session._data.duplicate(true)
 	check(not session.act("depart", {"region":0, "difficulty":0}) and session._data == before, "failed save is rolled back")
@@ -237,14 +237,14 @@ func _recovery() -> void:
 	check(session.record_kill(0, 0, "normal", "n", Vector3.ZERO), "record")
 	check(not session.record_kill(0, 0, "normal", "n", Vector3.ZERO), "duplicate normal")
 	check(session.record_kill(0, 0, "normal", "n2", Vector3.ZERO), "second record")
-	var latest := folder.path_join("slot-%d.sav" % session._slot.active_bank)
+	var latest := folder.path_join("slot-v2-%d.sav" % session._slot.active_bank)
 	var bad := FileAccess.open(latest, FileAccess.WRITE)
 	bad.store_string("truncated by test")
 	bad.close()
 	if _start("recovery"):
 		check(session.ui_state().coins == 1, "previous intact bank recovered after corruption")
-	var active := folder.path_join("slot-%d.sav" % session._slot.active_bank)
-	var inactive := folder.path_join("slot-%d.sav" % (1 - session._slot.active_bank))
+	var active := folder.path_join("slot-v2-%d.sav" % session._slot.active_bank)
+	var inactive := folder.path_join("slot-v2-%d.sav" % (1 - session._slot.active_bank))
 	for path in [active, inactive]:
 		var damaged := FileAccess.open(path, FileAccess.WRITE)
 		damaged.store_string("damaged")

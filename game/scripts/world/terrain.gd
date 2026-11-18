@@ -3,6 +3,7 @@ extends RefCounted
 const Painter = preload("res://scripts/world/scenery_mesh.gd")
 const GROUND = preload("res://scripts/world/landscape.gdshader")
 const HEIGHT = preload("res://scripts/world/height.gd")
+const Layout = preload("res://scripts/world/field_layout.gd")
 const PALETTES = [
 	["84995f","a7b77a","c2c98b","d1b58b","e0c79a","b09c71"],
 	["7d995a","9daf6a","c4be81","b8a37b","cfb789","a5996e"],
@@ -17,12 +18,16 @@ var region:int
 var tracks:=Image.create_empty(576,576,false,Image.FORMAT_L8)
 var road_texture:ImageTexture
 var bounds:Rect2
-const TEXTURE_BOUNDS:=Rect2(-24,-24,48,48)
+var texture_bounds:=Rect2(-24,-24,48,48)
+var layout:Layout
 
 func _init(painter:Painter, area:int) -> void:
 	g=painter
 	region=area
 	colors=PALETTES[region+1]
+	if region>=0:
+		layout=Layout.new(region)
+		texture_bounds=Rect2(-72,-72,144,144)
 
 func ribbon(points:PackedVector2Array,width:float,color:String,y:float,edge_variation:=.06) -> void:
 	var left:=PackedVector3Array()
@@ -42,8 +47,8 @@ func ribbon(points:PackedVector2Array,width:float,color:String,y:float,edge_vari
 			var variance:=1.0+edge_variation*sin(s.x*2.7+s.y)
 			var l:=s-normal*width*.5*variance
 			var r:=s+normal*width*.5*(2.0-variance)
-			left.append(Vector3(l.x,y,l.y))
-			right.append(Vector3(r.x,y,r.y))
+			left.append(Vector3(l.x,HEIGHT.altitude(l,region)+y,l.y))
+			right.append(Vector3(r.x,HEIGHT.altitude(r,region)+y,r.y))
 	for i in left.size()-1:
 		g.quad(left[i],right[i],right[i+1],left[i+1],Vector3.UP,g.clr(color))
 
@@ -59,8 +64,9 @@ func path(points:PackedVector2Array,width:float) -> void:
 			stamp(point,Vector2.ONE*width*.5)
 
 func stamp(at:Vector2,half_size:Vector2) -> void:
-	var center:=(at+Vector2.ONE*24.0)*12.0
-	var extent:=half_size*12.0
+	var density:=Vector2(tracks.get_size())/texture_bounds.size
+	var center:=(at-texture_bounds.position)*density
+	var extent:=half_size*density
 	var lo:=Vector2i((center-extent).floor()).clamp(Vector2i.ZERO,Vector2i(575,575))
 	var hi:=Vector2i((center+extent).ceil()).clamp(Vector2i.ZERO,Vector2i(575,575))
 	for row in range(lo.y,hi.y+1):
@@ -75,7 +81,7 @@ func stamp(at:Vector2,half_size:Vector2) -> void:
 
 func generate() -> void:
 	var plane:=PlaneMesh.new()
-	plane.size=Vector2(125,125)
+	plane.size=Vector2(125,125) if region<0 else Vector2(240,240)
 	var material:=ShaderMaterial.new()
 	material.shader=GROUND
 	material.set_shader_parameter("shade",Color(colors[0]))
@@ -84,6 +90,7 @@ func generate() -> void:
 	material.set_shader_parameter("dust",Color(colors[3]))
 	material.set_shader_parameter("dust_tip",Color(colors[4]))
 	material.set_shader_parameter("biome",region)
+	material.set_shader_parameter("track_extent",texture_bounds.size)
 	plane.material=material
 	var land:=MeshInstance3D.new()
 	land.mesh=plane
@@ -95,12 +102,14 @@ func generate() -> void:
 	else:
 		land.position.y=-.08
 		field_surface(material)
-	var xlimit:=14.0 if region==-1 else 17.0
-	var zlimit:=11.0 if region==-1 else 15.2
-	bounds=Rect2(-xlimit,-zlimit,xlimit*2,zlimit*2)
+	bounds=Rect2(-14,-11,28,22) if region<0 else Layout.BOUNDS
+	var xlimit:=bounds.size.x*.5
+	var zlimit:=bounds.size.y*.5
+	var wall_y:=1.6 if region<0 else 3.0
+	var wall_height:=3.3 if region<0 else 6.4
 	for side:float in [-1.,1.]:
-		g.solid(Vector3(side*(xlimit+.35),1.6,0),Vector3(.7,3.3,zlimit*2+1.4))
-		g.solid(Vector3(0,1.6,side*(zlimit+.35)),Vector3(xlimit*2,3.3,.7))
+		g.solid(Vector3(side*(xlimit+.35),wall_y,0),Vector3(.7,wall_height,zlimit*2+1.4))
+		g.solid(Vector3(0,wall_y,side*(zlimit+.35)),Vector3(xlimit*2,wall_height,.7))
 	distant_ridges()
 	g.at(Vector3.ZERO)
 	if region==-1:
@@ -113,22 +122,22 @@ func generate() -> void:
 
 func field_surface(material:ShaderMaterial) -> void:
 	# 메시와 물리 지형은 같은 1m 격자 표본을 쓴다. 오른쪽 길은 초입과 공터에서 평지로 이어진다.
-	const HALF:=23
-	const COUNT:=HALF*2+1
+	const HALF_X:=HEIGHT.HALF_X
+	const HALF_Z:=HEIGHT.HALF_Z
+	const COUNT:=HEIGHT.WIDTH
+	var heights:=HEIGHT.samples(region).heights
 	var points:=PackedVector3Array()
 	var normals:=PackedVector3Array()
 	var indices:=PackedInt32Array()
-	var heights:=PackedFloat32Array()
-	for z in range(-HALF,HALF+1):
-		for x in range(-HALF,HALF+1):
+	for z in range(-HALF_Z,HALF_Z+1):
+		for x in range(-HALF_X,HALF_X+1):
 			var p:=Vector2(x,z)
-			var h:=HEIGHT.altitude(p,region)
-			heights.append(h)
+			var h:=heights[(z+HALF_Z)*COUNT+x+HALF_X]
 			points.append(Vector3(x,h,z))
-			var dx:=HEIGHT.altitude(p+Vector2.RIGHT*.5,region)-HEIGHT.altitude(p-Vector2.RIGHT*.5,region)
-			var dz:=HEIGHT.altitude(p+Vector2.DOWN*.5,region)-HEIGHT.altitude(p-Vector2.DOWN*.5,region)
+			var dx:=HEIGHT.sample_height(p+Vector2.RIGHT*.5,region)-HEIGHT.sample_height(p-Vector2.RIGHT*.5,region)
+			var dz:=HEIGHT.sample_height(p+Vector2.DOWN*.5,region)-HEIGHT.sample_height(p-Vector2.DOWN*.5,region)
 			normals.append(Vector3(-dx,1,-dz).normalized())
-			if x<HALF and z<HALF:
+			if x<HALF_X and z<HALF_Z:
 				var i:=points.size()-1
 				indices.append_array(PackedInt32Array([i,i+1,i+COUNT,i+1,i+COUNT+1,i+COUNT]))
 	var arrays:Array=[]
@@ -143,12 +152,8 @@ func field_surface(material:ShaderMaterial) -> void:
 	ground.name="WalkableRidge"
 	ground.mesh=mesh
 	g.node.add_child(ground)
-	var shape:=HeightMapShape3D.new()
-	shape.map_width=COUNT
-	shape.map_depth=COUNT
-	shape.map_data=heights
 	var collider:=CollisionShape3D.new()
-	collider.shape=shape
+	collider.shape=mesh.create_trimesh_shape()
 	var body:=StaticBody3D.new()
 	body.collision_layer=1
 	body.collision_mask=0
@@ -160,6 +165,9 @@ func distant_ridges() -> void:
 	var cap_colors:=["d9e3d4","b8c6ad","e2bc89","acb8a8","9fb7a7","eef1e6","bf9279"]
 	for i in 24:
 		var p:=Vector3(-39+i%12*7.15,0,-24-float(i/12)*5.9+g.rng.randf_range(-1.5,1.5))
+		if region>=0:
+			p.x*=2.0
+			p.z-=42.0
 		var h:=g.rng.randf_range(3.4,9.1)+(2.2 if i>=12 else 0.0)
 		var r:=g.rng.randf_range(4.5,7.8)
 		g.at(p,g.rng.randf()*TAU)
@@ -212,21 +220,14 @@ func village_ground() -> void:
 			g.patch(x,z,g.rng.randf_range(.04,.12),.026,"c5ad8c",.039,5,.16)
 
 func field_ground() -> void:
-	var left:=PackedVector2Array([Vector2(.1,24),Vector2(.1,9.2),Vector2(-2.2,5.8),Vector2(-6.2,2.7),Vector2(-7.25,-1.1),Vector2(-4.9,-5.3),Vector2(0,-8.4),Vector2(-.8,-24)])
-	var right:=PackedVector2Array([Vector2(0,9.8),Vector2(3.6,6.2),Vector2(6.4,2.4),Vector2(6.25,-1.8),Vector2(4.5,-5.4),Vector2(0,-8.4)])
-	for i in range(2,6):
-		left[i]+=Vector2(sin(region*.9+i)*region*.53,cos(region*.83+i)*region*.43)
-	for i in range(1,5):
-		right[i]+=Vector2(cos(region*.95+i)*region*.50,sin(region*.8+i)*region*.38)
-	path(left,2.8)
-	path(right,2.4)
-	stamp(Vector2(0,-8.4),Vector2(4,3.3))
-	stamp(Vector2(0,9.4),Vector2(2.75,2.4))
-	for j in 340:
-		var x:=g.rng.randf_range(-18.2,18.2)
-		var z:=g.rng.randf_range(-16.2,16.2)
-		g.at(Vector3(x,0,z))
-		var s:=g.rng.randf_range(.046,.14)
+	for i in layout.routes.size():
+		path(layout.routes[i],3.6 if i<2 else 2.7)
+	stamp(Layout.ENTRY,Vector2(4.0,3.7))
+	stamp(Layout.ARENAS[region],Vector2(7,6.4))
+	for landmark in layout.landmarks:
+		stamp(landmark.pos,Vector2(4.2,3.6))
+	for j in 450:
+		var p:=Vector2(g.rng.randf_range(-63,63),g.rng.randf_range(-55,55))
+		g.at(Vector3(p.x,0,p.y))
+		var s:=g.rng.randf_range(.05,.18)
 		g.patch(0,0,s*1.23,s*.55,colors[5],.034,5,.28)
-		if j%6==0:
-			g.patch(.13,.07,.054,.037,colors[2],.035,5,.22)

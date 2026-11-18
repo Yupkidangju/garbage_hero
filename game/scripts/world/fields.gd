@@ -2,11 +2,11 @@ extends "res://scripts/world/props.gd"
 
 const Terrain = preload("res://scripts/world/terrain.gd")
 const HeightMap = preload("res://scripts/world/height.gd")
+const Layout = preload("res://scripts/world/field_layout.gd")
 const FOREST := ["508358","719555","91ac67","a8b572"]
 const SWAMP := ["4b7766","5f8973","84a77a","9caf82"]
 const AUTUMN := ["946f51","ad875c","c3a16e","d1ac72"]
 const ROCKS := ["89917a","c2916c","8a8c8d","71897e","8dabad","695956"]
-const STREAM := [Vector2(-15,14),Vector2(-11.5,10),Vector2(-9.4,6.0),Vector2(-10.0,2),Vector2(-10.1,-1.2),Vector2(-12.0,-6.5),Vector2(-11.4,-13.0),Vector2(-18,-19)]
 var area:int
 var terrain:Terrain
 
@@ -198,19 +198,22 @@ func furnace(pos:Vector3) -> void:
 		g.block(Vector3(x,.57,1.19),Vector3(.054,.84,.05),IRON)
 
 func aqueduct() -> void:
-	var stream:=PackedVector2Array(STREAM)
+	var stream:=terrain.layout.stream
 	var bank:String=["a1ad80","bc9c75","8a9791","8fa785","a8c2c5","936e62"][area]
 	var water:String=["77aba2","c0a77d","849599","729f95","aac9cf","c87e53"][area]
 	g.at(Vector3.ZERO)
+	g.frame=Transform3D.IDENTITY
 	terrain.ribbon(stream,2.14,bank,.043,.17)
 	terrain.ribbon(stream,1.87,water,.046,.14)
 	for j in 22:
 		var t:=g.rng.randf_range(.1,.9)
 		var idx:=g.rng.randi_range(0,stream.size()-2)
 		var v:=stream[idx].lerp(stream[idx+1],t)
-		g.patch(v.x,v.y,g.rng.randf_range(.12,.35),.034,["b3cdc0","dac097","a4b6b0","b1c5ae","d2dfdc","f5ad62"][area],.051,6,.24)
+		g.at(Vector3(v.x,0,v.y))
+		g.patch(0,0,g.rng.randf_range(.12,.35),.034,["b3cdc0","dac097","a4b6b0","b1c5ae","d2dfdc","f5ad62"][area],.051,6,.24)
 	if area in HeightMap.BRIDGE_REGIONS:
-		crossing(HeightMap.BRIDGE_ORIGIN)
+		var bridge:=Layout.bridge_at(area)
+		crossing(Vector3(bridge.x,0,bridge.y))
 
 func fallen_log(pos:Vector3,angle:float) -> void:
 	g.at(pos,angle,1.0,true)
@@ -325,48 +328,117 @@ func trailhead() -> void:
 
 func arena_marks() -> void:
 	var tints:=["a6a27a","c9a27a","989d8d","92a688","c3d1cd","9c8170"]
-	g.at(Vector3(0,0,-8.4))
-	for j in 11:
-		var a:=TAU*j/11
-		var r:=3.42+sin(j)*.17
-		g.block(Vector3(cos(a)*r,.045,sin(a)*r*.85),Vector3(.34,.084,.19),tints[area],Vector3(0,-a+.15,0))
-	if area==3:
-		pond(Vector3(9.1,0,-7.8),2.1,1.4)
-	elif area==5:
-		g.at(Vector3.ZERO)
-		for j in 3:
-			var base:=Vector2(7.1+j*.94,-6.1+j*.83)
-			terrain.ribbon(PackedVector2Array([base+Vector2(-.7,.1),base,base+Vector2(.36,.73),base+Vector2(.97,.88)]),.090,"e39a62",.067,.3)
-
-func landmarks() -> void:
+	var arena:Vector2=Layout.ARENAS[area]
+	for j in 22:
+		var a:=TAU*j/22
+		var p:=arena+Vector2(cos(a)*6.5,sin(a)*5.8)
+		g.at(Vector3(p.x,0,p.y),-a)
+		g.block(Vector3(0,.065,0),Vector3(.46,.13,.26),tints[area])
+	for side:float in [-1.,1.]:
+		beacon_flag(Vector3(arena.x+side*4.1,0,arena.y-4.8),"bc7059",1)
+	var altar:=Vector3(arena.x,0,arena.y-8.4)
 	match area:
 		0:
-			mill()
-			for pos:Vector3 in [Vector3(9.2,0,.9),Vector3(10.3,0,-.3),Vector3(10.8,0,1.1),Vector3(8.9,0,-1.8)]:
-				fungus(pos,1.5)
-			broadleaf(Vector3(-4.5,0,-13.7),1.62,FOREST)
-		1:
-			ruin(Vector3(-11.5,0,2.2),1.38)
-			ruin(Vector3(7.4,0,-12.8),1.14)
-			crystal(Vector3(11.7,0,-3.2),2.05,["7bafb1","94c4bb","86bcb9"])
-		2:
-			belfry(Vector3(-11.7,0,-2.1))
-			belfry(Vector3(4.1,0,-13.3))
-			for row in 2:
-				for j in 5:
-					headstone(Vector3(10.0+j*.91,0,-4.2+row*1.6+sin(j)*.28),g.rng.randf_range(.76,1.15))
-		3:
-			water_gate(Vector3(-11.37,0,1.0))
-			water_gate(Vector3(5.0,0,-13.2))
-			broadleaf(Vector3(11.6,0,-1.2),1.43,SWAMP)
-		4:
-			ruin(Vector3(-11.48,0,1.5),1.25,true)
-			crystal(Vector3(11.1,0,-3.1),1.95,["98bece","afcfdb","92bbcd"])
-			ruin(Vector3(3.2,0,-13.8),1.17,true)
-		5:
-			furnace(Vector3(-11.86,0,-1.35))
-			furnace(Vector3(3,0,-13.58))
-			basalt(Vector3(10.24,0,-3.47),1.75)
+			fallen_log(altar,.12)
+			g.at(altar)
+			wheel(Vector3(0,1.1,-.24),1.04,Vector3.BACK)
+		1: ruin(altar,1.42)
+		2: belfry(altar)
+		3: water_gate(altar)
+		4: crystal(altar,1.88,["98bece","bad7da","92bbcd"])
+		5: furnace(altar)
+
+func landmarks() -> void:
+	var spots:=terrain.layout.landmarks
+	# 표식 중심은 길 위에 두고 목표물은 옆에 세워 접근 공간을 확보한다.
+	for i in spots.size():
+		var center:Vector2=spots[i].pos
+		var side:Vector2=[Vector2(-5.7,0),Vector2(5.5,0),Vector2(-5,-4.2),Vector2(-2,-5.5)][i]
+		g.origin=Vector3(center.x+side.x,0,center.y+side.y)
+		match i:
+			0:
+				match area:
+					0:
+						g.origin+=Vector3(12.3,0,2.85)
+						mill()
+					1: ruin(Vector3.ZERO,1.48)
+					2: belfry(Vector3.ZERO)
+					3: water_gate(Vector3.ZERO)
+					4: ruin(Vector3.ZERO,1.4,true)
+					5: furnace(Vector3.ZERO)
+			1:
+				for k in 5:
+					var p:=Vector3(1.55*cos(k*1.6),0,k*1.18-2.5)
+					match area:
+						0: fungus(p,1.65+.35*(k%2))
+						1: crystal(p,1.45+.29*k,["7bafb1","94c4bb","86bcb9"])
+						2: headstone(p,1.2+.18*(k%3))
+						3:
+							if k==2: broadleaf(p,1.65,SWAMP)
+							else: reeds(p,1.3)
+						4: crystal(p,1.1+.32*k,["98bece","afcfdb","92bbcd"])
+						5: basalt(p,1.1+.24*k)
+			2:
+				match area:
+					0:
+						fallen_log(Vector3.ZERO,-.28)
+						fallen_log(Vector3(1.3,0,-1.1),-.21)
+						g.at(Vector3(2,0,1))
+						crate(Vector3.ZERO)
+					1:
+						g.at(Vector3.ZERO)
+						crate(Vector3(0,0,-.4),.85)
+						barrel(Vector3(1.2,0,.3),1.15)
+						beacon_flag(Vector3(-.6,0,.8),"b56c52")
+					2:
+						for k in 4:
+							g.at(Vector3(k*.76,0,sin(k)*.3))
+							lantern(Vector3.ZERO,1.45)
+						headstone(Vector3(1.1,0,-1.1),1.44)
+					3:
+						g.at(Vector3.ZERO)
+						for k in 9:
+							g.block(Vector3(k*.32,.14,0),Vector3(.31,.22,2.4),"ab8c66")
+						barrel(Vector3(-.5,0,.5))
+						reeds(Vector3(2.7,0,1.5),1.38)
+					4:
+						fallen_log(Vector3.ZERO,-.42)
+						beacon_flag(Vector3(.8,0,-1),"bb6c62")
+						g.at(Vector3(-1.4,0,-1.6))
+						crate(Vector3.ZERO)
+						lantern(Vector3(0,.68,0))
+					5:
+						rusted_rails(Vector2(-1.1,-2.5),-.36,5.5)
+						g.at(Vector3.ZERO,-.36)
+						g.block(Vector3(0,.62,0),Vector3(1.1,.70,1.42),IRON)
+						for x:float in [-.55,.55]:
+							for z:float in [-.48,.48]:
+								wheel(Vector3(x,.28,z),.26,Vector3.RIGHT)
+			3:
+				match area:
+					0: broadleaf(Vector3.ZERO,1.8,FOREST)
+					1:
+						g.at(Vector3.ZERO,-.22)
+						g.column(0,0,0,.42,1.46,1.15,"c1936c",12)
+						g.column(0,0,.42,.58,.61,.42,"cba279",8)
+						g.column(0,0,1.0,.14,1.12,1.10,"e3c78b",20)
+						for hour in 12:
+							var a:=hour*TAU/12
+							g.block(Vector3(cos(a)*.89,1.15,sin(a)*.89),Vector3(.15,.026,.045),IRON,Vector3(0,-a,0))
+						g.tri(Vector3(-.5,1.16,0),Vector3(.52,1.16,0),Vector3(-.45,1.96,0),Vector3.BACK,g.clr("826c54"))
+					2: ruin(Vector3.ZERO,1.17,true)
+					3: pond(Vector3.ZERO,3.45,2.4)
+					4:
+						for k in 3:
+							g.at(Vector3(k*1.45,0,sin(k)*.4))
+							for tier in 4:
+								var s:=.73-tier*.14
+								g.blob(Vector3(0,.15+tier*.34,0),Vector3(s,.26,s*.9),"9aadae" if tier<3 else "e1ece1",8)
+					5:
+						furnace(Vector3.ZERO)
+						rusted_rails(Vector2(2.1,-2.4),.1,4.3)
+		g.origin=Vector3.ZERO
+		beacon_flag(Vector3(center.x+2.1,0,center.y+2.2),"c99554")
 
 func flora(pos:Vector3,sc:float,index:int) -> void:
 	match area:
@@ -390,35 +462,120 @@ func flora(pos:Vector3,sc:float,index:int) -> void:
 			if index%4==0: crystal(pos,sc,["cc875e","d39767","ac795d"])
 			else: basalt(pos,sc)
 
+func _prototypes() -> Array:
+	var ground_painter:=g
+	var results:=[]
+	for i in 8:
+		var holder:=Node3D.new()
+		g=Painter.new(holder,701+area*100+i)
+		g.fade=ground_painter.fade
+		g.opaque=ground_painter.opaque
+		g.contact=ground_painter.contact
+		if i<4: flora(Vector3.ZERO,1.0,i)
+		elif i==4: rocks(Vector3.ZERO,1.0,ROCKS[area],3)
+		elif i==5 and area in [0,3]: flowers(Vector3.ZERO,1.0,"e6cc88" if area==0 else "d4a9bf")
+		else: grasses(Vector3.ZERO,1.0,["89a260","b8a771","81917b","8da279","a0b1ab","9a826c"][area])
+		g.finish()
+		var parts:=[]
+		var solids:=[]
+		for child in holder.get_children():
+			if child is MeshInstance3D:
+				parts.append([child.mesh,child.cast_shadow])
+			elif child is StaticBody3D:
+				solids.append([child.transform,child.get_child(0).shape])
+		results.append({"parts":parts,"solids":solids})
+		holder.free()
+	g=ground_painter
+	return results
+
+func _groves() -> void:
+	# 풀·바위·나무는 셀 단위로 묶어 같은 메시를 공유하고 화면 밖 무리는 컬링한다.
+	var shapes:=_prototypes()
+	var cells:={}
+	var body:=StaticBody3D.new()
+	body.collision_mask=0
+	g.node.add_child(body)
+	var banks:=PackedVector2Array()
+	var water:=terrain.layout.stream
+	for i in water.size()-1:
+		var steps:=ceili(water[i].distance_to(water[i+1])/1.7)
+		for k in steps: banks.append(Layout.road_at(water,i,float(k)/steps))
+	for z in range(-62,65,5):
+		for x in range(-71,73,5):
+			var center:=Vector2(x+g.rng.randf_range(-2.2,2.2),z+g.rng.randf_range(-2.2,2.2))
+			var grove:=g.rng.randi_range(0,3)
+			for j in 4:
+				var p:=center+Vector2(g.rng.randf_range(-2,2),g.rng.randf_range(-2,2))
+				var uv:=(p-terrain.texture_bounds.position)/terrain.texture_bounds.size
+				var cell_xy:=Vector2i(uv*Vector2(terrain.tracks.get_size())).clamp(Vector2i.ZERO,terrain.tracks.get_size()-Vector2i.ONE)
+				if terrain.tracks.get_pixelv(cell_xy).r>.015: continue
+				var tall:=j==0 or (j==1 and sin(center.x*.16)+cos(center.y*.23)>.53)
+				if tall and (p.distance_to(Layout.ENTRY)<7.0 or p.distance_to(Layout.ARENAS[area])<8.0): continue
+				var variation:=grove if tall else g.rng.randi_range(4,7)
+				var sc:=g.rng.randf_range(.82,1.36) if tall else g.rng.randf_range(.6,1.25)
+				if tall and (absf(p.x)<2.5 or _beside_landmark(p) or p.distance_squared_to(Layout.bridge_at(area))<16): continue
+				var on_bank:=false
+				for bank in banks:
+					if p.distance_squared_to(bank)<4.4:
+						on_bank=true
+						break
+				if on_bank: continue
+				var pose:=Transform3D(Basis(Vector3.UP,g.rng.randf()*TAU).scaled(Vector3.ONE*sc),
+					Vector3(p.x,HeightMap.altitude(p,area),p.y))
+				var key:=Vector3i(floori(p.x/24),floori(p.y/24),variation)
+				if not cells.has(key): cells[key]=[]
+				cells[key].append(pose)
+				if Layout.BOUNDS.has_point(p):
+					for solid in shapes[variation].solids:
+						var collision:=CollisionShape3D.new()
+						collision.shape=solid[1]
+						collision.transform=pose*solid[0]
+						body.add_child(collision)
+	for key:Vector3i in cells:
+		var poses:Array=cells[key]
+		for part in shapes[key.z].parts:
+			var instances:=MultiMesh.new()
+			instances.transform_format=MultiMesh.TRANSFORM_3D
+			instances.mesh=part[0]
+			instances.instance_count=poses.size()
+			for i in poses.size(): instances.set_instance_transform(i,poses[i])
+			var grove:=MultiMeshInstance3D.new()
+			grove.multimesh=instances
+			grove.cast_shadow=part[1]
+			g.node.add_child(grove)
+
+func _beside_landmark(point:Vector2) -> bool:
+	for spot in terrain.layout.landmarks:
+		if point.distance_squared_to(spot.pos)<52: return true
+	return false
+
+func _boundary_posts() -> void:
+	var color:String=["896b4d","bd946c","747d78","8d8568","95a4a2","846b61"][area]
+	var cord:String=["a2885a","bc9863","475652","968964","a88f76","665758"][area]
+	var bounds:=Layout.BOUNDS
+	var corners:=[bounds.position,Vector2(bounds.end.x,bounds.position.y),bounds.end,Vector2(bounds.position.x,bounds.end.y)]
+	for side in 4:
+		var a:Vector2=corners[side]
+		var b:Vector2=corners[(side+1)%4]
+		var count:=ceili(a.distance_to(b)/4.0)
+		for k in count:
+			var p:=a.lerp(b,float(k)/count)
+			var q:=a.lerp(b,float(k+1)/count)
+			g.at(Vector3(p.x,0,p.y))
+			var h:=.7+.12*(k%3)
+			g.column(0,0,0,h,.14,.105,color,5)
+			var far:=Vector3(q.x-p.x,HeightMap.altitude(q,area)-g.frame.origin.y+.63,q.y-p.y)
+			var middle:=(Vector3.UP*.63+far)*.5-Vector3.UP*.15
+			g.tube(Vector3.UP*.63,middle,.027,.027,cord,4)
+			g.tube(middle,far,.027,.027,cord,4)
+
 func generate() -> void:
 	aqueduct()
 	landmarks()
+	g.origin=Vector3(Layout.ENTRY.x,0,Layout.ENTRY.y-9.2)
 	return_shrine()
 	trailhead()
+	g.origin=Vector3.ZERO
 	arena_marks()
-	for i in 96:
-		var side:float=-1.0 if i%2==0 else 1.0
-		var pos:=Vector3(side*g.rng.randf_range(13.2,20.3),0,g.rng.randf_range(-18,18))
-		if i%3==0:
-			pos=Vector3(g.rng.randf_range(-17.9,17.9),0,side*g.rng.randf_range(14.3,19.4))
-		flora(pos,g.rng.randf_range(.72,1.49),i)
-	for pos:Vector3 in [Vector3(-8.65,0,8),Vector3(8.63,0,7.8),Vector3(9.49,0,4.4),Vector3(-8.97,0,-4.5),Vector3(8.54,0,-6),Vector3(-5.85,0,-10.4),Vector3(6.30,0,-10.55)]:
-		if area in [0,2,4] and pos.z>7:
-			flora(pos,.90,7)
-		else:
-			rocks(pos,.82,ROCKS[area])
-	for j in 110:
-		var x:=g.rng.randf_range(-14,14)
-		var z:=g.rng.randf_range(-13.3,13.3)
-		if absf(x)<2.1 and (z>6.3 or z< -5.4): continue
-		var p:=Vector3(x,0,z)
-		if area in [0,3]:
-			if j%6==0: flowers(p,g.rng.randf_range(.64,1.15),"f5df99" if area==0 else "d8bbc9")
-			else: grasses(p,g.rng.randf_range(.65,1.35),"8fa45e" if area==0 else "96a67c")
-		elif area in [2,4]:
-			if j%7==0: rocks(p,.38,ROCKS[area],2)
-			else: grasses(p,g.rng.randf_range(.52,.88),"8b967d" if area==2 else "a9b9ad")
-		elif j%4==0:
-			rocks(p,.42,ROCKS[area],2)
-		elif area==1:
-			grasses(p,.64,"bdad75")
+	_boundary_posts()
+	_groves()

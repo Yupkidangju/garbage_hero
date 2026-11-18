@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from model_tools import *
+import hero_arsenal
 
 INK='222537'; NAVY='344453'; BLUE='4c6370'; LEATHER='794634'; SEAM='ffc988'
 CLOTH='d46b3d'; LIGHT='ffa95d'; DARK='954d37'; SCARF='2ba49c'; AQUA='8ae8cb'
@@ -32,7 +33,9 @@ def skeleton():
         add('Thigh',(.108,0,.737),(.117,-.018,.419),'Pelvis')
         add('Shin',(.117,-.018,.419),(.124,.007,.139),'Thigh.'+side)
         add('Foot',(.124,.007,.139),(.124,-.14,.060),'Shin.'+side)
+    nock = grip + Vector((0,.21,0))
     bones.extend([('WeaponGrip',grip,sword(.10),'Hand.R'),
+                  ('BowNock',nock,nock+Vector((0,.1,0)),'WeaponGrip'),
                   ('SwordBase',sword(.13),sword(.19),'WeaponGrip'),
                   ('SwordTip',sword(1.04),sword(1.08),'WeaponGrip')])
     return armature('Repairer',bones)
@@ -362,6 +365,7 @@ def animate(rig):
           'UpperArm.L':(-24,-32,0),'Forearm.L':(-8,0,0),'Thigh.L':(-17,0,0)}
     action(rig,'Death',[(1,idle),(8,recoil),(20,{**crouch,'Root':(-21,2,-8)}),
         (36,fall),(49,fall)])
+    hero_arsenal.moves(rig,idle,blade_dir)
 
 
 if __name__=='__main__':
@@ -373,5 +377,6 @@ if __name__=='__main__':
     g.build('RepairerMesh',rig,mat)
     blade=Geometry(); weapon(blade); blade.build('WeaponBase',rig,mat)
     upgrades(rig,mat)
+    hero_arsenal.equipment(rig,mat,grip,blade_dir,blade_w,blade_n)
     controls(rig); animate(rig)
     save('hero',rig)

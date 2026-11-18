@@ -8,6 +8,9 @@ const Art = preload("res://scripts/hud_art.gd")
 const AreaMap = preload("res://scripts/area_map.gd")
 const TravelStamp = preload("res://scripts/hud_travel_stamp.gd")
 const Preferences = preload("res://scripts/hud_settings.gd")
+const GrowthMenu = preload("res://scripts/hud_growth.gd")
+const Equipment = preload("res://scripts/equipment.gd")
+const Loot = preload("res://data/loot_rules.gd")
 
 var info: Dictionary = {}
 var prefs := Preferences.new()
@@ -19,6 +22,7 @@ var quick: HBoxContainer
 var active := ""
 var section := ""
 var selected := -1
+var selected_skill := "hook"
 var materials: Array = []
 var route := 0
 var difficulty := 0
@@ -79,15 +83,15 @@ func refresh(data: Dictionary) -> void:
 		if previous_region != int(info.get("region",-1)):
 			close_panel()
 			return
-		var stamp := hash([info.get("coins"),info.get("bag"),info.get("chest"),info.get("equipped"),info.get("auto"),info.get("quests"),info.get("traveler"),info.get("cleared"),info.get("unlocked"),info.get("last_merge")])
+		var stamp := hash([info.get("coins"),info.get("bag"),info.get("chest"),info.get("equipment"),info.get("progression"),info.get("auto"),info.get("quests"),info.get("offers"),info.get("traveler"),info.get("cleared"),info.get("unlocked"),info.get("last_merge")])
 		if stamp != wallet_state:
 			wallet_state = stamp
 			_schedule()
 
 func open_panel(kind: String) -> void:
-	if kind not in ["inventory","map","pause","settings","coach","elder","shop","traveler","chest","return"]: return
+	if kind not in ["inventory","skills","map","pause","settings","coach","elder","shop","traveler","chest","return"]: return
 	var was_open := panel_open()
-	return_to = active if kind == "settings" or (kind in ["inventory","map"] and active == "pause") else ""
+	return_to = active if kind == "settings" or (kind in ["inventory","map","skills"] and active == "pause") or (kind == "skills" and active == "inventory") else ""
 	active = kind
 	section = "take" if kind=="chest" and info.get("bag",[]).is_empty() and not info.get("chest",[]).is_empty() else ""
 	selected = -1
@@ -109,6 +113,7 @@ func open_panel(kind: String) -> void:
 	quick.hide()
 	shade.show()
 	if not was_open: panel_changed.emit(true)
+	else: _drop_modal()
 	_render()
 
 func close_panel() -> void:
@@ -166,7 +171,7 @@ func _input(event: InputEvent) -> void:
 				toast(S.t(result))
 		get_viewport().set_input_as_handled()
 		return
-	var shortcut_closed := active in ["map","inventory"] and InputMap.has_action(active) and event.is_action_pressed(active)
+	var shortcut_closed := active in ["map","inventory","skills"] and InputMap.has_action(active) and event.is_action_pressed(active)
 	var close_key := event.is_action_pressed("ui_cancel") or shortcut_closed
 	if close_key:
 		get_viewport().set_input_as_handled()
@@ -198,13 +203,20 @@ func _layout() -> void:
 	var frame := screen.size
 	if frame.x < 1: frame = get_viewport().get_visible_rect().size
 	if is_instance_valid(quick):
-		var compact := frame.x / clampf(frame.y/780.0,0.86,1.35) < 980.0 + 860.0*(float(prefs.prefs.text_scale)-1.0)
-		quick.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
 		var qs := quick.get_combined_minimum_size()
-		quick.offset_right = -20
-		quick.offset_left = -20-qs.x
-		quick.offset_bottom = -(105+22*(float(prefs.prefs.text_scale)-1)) if compact else -18
-		quick.offset_top = quick.offset_bottom-qs.y
+		var slots: Rect2 = art.skill_row_rect(frame)
+		if frame.x - 20 - qs.x >= slots.end.x + 12:
+			quick.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+			quick.offset_left = -20-qs.x
+			quick.offset_right = -20
+			quick.offset_bottom = -18
+			quick.offset_top = quick.offset_bottom-qs.y
+		else:
+			var hud_factor := clampf(frame.y/780.0,0.86,1.35)
+			var margin := clampf(frame.x*0.023,16* hud_factor,38* hud_factor)
+			quick.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+			quick.position = Vector2(margin, margin+(art.hero_height()+8)*hud_factor)
+			quick.size = qs
 	if not is_instance_valid(modal): return
 	var available := Vector2(maxf(180,frame.x-30),maxf(150,frame.y-28))
 	var target := Vector2(minf(846,available.x),minf(685,available.y))
@@ -279,6 +291,7 @@ func _render() -> void:
 		"pause":
 			_button(body,S.t("resume"),close_panel,"Resume",true)
 			_button(body,S.t("open_bag"),open_panel.bind("inventory"),"OpenInventory")
+			_button(body,S.t("skills"),open_panel.bind("skills"),"OpenSkills")
 			_button(body,"%s   ·   %s"%[S.t("map"),S.binding("map")],open_panel.bind("map"),"OpenMap")
 			_button(body,S.t("open_settings"),open_panel.bind("settings"),"OpenSettings")
 			_button(body,S.t("exit"),_act.bind("quit",{}),"Quit")
@@ -289,6 +302,7 @@ func _render() -> void:
 			chart.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			body.add_child(chart)
 		"settings": _options()
+		"skills": GrowthMenu.render(self)
 		"inventory": _inventory()
 		"coach": _coach()
 		"elder": _elder()
@@ -333,6 +347,31 @@ func _line(parent: Control) -> void:
 	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(line)
 
+func _meter(parent: Control, current: float, maximum: float, tone: Color) -> void:
+	var bar := ProgressBar.new()
+	bar.max_value = maxf(1,maximum)
+	bar.value = current
+	bar.show_percentage = false
+	bar.custom_minimum_size.y = 6
+	var track := StyleBoxFlat.new()
+	track.bg_color = S.RAISED
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = tone
+	bar.add_theme_stylebox_override("background",track)
+	bar.add_theme_stylebox_override("fill",fill)
+	parent.add_child(bar)
+
+func _scroll_list(parent: Control, height: int) -> VBoxContainer:
+	var scroll := ScrollContainer.new()
+	scroll.name = "GearList"
+	scroll.follow_focus = true
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.custom_minimum_size.y = height
+	parent.add_child(scroll)
+	var rows := _col(scroll,5)
+	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return rows
+
 func _label(parent: Control, value: String, points: int = 17, tint: Color = S.PAPER, strong := false, wrap := false) -> Label:
 	var node := Label.new()
 	node.text = value
@@ -370,8 +409,8 @@ func _rebuild_quick() -> void:
 	for old in quick.get_children():
 		quick.remove_child(old)
 		old.queue_free()
-	for id in ["inventory","pause"]:
-		var shortcut := "Esc" if id=="pause" else S.binding("inventory")
+	for id in ["inventory","skills","pause"]:
+		var shortcut := "Esc" if id=="pause" else S.binding(id)
 		var b := _button(quick,"%s   %s"%[shortcut,S.t(id)],open_panel.bind(id),"Quick"+id)
 		b.focus_mode = Control.FOCUS_NONE
 
@@ -381,8 +420,8 @@ func _act(action: String, args: Dictionary) -> void:
 func _section_change(value: String) -> void:
 	section = value
 	selected = -1
-	_render()
 	if menu_scroll: menu_scroll.scroll_vertical = 0
+	_render()
 
 func _tabs(labels: Array, ids: Array, current: String) -> void:
 	var tabs := _row(body)
@@ -410,7 +449,7 @@ func _weapon_name(item: Dictionary) -> String:
 	return "%s  %s" % [S.t("grade%d"%int(item.get("grade",0))),str(item.get("name",""))]
 
 func _stats(item: Dictionary) -> String:
-	return S.t("gear_stats")%[int(item.get("atk",0)),int(item.get("crit",0))]
+	return str(item.get("stat_text",S.t("gear_stats")%[int(item.get("atk",0)),int(item.get("crit",0))]))
 
 func _selected_in(items: Array) -> Dictionary:
 	for item in items:
@@ -432,14 +471,7 @@ func _item_rows(parent: Control, items: Array, prefix: String, empty: String) ->
 		selected = int(choice.id)
 	var rows := parent
 	if items.size()>6:
-		var scroll := ScrollContainer.new()
-		scroll.name = "GearList"
-		scroll.follow_focus = true
-		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-		scroll.custom_minimum_size.y = 245 * float(prefs.prefs.text_scale)
-		parent.add_child(scroll)
-		rows = _col(scroll,5)
-		rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		rows = _scroll_list(parent,roundi(235*float(prefs.prefs.text_scale)))
 	var groups := {}
 	for item in items:
 		var pattern := int(item.get("design",0))
@@ -462,22 +494,32 @@ func _item_rows(parent: Control, items: Array, prefix: String, empty: String) ->
 func _details(parent: Control, item: Dictionary) -> void:
 	var grade := clampi(int(item.get("grade",0)),0,6)
 	_label(parent,_weapon_name(item),21,S.GRADE[grade],true,true)
+	_label(parent,_type_name(item),15,S.GOLD,false,true)
 	_label(parent,_stats(item),17,S.PAPER,false,true)
-	var worn: Dictionary = info.get("equipped",{})
-	var delta := [int(item.get("atk",0))-int(worn.get("atk",0)),int(item.get("crit",0))-int(worn.get("crit",0))]
-	_label(parent,S.t("stats_delta")%delta,15,S.MUTED,false,true)
+	var worn: Dictionary = info.get("equipment",{})
+	var comparison := Equipment.compare_text(item,worn)
+	var blocked: bool = item.get("slot","weapon")=="shield" and worn.get("weapon",{}).get("two_handed",false)
+	_label(parent,comparison if blocked else S.t("worn_delta")%comparison,15,S.GOLD if blocked else S.MUTED,false,true)
+
+func _type_name(item: Dictionary) -> String:
+	var category := str(item.get("type_name",item.get("slot_name","")))
+	return category+"   ·   "+S.t("two_handed") if item.get("two_handed",false) else category
 
 func _inventory() -> void:
 	var bag: Array = info.get("bag",[])
 	_balance()
-	var worn: Dictionary = info.get("equipped",{})
-	_label(body,S.t("own_gear"),16,S.GOLD,true)
-	if worn.is_empty(): _label(body,S.t("no_gear"),16,S.MUTED)
-	else:
-		var gear_line := _row(body)
-		var gear := _label(gear_line,_weapon_name(worn)+"   ·   "+_stats(worn),17,S.PAPER,false,true)
-		gear.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		_button(gear_line,S.t("unequip"),_act.bind("unequip",{"id":worn.id}),"Unequip")
+	var worn: Dictionary = info.get("equipment",{})
+	var count := 0
+	for piece in worn.values():
+		if not piece.is_empty(): count += 1
+	var tabs := _row(body)
+	for tab in [["bag",S.t("bag_tab")],["equipped",S.t("worn_count") % count]]:
+		var b := _button(tabs,tab[1],_section_change.bind(tab[0]),"Tab"+str(tab[0]),section==tab[0] or (section=="" and tab[0]=="bag"))
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_button(tabs,S.t("skills"),open_panel.bind("skills"),"OpenSkills")
+	if section=="equipped":
+		_worn_slots(worn)
+		return
 	var auto := bool(info.get("auto",true))
 	_button(body,S.t("auto_on" if auto else "auto_off"),_act.bind("auto",{"enabled":not auto}),"ToggleAuto",auto)
 	_line(body)
@@ -492,21 +534,46 @@ func _inventory() -> void:
 	materials = materials.filter(func(id): return valid_ids.has(id))
 	if not item.is_empty():
 		_details(detail,item)
-		_button(detail,S.t("equip"),_act.bind("equip",{"id":item.id}),"Equip",true)
+		var conflict: bool = item.get("slot","weapon") == "shield" and worn.get("weapon",{}).get("two_handed",false)
+		_button(detail,S.t("equip"),_act.bind("equip",{"id":item.id}),"Equip",true,conflict)
+		if item.get("two_handed",false) and not worn.get("shield",{}).is_empty():
+			_label(detail,S.t("shield_stowed"),15,S.GOLD,false,true)
 		_button(detail,S.t("unlock" if item.locked else "lock"),_act.bind("lock",{"id":item.id}),"Lock")
 	if not auto:
 		var reason := _material_reason(item,bag)
 		if not item.is_empty():
 			_button(detail,S.t("manual_remove" if materials.has(selected) else "manual_pick"),_toggle_material.bind(selected),"Material",false,not reason.is_empty())
 			if int(item.grade)<6:
-				_label(detail,S.t("fusion_range")%[int(item.get("next_min_atk",0)),int(item.get("next_max_atk",0)),int(item.get("next_min_crit",0)),int(item.get("next_max_crit",0))],15,S.MUTED,false,true)
+				_label(detail,S.t("next_fusion")%str(item.get("next_stat_text","")),15,S.MUTED,false,true)
 		_label(detail,S.t(reason) if reason!="" else S.t("fusion_help"),15,S.MUTED,false,true)
 		_button(detail,S.t("fusion")%materials.size(),_act.bind("merge",{"ids":materials.duplicate()}),"Merge",true,materials.size()!=3)
 	var merged: Dictionary = info.get("last_merge",{})
 	if not merged.is_empty() and merged.has("item"):
 		_line(body)
 		_label(body,"%s   ·   %s   ·   %s"%[S.t("fusion_last"),_weapon_name(merged.item),_stats(merged.item)],16,S.MINT,false,true)
-		_label(body,S.t("fusion_compare")%[int(merged.get("atk_delta",0)),int(merged.get("crit_delta",0))],15,S.MUTED)
+		_label(body,S.t("fusion_delta")%str(merged.comparison),15,S.MUTED,false,true).name = "LastFusionComparison"
+
+func _worn_slots(worn: Dictionary) -> void:
+	_label(body,GrowthMenu.stats_text(info.get("stats",{})),16,S.MINT,false,true)
+	_line(body)
+	var list := _col(body,4)
+	for id in Equipment.SLOTS:
+		var item: Dictionary = worn.get(id,{})
+		var row := _row(list,12)
+		var caption := _label(row,Loot.caption("SLOT_"+id.to_upper()),15,S.GOLD,true)
+		caption.custom_minimum_size.x = 55*float(prefs.prefs.text_scale)
+		var col := _col(row,0)
+		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		if item.is_empty():
+			var blocked: bool = id=="shield" and worn.get("weapon",{}).get("two_handed",false)
+			_label(col,S.t("shield_blocked" if blocked else "empty_slot"),16,S.MUTED,false,true)
+		else:
+			_label(col,_weapon_name(item),18,S.GRADE[clampi(int(item.grade),0,6)],true,true)
+			var bonuses := _stats(item)
+			if id=="weapon": bonuses = _type_name(item)+"   ·   "+bonuses
+			_label(col,bonuses,15,S.MUTED,false,true)
+			_button(row,S.t("unequip"),_act.bind("unequip",{"id":item.id}),"Unequip" if id=="weapon" else "Unequip"+id)
+		_line(list)
 
 func _material_reason(item: Dictionary, items: Array) -> String:
 	if item.is_empty() or materials.has(selected): return ""
@@ -579,23 +646,28 @@ func _elder() -> void:
 	var list: Control = sides[0]
 	var detail: Control = sides[1]
 	_label(list,S.t("quest_list"),16,S.GOLD,true)
-	for i in range(quests.size()):
-		var entry: Dictionary = quests[i]
-		var title := S.t("quest_first") if i==0 else S.t("quest_hunt")%S.t("boss%d"%(i-1))
-		var b := _button(list,title,_quest_select.bind(i),"Quest%d"%i,i==quest)
+	if quests.size()>6: list = _scroll_list(list,roundi(255*float(prefs.prefs.text_scale)))
+	for entry in quests:
+		var id := int(entry.id)
+		var title := str(entry.name)
+		var b := _button(list,title,_quest_select.bind(id),"Quest%d"%id,id==quest)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		if entry.get("claimed",false): b.text += "   ·   "+S.t("claimed")
-	quest = clampi(quest,0,quests.size()-1)
-	var entry: Dictionary = quests[quest]
+		elif entry.get("eligible",false): b.text += "   ·   "+S.t("eligible")
+	var entry: Dictionary = quests[0]
+	for candidate in quests:
+		if candidate.id==quest: entry = candidate
 	var claimed := bool(entry.get("claimed",false))
 	var eligible := bool(entry.get("eligible",false))
-	var target := S.t("quest_goal") if quest==0 else S.t("quest_boss_goal")%[S.t("region%d"%(quest-1)),S.t("boss%d"%(quest-1))]
-	_label(detail,target,21,S.PAPER,true,true)
+	_label(detail,str(entry.name),21,S.PAPER,true,true)
+	_label(detail,str(entry.description),17,S.PAPER,false,true)
+	_label(detail,S.t("quest_progress")%[entry.progress,entry.target],16,S.MINT)
+	_meter(detail,entry.progress,entry.target,S.MINT)
 	_label(detail,S.t("reward")%int(entry.get("reward",12 if quest==0 else 20)),18,S.GOLD)
-	if quest>0 and not quests[0].get("claimed",false):
-		_label(detail,S.t("quest_prereq"),16,S.MUTED,false,true)
-	_button(detail,S.t("claimed" if claimed else ("eligible" if eligible else "ongoing")),_act.bind("claim",{"quest":quest}),"Claim",true,not eligible or claimed)
+	if not str(entry.prerequisite).is_empty():
+		_label(detail,entry.prerequisite,16,S.MUTED,false,true)
+	_button(detail,S.t("claimed" if claimed else ("eligible" if eligible else "ongoing")),_act.bind("claim",{"quest":entry.id}),"Claim",true,not eligible or claimed)
 
 func _bag_has_room(design: int, grade: int, protected := false) -> bool:
 	var bag: Array = info.get("bag",[])
@@ -628,17 +700,38 @@ func _shop() -> void:
 		_button(detail,S.t("sell")%price,_act.bind("sell",{"id":item.id}),"Sell",true,bool(item.get("locked",false)))
 		if item.get("locked",false): _label(detail,S.t("locked_sell"),15,S.GOLD,false,true)
 		return
-	var price := int(vendor.get("price",18)) if visit else 8
-	var region := clampi(int(vendor.get("region",0)),0,5)
-	var name_text := S.t("buy_traveler")%S.t("region%d"%region) if visit else S.t("buy_shop")
-	_label(body,name_text,22,S.GOLD,true)
-	var sold := visit and bool(vendor.get("sold",false))
+	var vendor_id := "traveler" if visit else "shop"
+	var offers: Array = info.get("offers",{}).get(vendor_id,[])
+	if offers.is_empty(): return
+	var sides := _columns()
+	var list: Control = sides[0]
+	var detail: Control = sides[1]
+	if visit:
+		_label(list,S.t("region_stock")%S.t("region%d"%int(vendor.get("region",0))),16,S.GOLD,true,true)
+	else:
+		_label(list,S.t("shop_stock")%offers.size(),16,S.GOLD,true)
+	if offers.size()>6: list = _scroll_list(list,roundi(250*float(prefs.prefs.text_scale)))
+	var offer: Dictionary = offers[0]
+	for entry in offers:
+		if entry.design==selected: offer = entry
+	selected = int(offer.design)
+	for entry in offers:
+		var caption := "%s   ·   %s" % [entry.name,S.t("sold") if entry.sold else S.t("gold_fmt")%int(entry.price)]
+		var b := _button(list,caption,_choose.bind(int(entry.design)),"Offer%d"%int(entry.design),entry.design==selected)
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var price := int(offer.price)
+	var sold := bool(offer.sold)
+	_label(detail,_weapon_name(offer),21,S.GRADE[clampi(int(offer.grade),0,6)],true,true)
+	_label(detail,_type_name(offer),15,S.GOLD,false,true)
+	_label(detail,str(offer.stat_text),17,S.PAPER,false,true)
+	if visit: _label(detail,S.t("visit_stock")%int(offer.stock),15,S.MUTED,false,true)
 	var reason := ""
 	if sold: reason = "sold"
 	elif int(info.get("coins",0)) < price: reason = "no_funds"
-	elif not _bag_has_room(region+1 if visit else 0,1 if visit else 0): reason = "bag_full"
-	_button(body,S.t("sold") if sold else S.t("buy")%price,_act.bind("buy",{"vendor":"traveler" if visit else "shop"}),"Buy",true,reason!="")
-	if reason!="" and not sold: _label(body,S.t(reason),16,S.GOLD,false,true)
+	elif not _bag_has_room(selected,int(offer.grade)): reason = "bag_full"
+	_button(detail,S.t("sold") if sold else S.t("buy")%price,_act.bind("buy",{"vendor":vendor_id,"design":selected}),"Buy",true,reason!="")
+	if reason!="" and not sold: _label(detail,S.t(reason),16,S.GOLD,false,true)
 
 func _chest() -> void:
 	_balance()
@@ -683,7 +776,8 @@ func _options() -> void:
 		grid.add_theme_constant_override("v_separation",4)
 		body.add_child(grid)
 		for id in Preferences.ACTIONS:
-			var desc := _label(grid,S.t(id),16,S.PAPER)
+			var slot_index := GrowthMenu.SLOT_ACTIONS.find(id)
+			var desc := _label(grid,S.t("slot_%d"%slot_index if slot_index>=0 else id),16,S.PAPER)
 			desc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			_button(grid,S.binding(id),_capture_key.bind(id),"Bind"+id,binding_target==id)
 		_button(body,S.t("reset_keys"),_reset_keys,"ResetKeys")

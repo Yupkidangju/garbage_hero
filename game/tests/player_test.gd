@@ -71,7 +71,7 @@ func _run() -> void:
 	_box(Vector3.DOWN, Vector3(100,2,100))
 	player.configure({"atk":20, "crit":0}, false, false)
 	stage.add_child(player)
-	_check(player._base_bone>=0 and player._tip_bone>=0 and player._clips.size()==11, "Imported skeleton, sword sockets, and all 11 action clips")
+	_check(player._base_bone>=0 and player._tip_bone>=0 and player._clips.size()==18, "Imported skeleton, sword sockets, and all 18 action clips")
 	var equipment := player._grade_nodes
 	_check(equipment.size()==7, "Base weapon and six tier meshes")
 	player.configure({"atk":20, "crit":0, "grade":6}, false, false)

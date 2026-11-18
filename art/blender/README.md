@@ -31,6 +31,10 @@ python art/blender/verify_glb.py
 
 주인공의 오른손 아래 `WeaponGrip`이 검 전체를 변형한다. `SwordBase`와 `SwordTip`은 검 궤적을 샘플하는 본이다. `WeaponBase`는 기본 검, `Grade1`~`Grade6`은 누적 표시하는 별도 메시다. Blender 원본에는 손·발 IK 목표와 팔 비틀림 제약이 있다. 제작 액션은 FK 자세로 저장되고 GLB로 베이크된다. 게임 물리가 전진과 판정을 담당한다.
 
+0.2.0의 활·지팡이·창·메이스와 방패는 `hero_arsenal.py`에서 생성한다. 무기는 같은 오른손 손잡이를 쓰고 방패는 왼손을 따른다. 활시위 중앙의 `BowNock` 본은 활을 당겼다가 놓는 동작에 맞춰 움직인다. 양손 자세는 두 팔의 길이와 손목 목표로 계산해 액션에 굽는다. Blender에서 개별 부품을 살펴볼 때는 아웃라이너의 `Loadout*` 오브젝트를 표시한다. 게임은 장비와 진행 중인 동작에 맞춰 해당 메시를 표시한다.
+
+검의 기존 3연타에 더해 메이스 내려찍기, 창 찌르기, 활 당기기, 지팡이 발사와 파편 사격·파동·돌진을 전용 액션으로 재생한다. 저장소 루트에서 `godot --path game --script ../art/review/arsenal_actions.gd`를 실행하면 Godot 모델과 공격 효과를 사용해 [전투 동작 이미지](../review/arsenal_actions.webp)를 다시 생성한다. 검을 포함한 5종의 사거리·충돌·스킬 배치 검사는 `godot --headless --fixed-fps 60 --path game --script res://tests/arsenal_test.gd`로 실행한다.
+
 ## 검증 및 적용 범위
 
 여덟 GLB를 Godot 4.7.2의 헤드리스 에디터로 임포트했다. `verify_glb.py`는 GLB의 메시·색상·UV·텍스처·본·가중치·클립과 주인공의 기술 길이를 직접 읽는다. 내보낸 정점당 최대 가중치 개수는 2개다. 반올림 7자리에서 합계 오차는 0이었다.

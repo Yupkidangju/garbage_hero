@@ -82,6 +82,15 @@ func slam(origin: Vector3, direction: Vector3) -> void:
 	_effect("sparks", origin + direction * 1.5 + Vector3.UP * 0.08, direction, 0.32, 1.1, CREAM)
 
 
+func thrust(origin: Vector3, direction: Vector3, reach: float) -> void:
+	_effect("thrust", origin + Vector3.UP * 0.66, direction, 0.12, reach, CREAM)
+
+
+func nova(origin: Vector3, direction: Vector3, reach: float) -> void:
+	_effect("ring", origin + Vector3.UP * 0.13, direction, 0.32, reach, Color("#80dcff"))
+	_effect("sparks", origin + Vector3.UP * 0.24, direction, 0.32, reach*0.82, MINT)
+
+
 func dust(origin: Vector3, direction: Vector3) -> void:
 	_effect("sparks", origin + Vector3.UP * 0.09, direction, 0.24, 0.56, MINT)
 
@@ -197,6 +206,10 @@ func _draw_effect(e: Dictionary) -> void:
 	var radius := float(e.radius)
 	var color := _tint(e.color, pow(1.0-t, 0.7))
 	match e.kind:
+		"thrust":
+			var tip := origin + direction * (0.7 + t*0.3) * radius
+			var mid := tip - direction * (1.0-t)*radius*0.55
+			_quad(mid + right*0.055, tip, mid-right*0.055, origin + direction*0.35, color)
 		"arc", "spin":
 			var spinning: bool = e.kind == "spin"
 			var side := -1.0 if e.variation == 2 else 1.0

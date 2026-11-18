@@ -21,6 +21,7 @@ var frame := Transform3D.IDENTITY
 var occludes := false
 var cell := Vector2i.ZERO
 var area: int
+var origin := Vector3.ZERO
 
 func _init(parent: Node3D, seed_value: int,region:=-1) -> void:
 	node = parent
@@ -33,6 +34,7 @@ func _init(parent: Node3D, seed_value: int,region:=-1) -> void:
 	contact.render_priority=-10
 
 func at(pos: Vector3, yaw := 0.0, size := 1.0, can_occlude := false) -> void:
+	pos+=origin
 	pos.y+=HEIGHT.altitude(Vector2(pos.x,pos.z),area)
 	frame = Transform3D(Basis(Vector3.UP,yaw).scaled(Vector3.ONE*size),pos)
 	occludes = can_occlude

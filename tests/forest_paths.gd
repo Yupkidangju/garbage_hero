@@ -11,10 +11,17 @@ func _walk() -> void:
 	hero.position = world.entry_point()
 	root.add_child(hero)
 	var reached := 0
-	for side: float in [-1.0, 1.0]:
-		for i in 20:
-			var t := float(i + 1 if i < 10 else 19 - i) * 0.1
-			var target := Vector2(side*sin(t*PI)*6.4, 9.2-17.6*t)
+	for route in world.map_data().routes.slice(0,2):
+		var targets:=PackedVector2Array()
+		for index in route.size()-1:
+			var steps:=ceili(route[index].distance_to(route[index+1])/2.8)
+			for j in range(1,steps+1):
+				targets.append(world.Layout.road_at(route,index,float(j)/steps))
+		var back:=targets.duplicate()
+		back.reverse()
+		targets.append_array(back)
+		targets.append(route[0])
+		for target in targets:
 			var arrived := false
 			for frame in 160:
 				var local: Vector3 = world.axes.to_local(hero.position)

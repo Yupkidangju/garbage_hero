@@ -6,6 +6,7 @@ uniform vec4 grass_tip : source_color = vec4(.68,.72,.40,1);
 uniform vec4 dust : source_color;
 uniform vec4 dust_tip : source_color;
 uniform sampler2D tracks : filter_linear_mipmap,repeat_disable;
+uniform vec2 track_extent = vec2(48.0);
 uniform int biome = -1;
 varying vec2 field_pos;
 varying float height;
@@ -39,7 +40,7 @@ void fragment() {
 	}
 	grass=mix(grass,grass_tip.rgb,smoothstep(.08,.85,height)*.12);
 	vec2 wobble=vec2(noise(p*2.3),noise(p*2.3+vec2(2.,4.)))-vec2(.5);
-	float coverage=texture(tracks,(p+wobble*.50)/48.+.5).r;
+	float coverage=texture(tracks,(p+wobble*.50)/track_extent+.5).r;
 	float tooth=noise(p*5.)*.26+noise(p*1.3)*.24;
 	float opacity=smoothstep(.02+tooth*.26,.58+tooth*.27,coverage);
 	vec3 road=mix(dust.rgb,dust_tip.rgb,clamp(broad*.49+coverage*.44+noise(slant*vec2(2.,7.))*.11,0.,1.));

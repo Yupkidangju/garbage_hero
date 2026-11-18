@@ -52,7 +52,8 @@ func _run() -> void:
 	await _wait(3)
 	map = game.hud.modal.find_child("AreaMap",true,false)
 	_check(map.map_data.points.has("return") and map.map_data.guardian.pending, "Return stone and pending guardian marker")
-	_check(map.map_data.guardian.pos.is_equal_approx(Vector2(0,-8.4)), "Pending guardian at arena")
+	_check(map.map_data.landmarks.size()==4 and map.map_data.bounds.size==Vector2(128,112),"Expanded chart and its landmarks")
+	_check(map.map_data.guardian.pos.is_equal_approx(game.world.Layout.ARENAS[0]), "Pending guardian at arena")
 	_key(KEY_ESCAPE,true)
 	_key(KEY_ESCAPE,false)
 	for i in 125:

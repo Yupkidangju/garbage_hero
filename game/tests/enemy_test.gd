@@ -174,8 +174,11 @@ func hill_check() -> void:
 	world.build(0)
 	await physics_frame
 	await physics_frame
-	var slope_dir:=Vector3.RIGHT.rotated(Vector3.UP,PI*.25)
-	var start:=Vector3(1.35,0,-.15).rotated(Vector3.UP,PI*.25)
+	var crossing:PackedVector2Array=world.map_data().routes[2]
+	var segment:=crossing.size()-2
+	var start:=world._floor_point(Landscape.Layout.road_at(crossing,segment,.60))
+	var toward:=world._floor_point(Landscape.Layout.road_at(crossing,segment,.80))-start
+	var slope_dir:=Vector3(toward.x,0,toward.z).normalized()
 	var bee=spawn(0,0,"normal",1)
 	bee.global_position=start
 	start.y=world.ground_at(start)
@@ -201,7 +204,7 @@ func hill_check() -> void:
 	expect(absf(bolt.y-world.ground_at(bolt)-.552)<.03,"Projectile follows the hill under the lane")
 	print("uphill mark elevation=",snappedf(high-low,.001)," max_vertex_error=",snappedf(worst_error,.001))
 	var bridge=preload("res://scripts/world/height.gd")
-	var bridge_center:Vector3=bridge.BRIDGE_ORIGIN.rotated(Vector3.UP,PI*.25)
+	var bridge_center:=world._floor_point(Landscape.Layout.bridge_at(0))
 	var bridge_dir:=Vector3.RIGHT.rotated(Vector3.UP,PI*.25+bridge.BRIDGE_YAW)
 	bee.line(bridge_center-bridge_dir*2.9,bridge_dir,5.8,.46,.45,.45,"stone")
 	var bridge_shot:Node=zones(bee).back()

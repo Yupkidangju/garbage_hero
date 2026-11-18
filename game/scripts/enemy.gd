@@ -493,12 +493,15 @@ func support(effect:String) -> void:
 		else:
 			ally.haste=2.8
 
-func take_hit(amount:int, pull:Vector3=Vector3.ZERO) -> int:
+func take_hit(amount:int, pull:Vector3=Vector3.ZERO, incoming:Vector3=Vector3.ZERO) -> int:
 	if hp<=0 or amount<=0:
 		return 0
 	var damage:=amount
-	if behavior in ["shield","carapace","shove","sidestep"] and is_instance_valid(hero) and phase!="recover":
-		if flat(hero.global_position-global_position).normalized().dot(facing)>.57:
+	if behavior in ["shield","carapace","shove","sidestep"] and phase!="recover":
+		var toward_source := flat(-incoming)
+		if incoming.is_zero_approx() and is_instance_valid(hero):
+			toward_source = flat(hero.global_position - global_position)
+		if toward_source.normalized().dot(facing)>.57:
 			damage=maxi(1,roundi(amount*.36))
 			cue.emit("impact")
 	var dealt:=mini(hp,damage)

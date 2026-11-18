@@ -12,10 +12,6 @@ var defeats := {}
 var watch := {}
 var route_start := 0
 var unlock_times := {}
-var drift_until := 0
-var drift_goal := Vector3.ZERO
-var walk_reference := Vector3.ZERO
-var sample_tick := 0
 var hp_seen := 100
 var shopped := false
 var purchases := 0
@@ -73,9 +69,6 @@ func _campaign() -> void:
 			watch.clear()
 			region_selected = -1
 			retreat = false
-			selecting = false
-			drift_until = 0
-			sample_tick = ticks
 			hp_seen = 100
 			shopped = false
 			last_region = route
@@ -129,40 +122,15 @@ func _stop(success: bool, reason: String) -> void:
 		"state":_status(), "temp_directory":campaign_dir}))
 	quit(0 if success else 1)
 
-func _wheel(at: Vector2, direction: MouseButton) -> void:
-	_aim(at)
-	var event := InputEventMouseButton.new()
-	event.button_index = direction
-	event.factor = 1.0
-	event.position = cursor
-	event.global_position = cursor
-	event.pressed = true
-	Input.parse_input_event(event)
-	Input.flush_buffered_events()
-	event = event.duplicate()
-	event.pressed = false
-	Input.parse_input_event(event)
-	Input.flush_buffered_events()
-
-func _reveal(button: Button) -> bool:
-	var center := button.get_global_rect().get_center()
-	var ancestor := button.get_parent()
-	while ancestor:
-		if ancestor is ScrollContainer:
-			var rect: Rect2 = ancestor.get_global_rect()
-			if center.y < rect.position.y + 4 or center.y > rect.end.y - 4:
-				_wheel(rect.get_center(), MOUSE_BUTTON_WHEEL_UP if center.y < rect.position.y else MOUSE_BUTTON_WHEEL_DOWN)
-				next_ui = ticks + 4
-				return false
-		ancestor = ancestor.get_parent()
-	return true
-
 func _panel() -> void:
 	_stop_walking()
 	if ticks - opened_tick > 480:
 		_stop(false, "menu could not be operated")
 		return
 	if ticks < next_ui or mouse_held:
+		return
+	if training:
+		_train_panel(_buttons())
 		return
 	if game.hud.active == "shop":
 		if game.snapshot.bag.size() >= 28:
@@ -198,7 +166,7 @@ func _panel() -> void:
 		return
 	var name_wanted: String
 	if equipment_goal >= 0:
-		if game.snapshot.equipped.get("id", -1) == equipment_goal:
+		if _goal_is_equipped():
 			equipment_goal = -1
 			_tap(KEY_ESCAPE)
 			next_ui = ticks + 6
@@ -287,14 +255,11 @@ func _field(route: int) -> void:
 		else:
 			_navigate(game.world.entry_point())
 		return
+	if _start_training(): return
 	if (_tactical_evade() if tactical else _evade_telegraph()):
 		return
 	if ticks >= next_ui and ticks % 37 == 0:
-		var best := int(game.snapshot.equipped.get("atk", 0))
-		for item in game.snapshot.bag:
-			if item.atk > best:
-				equipment_goal = item.id
-				best = item.atk
+		equipment_goal = _upgrade()
 		if equipment_goal >= 0:
 			_stop_walking()
 			_tap(KEY_I)
@@ -320,44 +285,15 @@ func _field(route: int) -> void:
 	if loot_distance < 3.5 and distance > 2.4 and game.snapshot.bag.size() < 30:
 		_navigate(closest)
 		return
-	var camera: Camera3D = root.get_camera_3d()
-	_aim(camera.unproject_position(player.position.move_toward(goal, 4.0) + Vector3.UP * 0.24))
-	var reach := 1.48 + float(target.hit_radius)
-	if tactical and ticks % 3 == 0:
-		if game.snapshot.forest_clear and distance < 2.68 + float(target.hit_radius) and player.cooldowns().slam <= 0:
-			_tap(KEY_R)
-			return
-		if game.snapshot.first_merge and distance < 2.34 + float(target.hit_radius) and player.cooldowns().spin <= 0:
-			_tap(KEY_E)
-			return
+	_aim_enemy(target)
+	var reach := _reach(target)
 	if distance > reach:
 		_navigate(goal)
-		if distance < 5 and ticks % 13 == 0 and player.cooldowns().hook <= 0:
-			_tap(KEY_Q)
-		return
-	_stop_walking()
-	sample_tick = ticks
-	if ticks % 5 == 0:
-		if game.snapshot.first_merge and player.cooldowns().spin <= 0:
-			_tap(KEY_E)
-		elif game.snapshot.forest_clear and player.cooldowns().slam <= 0:
-			_tap(KEY_R)
-		elif not mouse_held:
-			_mouse(true)
-
-func _navigate(goal: Vector3) -> void:
-	var position: Vector3 = game.player.position
-	if ticks < drift_until:
-		_walk_towards(drift_goal)
-		return
-	if ticks - sample_tick > 70:
-		if position.distance_to(walk_reference) < 0.35 and position.distance_to(goal) > 1.3:
-			var axis := (goal-position).normalized().rotated(Vector3.UP, PI/2 if ticks % 2 else -PI/2)
-			drift_goal = position + axis * 2.3
-			drift_until = ticks + 24
-		walk_reference = position
-		sample_tick = ticks
-	_walk_towards(goal)
+	else:
+		_stop_walking()
+	if _skill_in_range(distance, float(target.hit_radius)): return
+	if distance <= reach and not mouse_held and ticks % 5 == 0:
+		_mouse(true)
 
 # 빛난 예고 영역들을 함께 읽고 주변 적을 피해 움직인다. 동시에 여러 줄이
 # 겹치는 보스전에서 한 줄을 피하다 인접한 다른 줄을 밟지 않게 한다.

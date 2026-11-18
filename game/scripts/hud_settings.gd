@@ -1,7 +1,7 @@
 extends RefCounted
 
 const DEFAULT_PATH = "user://interface.cfg"
-const ACTIONS = ["move_up","move_left","move_down","move_right","attack","dodge","hook","spin","slam","interact","inventory","map"]
+const ACTIONS = ["move_up","move_left","move_down","move_right","attack","dodge","hook","spin","slam","interact","inventory","skills","map"]
 const S = preload("res://scripts/hud_style.gd")
 var prefs := {"text_scale":1.0,"screen_shake":true,"reduced_flash":false}
 var settings_path := DEFAULT_PATH
@@ -35,6 +35,28 @@ func start() -> void:
 			event.button_index = saved[1]
 		else: continue
 		_apply(action,event)
+	_keep_growth_shortcut_free()
+
+func _key_in_use(event: InputEvent, except_action: String) -> bool:
+	for action in ACTIONS:
+		if action==except_action or not InputMap.has_action(action): continue
+		for existing in InputMap.action_get_events(action):
+			if S.key_name(existing)==S.key_name(event): return true
+	return false
+
+func _keep_growth_shortcut_free() -> void:
+	if not InputMap.has_action("skills"): return
+	var current := InputMap.action_get_events("skills")
+	if not current.is_empty() and not _key_in_use(current[0],"skills"): return
+	# 구버전에서 이미 사용하던 K는 원래 동작에 남기고 성장 화면에 빈 키를 배정한다.
+	for code in [KEY_J,KEY_G,KEY_H,KEY_U,KEY_Y,KEY_T,KEY_B,KEY_N,KEY_V,KEY_C,KEY_Z,KEY_X,KEY_P,KEY_O,KEY_L,KEY_1]:
+		var fallback := InputEventKey.new()
+		fallback.physical_keycode = code
+		if not _key_in_use(fallback,"skills"):
+			_apply("skills",fallback)
+			return
+	InputMap.action_erase_events("skills")
+	bindings.erase("skills")
 
 func _apply(action: String, event: InputEvent) -> void:
 	InputMap.action_erase_events(action)
@@ -54,10 +76,7 @@ func remap(action: String, input: InputEvent) -> String:
 		event = InputEventMouseButton.new()
 		event.button_index = input.button_index
 	else: return ""
-	for other in ACTIONS:
-		if other != action and InputMap.has_action(other):
-			for existing in InputMap.action_get_events(other):
-				if S.key_name(existing)==S.key_name(event): return "key_used"
+	if _key_in_use(event,action): return "key_used"
 	_apply(action,event)
 	return "ok"
 

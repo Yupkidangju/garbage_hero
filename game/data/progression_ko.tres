@@ -1,0 +1,22 @@
+[gd_resource type="Translation" format=3]
+
+[resource]
+locale = "ko"
+messages = {
+"SKILL_hook": "갈퀴 당기기",
+"SKILL_spin": "고철 회오리",
+"SKILL_slam": "압착 강타",
+"SKILL_volley": "파편 사격",
+"SKILL_nova": "고철 파동",
+"SKILL_rush": "돌진",
+"DESC_hook": "갈퀴에 처음 걸린 적을 타격합니다. 일반 적은 주인공 앞으로 끌려옵니다.",
+"DESC_spin": "몸을 축으로 두 번 회전해 가까운 적을 벱니다.",
+"DESC_slam": "무기를 높이 들어 정면의 적에게 강한 일격을 가합니다.",
+"DESC_volley": "여러 파편을 부채꼴로 쏘아 앞쪽의 적을 맞힙니다.",
+"DESC_nova": "주인공을 중심으로 파동을 일으켜 주위의 적을 타격합니다.",
+"DESC_rush": "앞으로 돌진하며 경로에 있는 적을 타격합니다.",
+"LEVEL_UP": "레벨 %d 달성! 능력치 점수 +%d · 스킬 포인트 +%d",
+"INVALID_STAT": "배분할 능력치를 확인하세요. 능력치 점수 1점이 필요합니다.",
+"INVALID_SKILL": "기술의 필요 레벨, 선행 기술과 남은 스킬 포인트를 확인하세요. 최대 등급은 5입니다.",
+"INVALID_LOADOUT": "배운 기술과 배치할 기술 칸을 확인하세요."
+}

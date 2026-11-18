@@ -13,6 +13,7 @@ var stage: Node3D
 var region := -1
 var difficulty := 0
 var service := ""
+var last_landmark := ""
 var combat_lock := 0.0
 var ui_clock := 0.0
 var snapshot := {}
@@ -82,10 +83,11 @@ func _update_player_gear() -> void:
 	if not is_instance_valid(player) or snapshot.is_empty():
 		return
 	var gear: Dictionary = snapshot.get("equipped", {})
-	var current := {"gear": gear, "first_merge": snapshot.get("first_merge", false), "forest": snapshot.get("forest_clear", false)}
+	var progress: Dictionary = snapshot.progression
+	var current := {"gear":gear, "equipment":snapshot.equipment, "stats":snapshot.stats, "ranks":progress.ranks, "loadout":progress.loadout}
 	if current != gear_state:
 		gear_state = current
-		player.configure(gear, current.first_merge, current.forest)
+		player.configure_build(gear, snapshot.stats, progress, snapshot.equipment)
 
 func _enter(theme: int, rank: int) -> void:
 	if is_instance_valid(stage):
@@ -97,6 +99,7 @@ func _enter(theme: int, rank: int) -> void:
 	region = theme
 	difficulty = rank
 	service = ""
+	last_landmark = ""
 	combat_lock = 0
 	gear_state = {}
 	stage = Node3D.new()
@@ -140,6 +143,12 @@ func _physics_process(delta: float) -> void:
 	if ui_clock <= 0:
 		ui_clock = 0.1
 		_update_service()
+		if region >= 0:
+			var landmark: String = world.landmark_near(player.global_position)
+			if landmark != last_landmark:
+				last_landmark = landmark
+				if not landmark.is_empty() and not session.discover(region, difficulty, landmark):
+					_show_retry(session.discover.bind(region, difficulty, landmark))
 		_refresh()
 
 func _update_service() -> void:
@@ -151,7 +160,7 @@ func _refresh() -> void:
 	if not is_instance_valid(player) or snapshot.is_empty():
 		return
 	var data := snapshot.duplicate()
-	data.merge({"region": region, "difficulty": difficulty, "hp": player.hp, "max_hp": 100,
+	data.merge({"region": region, "difficulty": difficulty, "hp": player.hp, "max_hp": player.max_hp,
 		"world": director.state if is_instance_valid(director) else {},
 		"area_map": AREA_MAP.snapshot(world, player, director),
 		"service": service, "unlocked": unlocked, "cooldowns": player.cooldowns(),
@@ -175,6 +184,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			hud.toast(tr("FIELD_NEARBY"))
 	elif event.is_action_pressed("inventory"):
 		hud.open_panel("inventory")
+	elif event.is_action_pressed("skills"):
+		hud.open_panel("skills")
 	elif event.is_action_pressed("map"):
 		_refresh()
 		hud.open_panel("map")
@@ -325,7 +336,7 @@ func _sound(kind: String) -> void:
 	var pitch := 1.0
 	var volume := -11.0
 	match kind:
-		"hit", "hurt", "slam", "impact":
+		"hit", "hurt", "slam", "impact", "mace", "nova":
 			clip = "scrap_impact"
 			pitch = 0.78 if kind == "slam" else 1.0
 		"warning", "boss", "death":
@@ -333,7 +344,7 @@ func _sound(kind: String) -> void:
 		"pickup", "merge", "menu":
 			clip = "salvage_chime"
 			volume = -17.0
-		"swing1", "swing2", "swing3", "spin", "dodge", "hook":
+		"swing1", "swing2", "swing3", "spin", "dodge", "hook", "bow", "staff", "spear", "volley", "rush":
 			clip = "blade_sweep"
 			pitch = 1.16 if kind == "swing1" else 0.94
 		_:

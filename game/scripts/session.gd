@@ -5,6 +5,10 @@ signal notice(message: String)
 
 const Loot = preload("res://data/loot_rules.gd")
 const Slot = preload("res://scripts/slot_store.gd")
+const Growth = preload("res://data/progression.gd")
+const Equipment = preload("res://scripts/equipment.gd")
+const Quests = preload("res://data/quest_book.gd")
+const MAP_TEXT: Translation = preload("res://data/map_ko.tres")
 const BAG_SIZE = 30
 const CHEST_SIZE = 120
 var _data: Dictionary = {}
@@ -24,11 +28,14 @@ func _new_slot() -> Dictionary:
 	for name_key in ["loot", "merge", "shop"]:
 		rng.randi()
 		seeds[name_key] = rng.state
-	return {"schema":Slot.SCHEMA, "seq":0, "coins":0, "next_id":2, "bag":[], "chest":[],
+	var data := {"schema":Slot.SCHEMA, "seq":0, "coins":0, "next_id":2, "bag":[], "chest":[],
+		"progression":Growth.fresh(), "gear_slots":{},
 		"equipped":{"id":1, "order":1, "design":0, "grade":0, "atk":10, "crit":3, "locked":false},
 		"auto":true, "first_merge":false, "forest_kills":0, "bonus_stage":0, "routes":routes,
 		"claimed":[false,false,false,false,false,false,false], "active_route":-1, "pending_traveler":-1,
 		"traveler":{"available":false,"sold":false,"region":-1,"price":18}, "rng":seeds, "normal_receipts":{}}
+	Quests.initialize(data)
+	return data
 
 func start_slot(folder: String = "user://save") -> bool:
 	_slot = Slot.new(folder)
@@ -41,8 +48,17 @@ func start_slot(folder: String = "user://save") -> bool:
 			return _fail("LOAD_FAILED")
 		return _commit(_begin())
 	var restored: bool = _slot.recovered
+	var migrated: bool = _data.schema == 1
+	if migrated:
+		_data.progression = Growth.from_legacy(_data.first_merge, _data.routes[0].cleared)
+		_data.gear_slots = {}
+		Quests.initialize(_data)
+		_data.schema = Slot.SCHEMA
 	if _data.active_route >= 0:
 		if not act("return", {}):
+			return false
+	elif migrated:
+		if not _commit(_begin()):
 			return false
 	else:
 		changed.emit()
@@ -57,7 +73,10 @@ func _begin() -> Dictionary:
 	return _data.duplicate(true)
 
 func _fail(key: String) -> bool:
-	last_error = Loot.caption(key)
+	return _refuse(Loot.caption(key))
+
+func _refuse(reason: String) -> bool:
+	last_error = reason
 	notice.emit(last_error)
 	return false
 
@@ -101,15 +120,6 @@ func world_state(region: int, difficulty: int) -> Dictionary:
 	view.drops = drops
 	return view
 
-func _is_eligible(data: Dictionary, quest: int) -> bool:
-	if quest == 0:
-		return data.first_merge
-	if quest > 0 and quest <= 6 and data.claimed[0]:
-		for difficulty in 4:
-			if data.routes[difficulty * 6 + quest - 1].cleared:
-				return true
-	return false
-
 func ui_state() -> Dictionary:
 	if _data.is_empty():
 		return {}
@@ -122,12 +132,13 @@ func ui_state() -> Dictionary:
 	var cleared := []
 	for route in _data.routes:
 		cleared.append(route.cleared)
-	var quests := []
-	for i in 7:
-		quests.append({"id":i, "eligible":_is_eligible(_data, i), "claimed":_data.claimed[i], "reward":12 if i == 0 else 20})
+	var equipment: Dictionary = Equipment.slots(_data)
 	return {"coins":_data.coins, "bag":bag, "chest":chest, "equipped":Loot.describe(_data.equipped),
+		"equipment":equipment, "progression":Growth.describe(_data.progression),
+		"stats":Growth.stats(_data.progression, Equipment.bonuses(_data)),
+		"offers":{"shop":Equipment.offers("shop", _data.traveler), "traveler":Equipment.offers("traveler", _data.traveler)},
 		"auto":_data.auto, "first_merge":_data.first_merge, "forest_clear":cleared[0], "ending":cleared[23],
-		"traveler":_data.traveler.duplicate(), "quests":quests, "cleared":cleared, "last_merge":_last_merge.duplicate(true)}
+		"traveler":_data.traveler.duplicate(true), "quests":Quests.views(_data), "cleared":cleared, "last_merge":_last_merge.duplicate(true)}
 
 func _stream(data: Dictionary, channel: String) -> RandomNumberGenerator:
 	var rng := RandomNumberGenerator.new()
@@ -221,14 +232,19 @@ func record_kill(region: int, difficulty: int, kind: String, spawn_id: String, p
 			level = mini(70, level + 6)
 			if not route.cleared:
 				_messages.append(Loot.caption("ENDING" if index == 23 else "FIRST_CLEAR"))
+				if index == 0:
+					Growth.grant_legacy(next.progression, "slam")
 			route.cleared = true
 			route.phase = "rest"
 			route.cycle += 1
 			route.trace = 0
 			route.minis = 0
 			route.rest = 30
+	var levels: int = Growth.gain(next.progression, Loot.field_level(region, difficulty), kind)
+	if levels > 0:
+		_messages.append(Growth.level_notice(next.progression, levels))
 	for i in draws:
-		var design := 0 if rng.randf() < 0.6 else region + 1
+		var design: int = Loot.draw_design(region, rng)
 		var grade := Loot.draw_grade(level, rng)
 		var offset := Vector3(0.35, 0, 0) if i == 1 else Vector3.ZERO
 		_ground_item(next, route, design, grade, pos + offset, rng)
@@ -252,13 +268,6 @@ func _find(items: Array, id: int) -> int:
 			return i
 	return -1
 
-func _less_valuable(a: Dictionary, b: Dictionary) -> bool:
-	if a.atk != b.atk:
-		return a.atk < b.atk
-	if a.crit != b.crit:
-		return a.crit < b.crit
-	return a.order < b.order
-
 func _fuse(data: Dictionary, materials: Array) -> void:
 	var base: Dictionary = materials[0]
 	for item in materials:
@@ -268,11 +277,16 @@ func _fuse(data: Dictionary, materials: Array) -> void:
 	data.rng.merge = rng.state
 	data.bag.append(result)
 	var view := Loot.describe(result)
-	_new_merge = {"item":view, "atk_delta":result.atk - data.equipped.get("atk", 0), "crit_delta":result.crit - data.equipped.get("crit", 0)}
-	_messages.append(Loot.caption("MERGED") % [Loot.caption("GRADE_%d" % base.grade), view.grade_name, view.name, view.atk, view.crit])
+	var equipment: Dictionary = Equipment.slots(data)
+	var worn: Dictionary = equipment[view.slot]
+	_new_merge = {"item":view, "atk_delta":result.atk - worn.get("atk", 0), "crit_delta":result.crit - worn.get("crit", 0),
+		"comparison":Equipment.compare_text(view, equipment)}
+	_messages.append(Loot.caption("MERGED_ITEM") % [Loot.caption("GRADE_%d" % base.grade), view.grade_name, view.name, view.stat_text])
 	if base.design == 0 and not data.first_merge:
 		data.first_merge = true
-		_messages.append(Loot.caption("UNLOCK_SPIN"))
+		if data.progression.ranks.get("spin", 0) == 0:
+			Growth.grant_legacy(data.progression, "spin")
+			_messages.append(Loot.caption("UNLOCK_SPIN"))
 
 func _auto_merge(data: Dictionary) -> void:
 	if not data.auto:
@@ -286,7 +300,7 @@ func _auto_merge(data: Dictionary) -> void:
 					groups[item.design] = []
 				groups[item.design].append(item)
 		for group: Array in groups.values():
-			group.sort_custom(_less_valuable)
+			group.sort_custom(Loot.less_valuable)
 			for start in range(0, group.size() - 2, 3):
 				_fuse(data, group.slice(start, start + 3))
 
@@ -341,28 +355,29 @@ func act(action: String, args: Dictionary = {}) -> bool:
 		"equip":
 			if idx < 0:
 				return false
-			var replacement: Dictionary = next.bag.pop_at(idx)
-			if not next.equipped.is_empty():
-				next.bag.append(next.equipped)
-			next.equipped = replacement
+			var item: Dictionary = next.bag[idx]
+			var error: String = Equipment.equip(next, item)
+			if not error.is_empty():
+				return _fail(error)
+			var view := Loot.describe(item)
+			Quests.record_equip(next, view.slot, view.weapon_type)
 			_auto_merge(next)
 		"unequip":
-			if next.equipped.is_empty() or (args.has("id") and id != next.equipped.id):
-				return false
-			next.bag.append(next.equipped)
-			next.equipped = {}
+			var error: String = Equipment.unequip(next, id)
+			if not error.is_empty():
+				return _fail(error)
 			_auto_merge(next)
 		"lock":
 			var item: Dictionary
 			if idx >= 0:
 				item = next.bag[idx]
-			elif id == next.equipped.get("id", -2):
-				item = next.equipped
 			else:
-				var chest_index := _find(next.chest, id)
-				if chest_index < 0:
-					return false
-				item = next.chest[chest_index]
+				item = Equipment.equipped_item(next, id)
+				if item.is_empty():
+					var chest_index := _find(next.chest, id)
+					if chest_index < 0:
+						return false
+					item = next.chest[chest_index]
 			item.locked = not item.locked
 			if idx >= 0 and not item.locked:
 				_auto_merge(next)
@@ -384,14 +399,24 @@ func act(action: String, args: Dictionary = {}) -> bool:
 			var item: Dictionary = next.bag.pop_at(idx)
 			next.coins += 2 * (item.grade + 1)
 		"buy":
-			if not _buy(next, str(args.get("vendor", ""))):
-				return false
-		"claim":
-			var quest := int(args.get("quest", -1))
-			if quest < 0 or quest > 6 or next.claimed[quest] or not _is_eligible(next, quest):
+			if args.has("design") and not args.design is int:
 				return _fail("UNAVAILABLE")
-			next.claimed[quest] = true
-			next.coins += 12 if quest == 0 else 20
+			var error: String = Equipment.buy(next, str(args.get("vendor", "")), int(args.get("design", -1)))
+			if not error.is_empty():
+				return _fail(error)
+			_auto_merge(next)
+		"claim":
+			if not args.get("quest") is int or not Quests.claim(next, args.quest):
+				return _fail("UNAVAILABLE")
+		"allocate_stat":
+			if not Growth.allocate(next.progression, str(args.get("stat", ""))):
+				return _refuse(Growth.caption("INVALID_STAT"))
+		"learn_skill":
+			if not Growth.learn(next.progression, str(args.get("skill", ""))):
+				return _refuse(Growth.caption("INVALID_SKILL"))
+		"equip_skill":
+			if not args.get("slot") is int or not args.get("skill") is String or not Growth.equip(next.progression, args.slot, args.skill):
+				return _refuse(Growth.caption("INVALID_LOADOUT"))
 		_:
 			return false
 	if next.bag.size() > BAG_SIZE:
@@ -415,23 +440,13 @@ func _manual_merge(data: Dictionary, ids: Array) -> bool:
 	_fuse(data, materials)
 	return true
 
-func _buy(data: Dictionary, vendor: String) -> bool:
-	if vendor not in ["shop","traveler"]:
-		return _fail("UNAVAILABLE")
-	var traveling := vendor == "traveler"
-	if traveling and not data.traveler.available:
-		return _fail("UNAVAILABLE")
-	if traveling and data.traveler.sold:
-		return _fail("SOLD_OUT")
-	var price := 18 if traveling else 8
-	if data.coins < price:
-		return _fail("LOW_COINS")
-	var rng := _stream(data, "shop")
-	var design: int = data.traveler.region + 1 if traveling else 0
-	data.bag.append(_new_weapon(data, design, 1 if traveling else 0, rng))
-	data.rng.shop = rng.state
-	data.coins -= price
-	if traveling:
-		data.traveler.sold = true
-	_auto_merge(data)
-	return true
+func discover(region: int, difficulty: int, landmark: String) -> bool:
+	var route := _route(region, difficulty)
+	if route < 0 or _data.get("active_route", -1) != route or not Quests.valid_landmark(region, landmark) or _slot.unreadable:
+		return false
+	var next := _begin()
+	if not Quests.record_landmark(next, region, landmark):
+		return true
+	var title := MAP_TEXT.get_message("landmark_" + landmark.get_slice(":", 1))
+	_messages.append(MAP_TEXT.get_message("discovered") % title)
+	return _commit(next)

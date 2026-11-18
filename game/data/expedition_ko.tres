@@ -1,0 +1,16 @@
+[gd_resource type="Translation" format=3]
+
+[resource]
+locale = "ko"
+messages = {
+"FIELD_MINI": "중간보스의 흔적을 발견했다",
+"FIELD_BOSS": "필드보스가 공터에 나타난다",
+"FIELD_TARGET_MINI": "중간보스",
+"FIELD_TARGET_BOSS": "필드보스",
+"FIELD_COMBAT_RETURN": "전투가 끝나면 표석으로 귀환할 수 있습니다",
+"FIELD_NEARBY": "마차나 표석, 마을 주민에게 가까이 다가가세요",
+"FIELD_LOOT": "전리품",
+"SAVE_RETRY_TITLE": "저장 파일을 확인할 수 없습니다",
+"SAVE_SLOT_BUSY": "다른 게임 창에서 이 저장 슬롯을 사용 중입니다. 그 창을 닫은 뒤 다시 시도하세요.",
+"SAVE_RETRY_ACTION": "다시 시도"
+}

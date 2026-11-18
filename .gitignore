@@ -1,0 +1,11 @@
+game/.godot/
+game/.mcp/
+art/**/*.blend[0-9]
+*.tmp
+desktop.ini
+__pycache__/
+*.pyc
+/dist/
+/.tools/
+/game/override.cfg
+/game/export_credentials.cfg

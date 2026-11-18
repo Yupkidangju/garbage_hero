@@ -1,0 +1,35 @@
+[gd_resource type="Translation" format=3]
+
+[resource]
+locale = "ko"
+messages = {
+"DESIGN_0": "고철검",
+"DESIGN_1": "가시갈퀴검",
+"DESIGN_2": "유리톱날",
+"DESIGN_3": "종추검",
+"DESIGN_4": "갈대낫",
+"DESIGN_5": "서리톱",
+"DESIGN_6": "도가니칼",
+"GRADE_0": "쓰레기",
+"GRADE_1": "일반",
+"GRADE_2": "좋음",
+"GRADE_3": "매우좋음",
+"GRADE_4": "명품",
+"GRADE_5": "전설",
+"GRADE_6": "신화급",
+"BAG_FULL": "가방이 가득 찼습니다.",
+"CHEST_FULL": "창고가 가득 찼습니다.",
+"LOW_COINS": "코인이 부족합니다.",
+"UNAVAILABLE": "지금은 이용할 수 없습니다.",
+"PROTECTED": "장착하거나 잠근 무기는 판매할 수 없습니다.",
+"INVALID_MERGE": "잠기지 않은 같은 도안·등급의 재료 세 자루를 고르세요.",
+"MERGED": "%s 세 자루를 합성해 %s %s 획득! 공격력 %d · 치명타 %d%%",
+"UNLOCK_SPIN": "새 기술 · E 고철 회오리",
+"FIRST_CLEAR": "필드 첫 승리! 마차에 다음 노선이 열렸습니다.",
+"ENDING": "마지막 용광로가 멈췄습니다. 모든 노선을 되살린 고물용사의 이야기는 계속됩니다.",
+"SAVE_FAILED": "저장할 수 없습니다. 공간과 쓰기 권한을 확인한 뒤 다시 시도하세요.",
+"LOAD_FAILED": "저장 파일을 읽을 수 없습니다. 저장 폴더의 이전 파일을 확인한 뒤 다시 시도하세요.",
+"RECOVERED": "이전 정상 저장본에서 모험을 복원했습니다.",
+"PICKED": "%s %s 획득",
+"SOLD_OUT": "이동상인의 이번 방문 재고가 소진됐습니다."
+}

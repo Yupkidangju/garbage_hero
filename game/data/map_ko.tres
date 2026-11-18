@@ -1,0 +1,13 @@
+[gd_resource type="Translation" format=3]
+
+[resource]
+locale = "ko"
+messages = {
+&"you": "현재 위치",
+&"places": "지도 표식",
+&"way": "탐방로",
+&"scale": "%d m",
+&"direction": "화면 위쪽",
+&"pending": "출현 예정",
+&"distance": "%d m"
+}

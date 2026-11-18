@@ -1,0 +1,12 @@
+* text=auto
+*.cmd text eol=crlf
+*.yml text eol=lf
+*.py text eol=lf
+*.blend binary
+*.glb binary
+*.png binary
+*.webp binary
+*.mp4 binary
+*.wav binary
+*.ttf binary
+*.zip binary

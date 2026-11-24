@@ -1,0 +1,2 @@
+bb7db374ccda6d0f283efedaf879a0f1cb57532b7d5db47f1b9c55188e1bcb82  GarbageHero-v0.3.0-windows-x86_64.zip
+4f0abb3cde0180575b76eda0b20bf6625a5c341e3f2710d6644780f593b55b09  GarbageHero-v0.3.0-linux-x86_64.tar.gz

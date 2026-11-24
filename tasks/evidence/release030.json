@@ -1,0 +1,55 @@
+{
+  "release_url": "https://github.com/Yupkidangju/garbage_hero/releases/tag/v0.3.0",
+  "release_id": 456586464,
+  "tag": "v0.3.0",
+  "commit": "d69eb6eb78bb3f746ace8a793fd4a285c91f3385",
+  "draft": false,
+  "prerelease": false,
+  "public_repository": true,
+  "latest": true,
+  "published_at": "2026-11-24T10:11:13Z",
+  "assets": {
+    "GarbageHero-v0.3.0-windows-x86_64.zip": {
+      "sha256": "bb7db374ccda6d0f283efedaf879a0f1cb57532b7d5db47f1b9c55188e1bcb82",
+      "bytes": 106081802,
+      "public_download": true,
+      "manifest_match": true,
+      "github_digest_match": true,
+      "url": "https://github.com/Yupkidangju/garbage_hero/releases/download/v0.3.0/GarbageHero-v0.3.0-windows-x86_64.zip"
+    },
+    "GarbageHero-v0.3.0-linux-x86_64.tar.gz": {
+      "sha256": "4f0abb3cde0180575b76eda0b20bf6625a5c341e3f2710d6644780f593b55b09",
+      "bytes": 96268633,
+      "public_download": true,
+      "manifest_match": true,
+      "github_digest_match": true,
+      "url": "https://github.com/Yupkidangju/garbage_hero/releases/download/v0.3.0/GarbageHero-v0.3.0-linux-x86_64.tar.gz"
+    }
+  },
+  "ci": {
+    "main": "https://github.com/Yupkidangju/garbage_hero/actions/runs/45371639005",
+    "tag": "https://github.com/Yupkidangju/garbage_hero/actions/runs/45371964444"
+  },
+  "smoke": {
+    "windows": {
+      "target": "windows",
+      "passed": true,
+      "frames": 120,
+      "mode": "headless unpacked release executable",
+      "save_check": "GH01 header and SHA256 of saved body",
+      "duration_seconds": 1.531,
+      "checked_at": "2026-11-24T10:12:50.327479+00:00",
+      "host": "Windows"
+    },
+    "linux": {
+      "target": "linux",
+      "passed": true,
+      "frames": 120,
+      "mode": "headless unpacked release executable",
+      "save_check": "GH01 header and SHA256 of saved body",
+      "duration_seconds": 2.149,
+      "checked_at": "2026-11-24T10:12:55.594490+00:00",
+      "host": "WSL Ubuntu Linux"
+    }
+  }
+}

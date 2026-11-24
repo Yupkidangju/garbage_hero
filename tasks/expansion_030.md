@@ -15,7 +15,7 @@
 
 최종 사용자 성능 게이트는 같은 시험 로직·41체·Forward+·1080p·30초 예열·120초 조건을 **실제 release 템플릿으로 내보낸 실행 파일**에서 측정한다. 편집기의 debug 기능이 켜진 수치는 개발 진단으로 함께 보존한다. 공식 release 템플릿이 외부 script/path override를 제한하므로 공통 실행기 runtime_benchmark.gd를 포함하고, 일반 시작 씬에서 `-- --benchmark`를 명시했을 때만 임시 저장의 준비된 장면을 만든다. 편집기용 tests/field_performance.gd도 같은 실행기를 사용한다. 배포 빌드는 실제 .pck의 모델·UI·전투를 실행하고 결과 파일에 debug 여부·41체 유지·해상도·시간·공격 신호를 기록한다.
 
-- [ ] 배포 · 로컬 두 플랫폼 패키지와 실행, main푸시 CI 통과→v0.3.0태그 CI/CD 성공→공개 릴리즈 두 빌드·SHA256 내려받기 및 Windows/WSL Linux 기동·저장 확인.
+- [x] 배포 · 로컬 두 플랫폼 패키지와 실행, main푸시 CI 통과→v0.3.0태그 CI/CD 성공→공개 릴리즈 두 빌드·SHA256 내려받기 및 Windows/WSL Linux 기동·저장 확인.
 
 ### 세계 구현 단위
 
@@ -187,3 +187,18 @@ Windows ZIP·Linux tar.gz를 로컬 빌드하고 각각 Windows·WSL Ubuntu에�
 UI의 네이티브 캡처는 준비된 격리 상태다. 전체 회귀 중 UI030 종료 대기가 가상시간 감시기에 걸린 것은 테스트 종료 순서 문제였다. 벽시계 감시와 process_frame 종료 대기로 수정한 최종 전체 실행은 오류0건이었다. 자연 원정에는 준비 자금이나 레벨을 주입하지 않았다.
 
 독립 지적(무기 필터·보물 소지역·근접 첫 표적 관통·일시정지 점수)은 원래 재현 경로로 수정 후 통과했다. 성능 파동의 기하/재질/캐시/물가, 기본 실행·저장 격리 검토도 통과했다. 남은 배포 단위는 main/tag의 두 OS CI/CD와 공개 파일 검증이다.
+
+## 공개 릴리즈 최종 판정 · 2026-11-24 KST
+
+구현 커밋 `d69eb6eb78bb3f746ace8a793fd4a285c91f3385`를 main에 푸시한 [CI 45371639005](https://github.com/Yupkidangju/garbage_hero/actions/runs/45371639005)에서 Windows·Linux의 전체 회귀, 내보내기, 압축 해제 후 실행·저장 검사가 모두 성공했다. 같은 커밋의 `v0.3.0` 태그 [CI/CD 45371964444](https://github.com/Yupkidangju/garbage_hero/actions/runs/45371964444)도 두 빌드와 Publish GitHub Release가 모두 성공했다. [원본 작업 상태](evidence/ci030-release.json)
+
+[Garbage Hero v0.3.0](https://github.com/Yupkidangju/garbage_hero/releases/tag/v0.3.0)은 public 저장소의 최신 정식 공개 릴리즈다. Windows ZIP 106,081,802바이트, Linux tar.gz 96,268,633바이트와 SHA256SUMS.txt가 게시됐다. 인증 헤더 없이 공개 다운로드 URL에서 세 파일을 직접 내려받았으며, 두 압축 파일의 SHA-256이 목록과 GitHub asset digest에 각각 일치했다.
+
+| 패키지 | SHA-256 |
+| --- | --- |
+| Windows x86_64 ZIP | `bb7db374ccda6d0f283efedaf879a0f1cb57532b7d5db47f1b9c55188e1bcb82` |
+| Linux x86_64 tar.gz | `4f0abb3cde0180575b76eda0b20bf6625a5c341e3f2710d6644780f593b55b09` |
+
+다운로드한 Windows 파일은 Windows에서, Linux 파일은 WSL Ubuntu에서 `scripts.build.smoke()`로 별도 임시 디렉터리에 풀었다. 두 실제 release 실행 파일의 메인 씬120프레임과 새 슬롯의 GH01 헤더·본문 SHA-256을 확인했다. 기동 검사는 headless이며, 앞선 Windows GPU 성능·UI 캡처와 범위를 구분한다. [릴리즈·해시·기동 결과](evidence/release030.json) · [Windows 로그](evidence/release030-windows.log) · [Linux 로그](evidence/release030-linux.log) · [게시된 해시 목록](evidence/release030-SHA256SUMS.txt)
+
+전체 목표의 필수 완료 조건은 통과했다. 이 마지막 문서·증거 반영은 릴리즈 태그 이후의 문서 전용 커밋으로 남기며 이미 게시한 태그나 패키지를 교체하지 않는다. 사람의24노선 완주·밸런스 평가와 Linux 그래픽 드라이버별 성능은 미측정 범위다.

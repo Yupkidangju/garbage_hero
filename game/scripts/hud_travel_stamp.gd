@@ -10,6 +10,7 @@ func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_IGNORE
 	clip_contents = true
 	custom_minimum_size.y = 116
+	resized.connect(queue_redraw)
 
 func _shape(coords: Array, paint: Color) -> void:
 	var points := PackedVector2Array()
@@ -19,6 +20,15 @@ func _shape(coords: Array, paint: Color) -> void:
 
 func _draw() -> void:
 	if size.x<1: return
+	var painting := S.region_art(region)
+	if painting:
+		var source := Vector2(painting.get_size())
+		var extent := source.x*size.y/size.x
+		var crop := Rect2(0,maxf(0,(source.y-extent)*0.5),source.x,minf(source.y,extent))
+		draw_texture_rect_region(painting,Rect2(Vector2.ZERO,size),crop)
+		draw_rect(Rect2(Vector2.ZERO,size),Color(S.DEEP,0.1))
+		draw_rect(Rect2(Vector2.ZERO,size),S.BRASS,false,1)
+		return
 	var sky: Color = SKY[region]
 	var land: Color = LAND[region]
 	draw_set_transform(Vector2.ZERO,0,size/Vector2(400,116))

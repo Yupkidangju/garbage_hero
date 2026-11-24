@@ -25,7 +25,11 @@ var terrain:Node
 var flat_surface := false
 var floor_offset := 0.0
 var sampled_heights := {}
+var dry_samples:Dictionary={}
+var shoreline:=false
 static var projectiles := {}
+const FLAT_CACHE_LIMIT:=128
+static var flat_geometry:Dictionary={}
 
 func configure(enemy, origin:Vector3, dir:Vector3, form:String, extent:float, breadth:float,
 		aperture:float, delay:float, duration:float, theme:String, extra:String="") -> void:
@@ -49,6 +53,15 @@ func _ready() -> void:
 		if shape == "lane":
 			bounds = Rect2(-width*0.5,-length,width,length)
 		flat_surface = terrain.flat_below(global_transform,bounds)
+		if terrain.has_method("surface_at"):
+			# 바닥이 평평해도 강을 가로지르는 예고는 지형별로 잘라야 한다.
+			for row in range(0,ceili(bounds.size.y/1.5)+1):
+				for col in range(0,ceili(bounds.size.x/1.5)+1):
+					var point:=bounds.position+Vector2(minf(bounds.size.x,col*1.5),minf(bounds.size.y,row*1.5))
+					if not dry_at(Vector3(point.x,0,point.y)):
+						shoreline=true
+						break
+				if shoreline: break
 		if flat_surface:
 			floor_offset = terrain.ground_at(global_position) + .082 - global_position.y
 	add_child(carpet)
@@ -66,6 +79,11 @@ func _ready() -> void:
 		cluster.transform_format = MultiMesh.TRANSFORM_3D
 		cluster.mesh = projectile_mesh(style)
 		var points := impact_points()
+		if shoreline:
+			var dry:=PackedVector3Array()
+			for point in points:
+				if dry_at(point): dry.append(point)
+			points=dry
 		cluster.instance_count = points.size()
 		for n in points.size():
 			var size := .63+.24*fmod(n*.73,1.)
@@ -148,12 +166,33 @@ func on_ground(point:Vector3) -> Vector3:
 	point.y=sampled_heights[key]
 	return point
 
+func dry_at(point:Vector3) -> bool:
+	if not terrain or not terrain.has_method("surface_at"):
+		return true
+	var key:=Vector2i(roundi(point.x*64),roundi(point.z*64))
+	if not dry_samples.has(key):
+		dry_samples[key]=terrain.walkable_at(to_global(point)) if terrain.has_method("walkable_at") else bool(terrain.surface_at(to_global(point)).walkable)
+	return dry_samples[key]
+
+func triangle(a:Vector3,b:Vector3,c:Vector3,color:Color) -> void:
+	if shoreline and (not dry_at(a) or not dry_at(b) or not dry_at(c) or not dry_at((a+b+c)/3.)):
+		return
+	stroke_points.append_array(PackedVector3Array([a,b,c]))
+	for n in 3: stroke_colors.append(color)
+
 func quad(a:Vector3,b:Vector3,c:Vector3,d:Vector3,color:Color) -> void:
 	var cols := 1
 	var rows := 1
-	if terrain and not flat_surface:
+	if terrain and (not flat_surface or shoreline):
 		cols = maxi(1,ceili(maxf(a.distance_to(b),d.distance_to(c))/.48))
 		rows = maxi(1,ceili(maxf(a.distance_to(d),b.distance_to(c))/.48))
+		# 작은 도형은 기존 격자가 더 싸다. 큰 면만 증명해 지형 조회·분할을 줄인다.
+		if not shoreline and cols*rows>=8:
+			var lo:=Vector2(minf(minf(a.x,b.x),minf(c.x,d.x)),minf(minf(a.z,b.z),minf(c.z,d.z)))
+			var hi:=Vector2(maxf(maxf(a.x,b.x),maxf(c.x,d.x)),maxf(maxf(a.z,b.z),maxf(c.z,d.z)))
+			if terrain.flat_below(global_transform,Rect2(lo,hi-lo)):
+				cols=1
+				rows=1
 	var previous := PackedVector3Array()
 	previous.resize(cols + 1)
 	for y in rows+1:
@@ -166,14 +205,27 @@ func quad(a:Vector3,b:Vector3,c:Vector3,d:Vector3,color:Color) -> void:
 			var point := on_ground(left.lerp(right,float(x)/cols))
 			var above := previous[x]
 			if x > 0 and y > 0:
-				stroke_points.append_array(PackedVector3Array([prior,above,point,prior,point,last]))
-				for vertex in 6:
-					stroke_colors.append(color)
+				triangle(prior,above,point,color)
+				triangle(prior,point,last,color)
 			previous[x] = point
 			last = point
 			prior = above
 
 func paint() -> void:
+	area_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	area_mat.vertex_color_use_as_albedo = true
+	area_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	area_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	carpet.material_override=area_mat
+	var cache_key:Array=[]
+	if flat_surface and not shoreline:
+		cache_key=[shape,length,width,angle,effect,floor_offset]
+		if flat_geometry.has(cache_key):
+			var shared:Mesh=flat_geometry[cache_key]
+			flat_geometry.erase(cache_key)
+			flat_geometry[cache_key]=shared
+			carpet.mesh=shared
+			return
 	var fill := Color(.95,.29,.11,.22)
 	var edge := Color(1.,.58,.26,.87)
 	if effect in ["haste","heal"]:
@@ -206,19 +258,24 @@ func paint() -> void:
 			if n%3==1:
 				quad(a*length*.74,a*length*.91,b*length*.82,b*length*.79,edge)
 	var arrays := []
+	if stroke_points.is_empty():
+		queue_free()
+		return
 	arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX] = stroke_points
 	arrays[Mesh.ARRAY_COLOR] = stroke_colors
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
-	area_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	area_mat.vertex_color_use_as_albedo = true
-	area_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	area_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	mesh.surface_set_material(0,area_mat)
 	carpet.mesh = mesh
+	if not cache_key.is_empty():
+		if flat_geometry.size()>=FLAT_CACHE_LIMIT:
+			flat_geometry.erase(flat_geometry.keys()[0])
+		flat_geometry[cache_key]=mesh
 
 func contains_point(point:Vector3, fraction_from:=0., fraction_to:=1.) -> bool:
+	if terrain and terrain.has_method("surface_at"):
+		var walkable:bool=terrain.walkable_at(point) if terrain.has_method("walkable_at") else bool(terrain.surface_at(point).walkable)
+		if not walkable: return false
 	var offset := to_local(point)
 	offset.y = 0.
 	if shape=="lane":

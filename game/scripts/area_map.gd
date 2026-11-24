@@ -35,6 +35,7 @@ static func snapshot(world, player, director) -> Dictionary:
 			continue
 		points[key] = _flat(inverse * services[key])
 	data["points"] = points
+	data["opened_caches"] = director.state.get("opened_caches",[]) if is_instance_valid(director) else []
 	if is_instance_valid(director) and not str(director.boss_key).is_empty():
 		var alive := is_instance_valid(director.boss)
 		var pos: Vector3 = director.boss.global_position if alive else world.boss_point()
@@ -151,6 +152,7 @@ func _draw() -> void:
 	_draw_terrain(chart)
 	_draw_footprints(chart)
 	_draw_grid(chart)
+	_draw_exploration(chart)
 	if map_data.has("arena"):
 		_mark(_at(map_data.arena,chart),"guardian",9.0)
 	for i in map_data.landmarks.size():
@@ -170,6 +172,9 @@ func _at(local: Vector2, chart: Rect2) -> Vector2:
 
 
 func _draw_terrain(chart: Rect2) -> void:
+	if map_data.has("waters"):
+		_draw_water(chart)
+		return
 	var stream: PackedVector2Array = map_data.get("stream",PackedVector2Array())
 	var bounds: Rect2 = map_data.bounds
 	if stream.size()>1:
@@ -190,6 +195,46 @@ func _draw_terrain(chart: Rect2) -> void:
 		var arm := Vector2.RIGHT.rotated(-Height.BRIDGE_YAW)*Height.BRIDGE_HALF_LENGTH*chart.size.x/bounds.size.x
 		draw_line(mid-arm,mid+arm,INK,7.0,true)
 		draw_line(mid-arm,mid+arm,PAPER,4.0,true)
+
+func _draw_water(chart: Rect2) -> void:
+	# 월드의 통행 판정과 같은 수면/횡단 사각형을 사용한다.
+	for kind in ["swamp","shallow","deep"]:
+		for water in map_data.get("waters",[]):
+			if water.kind!=kind: continue
+			var local: Rect2 = water.rect
+			var bounds: Rect2 = map_data.bounds
+			local = local.intersection(bounds)
+			if not local.has_area(): continue
+			var area := Rect2(_at(local.position,chart),local.size/bounds.size*chart.size)
+			var color := Color("#284c5b") if kind=="deep" else (Color("#8cb8b2") if kind=="shallow" else Color("#5a7961"))
+			draw_rect(area,color)
+			for n in range(1,4):
+				var y := area.position.y+area.size.y*n/4.0
+				draw_line(Vector2(area.position.x+2,y),Vector2(area.end.x-2,y),Color(PAPER,0.18),0.8,true)
+	for crossing in map_data.get("crossings",[]):
+		var center: Vector2 = crossing.pos
+		var half: Vector2 = crossing.half_size
+		var area := Rect2(_at(center-half,chart),half*2/map_data.bounds.size*chart.size)
+		draw_rect(area.grow(1.4),INK)
+		draw_rect(area,PAPER if crossing.kind=="bridge" else Color("#a8c9bd"))
+		if crossing.kind=="bridge":
+			for n in 4:
+				var y := area.position.y+area.size.y*(n+0.5)/4.0
+				draw_line(Vector2(area.position.x,y),Vector2(area.end.x,y),Color(INK,0.5),0.8,true)
+
+func _draw_exploration(chart: Rect2) -> void:
+	var fs := roundi(11*minf(text_scale,1.2))
+	for district in map_data.get("districts",[]):
+		var at := _at(district.pos,chart)
+		var name := str(district.get("name",""))
+		var width := _font.get_string_size(name,HORIZONTAL_ALIGNMENT_LEFT,-1,fs).x+10
+		var left := clampf(at.x-width/2,chart.position.x+2,chart.end.x-width-2)
+		draw_rect(Rect2(left,at.y+12,width,fs+5),Color(INK,0.82))
+		draw_string(_font,Vector2(left+5,at.y+fs+14),name,HORIZONTAL_ALIGNMENT_LEFT,width-10,fs,S.PAPER)
+	for cache in map_data.get("caches",[]):
+		var at := _at(cache.pos,chart)
+		draw_circle(at,7.5,INK,true,-1,true)
+		S.icon(self,"chest",at-Vector2(6,6),12,S.MUTED if cache.id in map_data.get("opened_caches",[]) else S.GOLD)
 
 
 func _draw_grid(chart: Rect2) -> void:
@@ -253,6 +298,15 @@ func _legend(pos: Vector2, region: int) -> void:
 	var fs := roundi(16*text_scale)
 	var row := maxf(29,fs+12)
 	draw_string(_font,pos+Vector2(1,fs+4),title,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(fs*1.16),S.PAPER)
+	var painting := S.region_art(region) if region>=0 else null
+	if painting:
+		var width := 60.0*text_scale
+		var height := 29.0*text_scale
+		var stamp := Rect2(size.x-width-12,pos.y+2,width,height)
+		var source := Vector2(painting.get_size())
+		var crop_height := source.x*height/width
+		draw_texture_rect_region(painting,stamp,Rect2(0,(source.y-crop_height)*0.5,source.x,crop_height))
+		draw_rect(stamp,S.BRASS,false,1)
 	pos.y += row+7
 	draw_line(pos,pos+Vector2(minf(size.x-pos.x-8,182*text_scale),0),S.LINE,1)
 	pos.y += row

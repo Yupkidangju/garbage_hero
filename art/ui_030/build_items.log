@@ -1,0 +1,715 @@
+D:\godot\garbagehero\art\ui_030\build_items.py:25: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat.use_nodes = True
+D:\godot\garbagehero\art\ui_030\build_items.py:552: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world=bpy.data.worlds.new('Slate studio ambient');world.use_nodes=True
+INFO Draco is available, use library at C:\Program Files\Blender Foundation\Blender 5.2\5.2\scripts\addons_core\io_scene_gltf2\bf_intern_draco_bridge.dll
+INFO MeshOptimizer is available, use library at C:\Program Files\Blender Foundation\Blender 5.2\5.2\scripts\addons_core\io_scene_gltf2\bf_intern_meshopt_bridge.dll
+17:04:08 | INFO: Starting glTF 2.0 export
+17:04:08 | INFO: Extracting primitive: Item_000_notched_cleaver
+17:04:08 | INFO: Primitives created: 7
+17:04:08 | INFO: Finished glTF 2.0 export in 0.18300223350524902 s
+
+EXPORTED_ITEM 0 sword
+17:04:08 | INFO: Starting glTF 2.0 export
+17:04:08 | INFO: Extracting primitive: Item_001_thorn_hook
+17:04:08 | INFO: Primitives created: 4
+17:04:08 | INFO: Finished glTF 2.0 export in 0.0699472427368164 s
+
+EXPORTED_ITEM 1 sword
+17:04:08 | INFO: Starting glTF 2.0 export
+17:04:08 | INFO: Extracting primitive: Item_029_starwheel_longsword
+17:04:08 | INFO: Primitives created: 5
+17:04:08 | INFO: Finished glTF 2.0 export in 0.08075094223022461 s
+
+EXPORTED_ITEM 29 sword
+17:04:08 | INFO: Starting glTF 2.0 export
+17:04:08 | INFO: Extracting primitive: Item_052_bark_lamellar
+17:04:08 | INFO: Primitives created: 5
+17:04:08 | INFO: Finished glTF 2.0 export in 0.08184385299682617 s
+
+EXPORTED_ITEM 52 armor
+17:04:08 | INFO: Starting glTF 2.0 export
+17:04:08 | INFO: Extracting primitive: Item_058_pinecone_buckler
+17:04:08 | INFO: Primitives created: 4
+17:04:08 | INFO: Finished glTF 2.0 export in 0.05371379852294922 s
+
+EXPORTED_ITEM 58 shield
+17:04:08 | INFO: Starting glTF 2.0 export
+17:04:08 | INFO: Extracting primitive: Item_064_sand_sail_boots
+17:04:08 | INFO: Primitives created: 5
+17:04:08 | INFO: Finished glTF 2.0 export in 0.05435943603515625 s
+
+EXPORTED_ITEM 64 boots
+17:04:08 | INFO: Starting glTF 2.0 export
+17:04:09 | INFO: Extracting primitive: Item_070_acorn_watchcap
+17:04:09 | INFO: Primitives created: 3
+17:04:09 | INFO: Finished glTF 2.0 export in 0.031131267547607422 s
+
+EXPORTED_ITEM 70 helmet
+17:04:09 | INFO: Starting glTF 2.0 export
+17:04:09 | INFO: Extracting primitive: Item_076_pine_knot_ring
+17:04:09 | INFO: Primitives created: 4
+17:04:09 | INFO: Finished glTF 2.0 export in 0.046173810958862305 s
+
+EXPORTED_ITEM 76 ring
+17:04:09 | INFO: Starting glTF 2.0 export
+17:04:09 | INFO: Extracting primitive: Item_082_acorn_whistle
+17:04:09 | INFO: Primitives created: 5
+17:04:09 | INFO: Finished glTF 2.0 export in 0.03856682777404785 s
+
+EXPORTED_ITEM 82 necklace
+17:04:09 | INFO: Starting glTF 2.0 export
+17:04:09 | INFO: Extracting primitive: Item_002_glass_saw
+17:04:09 | INFO: Primitives created: 5
+17:04:09 | INFO: Finished glTF 2.0 export in 0.06187796592712402 s
+
+EXPORTED_ITEM 2 sword
+17:04:09 | INFO: Starting glTF 2.0 export
+17:04:09 | INFO: Extracting primitive: Item_003_bell_counterweight
+17:04:09 | INFO: Primitives created: 6
+17:04:09 | INFO: Finished glTF 2.0 export in 0.12090468406677246 s
+
+EXPORTED_ITEM 3 sword
+17:04:09 | INFO: Starting glTF 2.0 export
+17:04:09 | INFO: Extracting primitive: Item_004_reed_sickle
+17:04:09 | INFO: Primitives created: 5
+17:04:09 | INFO: Finished glTF 2.0 export in 0.09045648574829102 s
+
+EXPORTED_ITEM 4 sword
+17:04:09 | INFO: Starting glTF 2.0 export
+17:04:09 | INFO: Extracting primitive: Item_005_frost_saw
+17:04:09 | INFO: Primitives created: 6
+17:04:09 | INFO: Finished glTF 2.0 export in 0.14324331283569336 s
+
+EXPORTED_ITEM 5 sword
+17:04:09 | INFO: Starting glTF 2.0 export
+17:04:09 | INFO: Extracting primitive: Item_006_crucible_falchion
+17:04:09 | INFO: Primitives created: 7
+17:04:09 | INFO: Finished glTF 2.0 export in 0.05247378349304199 s
+
+EXPORTED_ITEM 6 sword
+17:04:10 | INFO: Starting glTF 2.0 export
+17:04:10 | INFO: Extracting primitive: Item_007_laundry_flatbow
+17:04:10 | INFO: Primitives created: 7
+17:04:10 | INFO: Finished glTF 2.0 export in 0.07123017311096191 s
+
+EXPORTED_ITEM 7 bow
+17:04:10 | INFO: Starting glTF 2.0 export
+17:04:10 | INFO: Extracting primitive: Item_008_lightbulb_crook
+17:04:10 | INFO: Primitives created: 5
+17:04:10 | INFO: Finished glTF 2.0 export in 0.06477808952331543 s
+
+EXPORTED_ITEM 8 staff
+17:04:10 | INFO: Starting glTF 2.0 export
+17:04:10 | INFO: Extracting primitive: Item_009_fork_rake
+17:04:10 | INFO: Primitives created: 4
+17:04:10 | INFO: Finished glTF 2.0 export in 0.06017565727233887 s
+
+EXPORTED_ITEM 9 spear
+17:04:10 | INFO: Starting glTF 2.0 export
+17:04:10 | INFO: Extracting primitive: Item_010_hex_nut_club
+17:04:10 | INFO: Primitives created: 5
+17:04:10 | INFO: Finished glTF 2.0 export in 0.22026705741882324 s
+
+EXPORTED_ITEM 10 mace
+17:04:10 | INFO: Starting glTF 2.0 export
+17:04:10 | INFO: Extracting primitive: Item_011_tin_apron
+17:04:10 | INFO: Primitives created: 5
+17:04:10 | INFO: Finished glTF 2.0 export in 0.057135820388793945 s
+
+EXPORTED_ITEM 11 armor
+17:04:10 | INFO: Starting glTF 2.0 export
+17:04:10 | INFO: Extracting primitive: Item_012_pot_lid
+17:04:10 | INFO: Primitives created: 4
+17:04:10 | INFO: Finished glTF 2.0 export in 0.07195758819580078 s
+
+EXPORTED_ITEM 12 shield
+17:04:10 | INFO: Starting glTF 2.0 export
+17:04:10 | INFO: Extracting primitive: Item_013_patched_workboots
+17:04:10 | INFO: Primitives created: 6
+17:04:10 | INFO: Finished glTF 2.0 export in 0.029296159744262695 s
+
+EXPORTED_ITEM 13 boots
+17:04:10 | INFO: Starting glTF 2.0 export
+17:04:10 | INFO: Extracting primitive: Item_014_kettle_helm
+17:04:10 | INFO: Primitives created: 3
+17:04:10 | INFO: Finished glTF 2.0 export in 0.032210350036621094 s
+
+EXPORTED_ITEM 14 helmet
+17:04:10 | INFO: Starting glTF 2.0 export
+17:04:10 | INFO: Extracting primitive: Item_015_wire_loop
+17:04:10 | INFO: Primitives created: 3
+17:04:10 | INFO: Finished glTF 2.0 export in 0.032820701599121094 s
+
+EXPORTED_ITEM 15 ring
+17:04:10 | INFO: Starting glTF 2.0 export
+17:04:10 | INFO: Extracting primitive: Item_016_pulley_pendant
+17:04:10 | INFO: Primitives created: 5
+17:04:10 | INFO: Finished glTF 2.0 export in 0.03193545341491699 s
+
+EXPORTED_ITEM 16 necklace
+17:04:11 | INFO: Starting glTF 2.0 export
+17:04:11 | INFO: Extracting primitive: Item_017_pine_recurve
+17:04:11 | INFO: Primitives created: 6
+17:04:11 | INFO: Finished glTF 2.0 export in 0.2134690284729004 s
+
+EXPORTED_ITEM 17 bow
+17:04:11 | INFO: Starting glTF 2.0 export
+17:04:11 | INFO: Extracting primitive: Item_018_glass_sun
+17:04:11 | INFO: Primitives created: 4
+17:04:11 | INFO: Finished glTF 2.0 export in 0.09541749954223633 s
+
+EXPORTED_ITEM 18 staff
+17:04:11 | INFO: Starting glTF 2.0 export
+17:04:11 | INFO: Extracting primitive: Item_019_funeral_bell
+17:04:11 | INFO: Primitives created: 5
+17:04:11 | INFO: Finished glTF 2.0 export in 0.04429769515991211 s
+
+EXPORTED_ITEM 19 mace
+17:04:11 | INFO: Starting glTF 2.0 export
+17:04:11 | INFO: Extracting primitive: Item_020_reed_lance
+17:04:11 | INFO: Primitives created: 6
+17:04:11 | INFO: Finished glTF 2.0 export in 0.17603230476379395 s
+
+EXPORTED_ITEM 20 spear
+17:04:11 | INFO: Starting glTF 2.0 export
+17:04:11 | INFO: Extracting primitive: Item_021_frost_compound
+17:04:11 | INFO: Primitives created: 6
+17:04:11 | INFO: Finished glTF 2.0 export in 0.07425832748413086 s
+
+EXPORTED_ITEM 21 bow
+17:04:11 | INFO: Starting glTF 2.0 export
+17:04:11 | INFO: Extracting primitive: Item_022_ember_anvil
+17:04:11 | INFO: Primitives created: 5
+17:04:11 | INFO: Finished glTF 2.0 export in 0.05174136161804199 s
+
+EXPORTED_ITEM 22 mace
+17:04:11 | INFO: Starting glTF 2.0 export
+17:04:11 | INFO: Extracting primitive: Item_023_pineleaf_runners
+17:04:11 | INFO: Primitives created: 5
+17:04:11 | INFO: Finished glTF 2.0 export in 0.04340386390686035 s
+
+EXPORTED_ITEM 23 boots
+17:04:11 | INFO: Starting glTF 2.0 export
+17:04:11 | INFO: Extracting primitive: Item_024_scorpion_ring
+17:04:11 | INFO: Primitives created: 2
+17:04:12 | INFO: Finished glTF 2.0 export in 0.05772256851196289 s
+
+EXPORTED_ITEM 24 ring
+17:04:12 | INFO: Starting glTF 2.0 export
+17:04:12 | INFO: Extracting primitive: Item_025_bellkeeper_helm
+17:04:12 | INFO: Primitives created: 3
+17:04:12 | INFO: Finished glTF 2.0 export in 0.06464099884033203 s
+
+EXPORTED_ITEM 25 helmet
+17:04:12 | INFO: Starting glTF 2.0 export
+17:04:12 | INFO: Extracting primitive: Item_026_lily_seed_pendant
+17:04:12 | INFO: Primitives created: 5
+17:04:12 | INFO: Finished glTF 2.0 export in 0.0594785213470459 s
+
+EXPORTED_ITEM 26 necklace
+17:04:12 | INFO: Starting glTF 2.0 export
+17:04:12 | INFO: Extracting primitive: Item_027_patched_parka
+17:04:12 | INFO: Primitives created: 5
+17:04:12 | INFO: Finished glTF 2.0 export in 0.05992007255554199 s
+
+EXPORTED_ITEM 27 armor
+17:04:12 | INFO: Starting glTF 2.0 export
+17:04:12 | INFO: Extracting primitive: Item_028_slag_tower
+17:04:12 | INFO: Primitives created: 4
+17:04:12 | INFO: Finished glTF 2.0 export in 0.04276609420776367 s
+
+EXPORTED_ITEM 28 shield
+17:04:12 | INFO: Starting glTF 2.0 export
+17:04:12 | INFO: Extracting primitive: Item_030_hourglass_longbow
+17:04:12 | INFO: Primitives created: 6
+17:04:12 | INFO: Finished glTF 2.0 export in 0.05135393142700195 s
+
+EXPORTED_ITEM 30 bow
+17:04:12 | INFO: Starting glTF 2.0 export
+17:04:12 | INFO: Extracting primitive: Item_031_bell_shortbow
+17:04:12 | INFO: Primitives created: 7
+17:04:12 | INFO: Finished glTF 2.0 export in 0.21123766899108887 s
+
+EXPORTED_ITEM 31 bow
+17:04:12 | INFO: Starting glTF 2.0 export
+17:04:12 | INFO: Extracting primitive: Item_032_lily_foldingbow
+17:04:12 | INFO: Primitives created: 6
+17:04:12 | INFO: Finished glTF 2.0 export in 0.09679961204528809 s
+
+EXPORTED_ITEM 32 bow
+17:04:12 | INFO: Starting glTF 2.0 export
+17:04:13 | INFO: Extracting primitive: Item_033_bellows_pulleybow
+17:04:13 | INFO: Primitives created: 7
+17:04:13 | INFO: Finished glTF 2.0 export in 0.04950976371765137 s
+
+EXPORTED_ITEM 33 bow
+17:04:13 | INFO: Starting glTF 2.0 export
+17:04:13 | INFO: Extracting primitive: Item_034_comet_orbitbow
+17:04:13 | INFO: Primitives created: 6
+17:04:13 | INFO: Finished glTF 2.0 export in 0.09082412719726562 s
+
+EXPORTED_ITEM 34 bow
+17:04:13 | INFO: Starting glTF 2.0 export
+17:04:13 | INFO: Extracting primitive: Item_035_acorn_lantern
+17:04:13 | INFO: Primitives created: 4
+17:04:13 | INFO: Finished glTF 2.0 export in 0.12134337425231934 s
+
+EXPORTED_ITEM 35 staff
+17:04:13 | INFO: Starting glTF 2.0 export
+17:04:13 | INFO: Extracting primitive: Item_036_funeral_candelabrum
+17:04:13 | INFO: Primitives created: 5
+17:04:13 | INFO: Finished glTF 2.0 export in 0.07461667060852051 s
+
+EXPORTED_ITEM 36 staff
+17:04:13 | INFO: Starting glTF 2.0 export
+17:04:13 | INFO: Extracting primitive: Item_037_lily_sluice
+17:04:13 | INFO: Primitives created: 7
+17:04:13 | INFO: Finished glTF 2.0 export in 0.09425020217895508 s
+
+EXPORTED_ITEM 37 staff
+17:04:13 | INFO: Starting glTF 2.0 export
+17:04:13 | INFO: Extracting primitive: Item_038_icicle_baton
+17:04:13 | INFO: Primitives created: 5
+17:04:13 | INFO: Finished glTF 2.0 export in 0.053795576095581055 s
+
+EXPORTED_ITEM 38 staff
+17:04:13 | INFO: Starting glTF 2.0 export
+17:04:13 | INFO: Extracting primitive: Item_039_furnace_blower
+17:04:13 | INFO: Primitives created: 6
+17:04:13 | INFO: Finished glTF 2.0 export in 0.11582016944885254 s
+
+EXPORTED_ITEM 39 staff
+17:04:13 | INFO: Starting glTF 2.0 export
+17:04:13 | INFO: Extracting primitive: Item_040_armillary_compass
+17:04:14 | INFO: Primitives created: 5
+17:04:14 | INFO: Finished glTF 2.0 export in 0.044120073318481445 s
+
+EXPORTED_ITEM 40 staff
+17:04:14 | INFO: Starting glTF 2.0 export
+17:04:14 | INFO: Extracting primitive: Item_041_pine_fork
+17:04:14 | INFO: Primitives created: 4
+17:04:14 | INFO: Finished glTF 2.0 export in 0.035572052001953125 s
+
+EXPORTED_ITEM 41 spear
+17:04:14 | INFO: Starting glTF 2.0 export
+17:04:14 | INFO: Extracting primitive: Item_042_scorpion_tail
+17:04:14 | INFO: Primitives created: 5
+17:04:14 | INFO: Finished glTF 2.0 export in 0.1777031421661377 s
+
+EXPORTED_ITEM 42 spear
+17:04:14 | INFO: Starting glTF 2.0 export
+17:04:14 | INFO: Extracting primitive: Item_043_tomb_banner
+17:04:14 | INFO: Primitives created: 5
+17:04:14 | INFO: Finished glTF 2.0 export in 0.13794541358947754 s
+
+EXPORTED_ITEM 43 spear
+17:04:14 | INFO: Starting glTF 2.0 export
+17:04:14 | INFO: Extracting primitive: Item_044_goat_horn_pike
+17:04:14 | INFO: Primitives created: 5
+17:04:14 | INFO: Finished glTF 2.0 export in 0.05842947959899902 s
+
+EXPORTED_ITEM 44 spear
+17:04:14 | INFO: Starting glTF 2.0 export
+17:04:14 | INFO: Extracting primitive: Item_045_chimney_awl
+17:04:14 | INFO: Primitives created: 6
+17:04:14 | INFO: Finished glTF 2.0 export in 0.030249595642089844 s
+
+EXPORTED_ITEM 45 spear
+17:04:14 | INFO: Starting glTF 2.0 export
+17:04:14 | INFO: Extracting primitive: Item_046_ford_trident
+17:04:14 | INFO: Primitives created: 5
+17:04:14 | INFO: Finished glTF 2.0 export in 0.10735321044921875 s
+
+EXPORTED_ITEM 46 spear
+17:04:14 | INFO: Starting glTF 2.0 export
+17:04:14 | INFO: Extracting primitive: Item_047_acorn_mallet
+17:04:14 | INFO: Primitives created: 5
+17:04:15 | INFO: Finished glTF 2.0 export in 0.1646132469177246 s
+
+EXPORTED_ITEM 47 mace
+17:04:15 | INFO: Starting glTF 2.0 export
+17:04:15 | INFO: Extracting primitive: Item_048_glass_mortar
+17:04:15 | INFO: Primitives created: 5
+17:04:15 | INFO: Finished glTF 2.0 export in 0.04709029197692871 s
+
+EXPORTED_ITEM 48 mace
+17:04:15 | INFO: Starting glTF 2.0 export
+17:04:15 | INFO: Extracting primitive: Item_049_sluice_cog
+17:04:15 | INFO: Primitives created: 4
+17:04:15 | INFO: Finished glTF 2.0 export in 0.047907352447509766 s
+
+EXPORTED_ITEM 49 mace
+17:04:15 | INFO: Starting glTF 2.0 export
+17:04:15 | INFO: Extracting primitive: Item_050_glacier_pendulum
+17:04:15 | INFO: Primitives created: 4
+17:04:15 | INFO: Finished glTF 2.0 export in 0.126953125 s
+
+EXPORTED_ITEM 50 mace
+17:04:15 | INFO: Starting glTF 2.0 export
+17:04:15 | INFO: Extracting primitive: Item_051_oscillator_hammer
+17:04:15 | INFO: Primitives created: 6
+17:04:15 | INFO: Finished glTF 2.0 export in 0.05789017677307129 s
+
+EXPORTED_ITEM 51 mace
+17:04:15 | INFO: Starting glTF 2.0 export
+17:04:15 | INFO: Extracting primitive: Item_053_sunshade_breastplate
+17:04:15 | INFO: Primitives created: 4
+17:04:15 | INFO: Finished glTF 2.0 export in 0.14203405380249023 s
+
+EXPORTED_ITEM 53 armor
+17:04:15 | INFO: Starting glTF 2.0 export
+17:04:15 | INFO: Extracting primitive: Item_054_tomb_oathplate
+17:04:15 | INFO: Primitives created: 4
+17:04:15 | INFO: Finished glTF 2.0 export in 0.05507159233093262 s
+
+EXPORTED_ITEM 54 armor
+17:04:15 | INFO: Starting glTF 2.0 export
+17:04:15 | INFO: Extracting primitive: Item_055_sluice_scalemail
+17:04:15 | INFO: Primitives created: 3
+17:04:15 | INFO: Finished glTF 2.0 export in 0.042183876037597656 s
+
+EXPORTED_ITEM 55 armor
+17:04:15 | INFO: Starting glTF 2.0 export
+17:04:15 | INFO: Extracting primitive: Item_056_crucible_heatplate
+17:04:15 | INFO: Primitives created: 5
+17:04:15 | INFO: Finished glTF 2.0 export in 0.10246396064758301 s
+
+EXPORTED_ITEM 56 armor
+17:04:15 | INFO: Starting glTF 2.0 export
+17:04:15 | INFO: Extracting primitive: Item_057_engine_heartplate
+17:04:15 | INFO: Primitives created: 5
+17:04:15 | INFO: Finished glTF 2.0 export in 0.03178906440734863 s
+
+EXPORTED_ITEM 57 armor
+17:04:15 | INFO: Starting glTF 2.0 export
+17:04:15 | INFO: Extracting primitive: Item_059_scorpion_kite
+17:04:16 | INFO: Primitives created: 3
+17:04:16 | INFO: Finished glTF 2.0 export in 0.027495622634887695 s
+
+EXPORTED_ITEM 59 shield
+17:04:16 | INFO: Starting glTF 2.0 export
+17:04:16 | INFO: Extracting primitive: Item_060_funeral_cross
+17:04:16 | INFO: Primitives created: 3
+17:04:16 | INFO: Finished glTF 2.0 export in 0.21457409858703613 s
+
+EXPORTED_ITEM 60 shield
+17:04:16 | INFO: Starting glTF 2.0 export
+17:04:16 | INFO: Extracting primitive: Item_061_sluice_crescent
+17:04:16 | INFO: Primitives created: 2
+17:04:16 | INFO: Finished glTF 2.0 export in 0.047235727310180664 s
+
+EXPORTED_ITEM 61 shield
+17:04:16 | INFO: Starting glTF 2.0 export
+17:04:16 | INFO: Extracting primitive: Item_062_frost_hexagon
+17:04:16 | INFO: Primitives created: 3
+17:04:16 | INFO: Finished glTF 2.0 export in 0.13726162910461426 s
+
+EXPORTED_ITEM 62 shield
+17:04:16 | INFO: Starting glTF 2.0 export
+17:04:16 | INFO: Extracting primitive: Item_063_wheel_spoke_guard
+17:04:16 | INFO: Primitives created: 4
+17:04:16 | INFO: Finished glTF 2.0 export in 0.047750234603881836 s
+
+EXPORTED_ITEM 63 shield
+17:04:16 | INFO: Starting glTF 2.0 export
+17:04:16 | INFO: Extracting primitive: Item_065_bell_pilgrim_shoes
+17:04:16 | INFO: Primitives created: 5
+17:04:16 | INFO: Finished glTF 2.0 export in 0.2158825397491455 s
+
+EXPORTED_ITEM 65 boots
+17:04:16 | INFO: Starting glTF 2.0 export
+17:04:16 | INFO: Extracting primitive: Item_066_reed_floatboots
+17:04:16 | INFO: Primitives created: 6
+17:04:16 | INFO: Finished glTF 2.0 export in 0.06385183334350586 s
+
+EXPORTED_ITEM 66 boots
+17:04:16 | INFO: Starting glTF 2.0 export
+17:04:16 | INFO: Extracting primitive: Item_067_icicle_crampons
+17:04:16 | INFO: Primitives created: 7
+17:04:17 | INFO: Finished glTF 2.0 export in 0.10321736335754395 s
+
+EXPORTED_ITEM 67 boots
+17:04:17 | INFO: Starting glTF 2.0 export
+17:04:17 | INFO: Extracting primitive: Item_068_ember_bellows_shoes
+17:04:17 | INFO: Primitives created: 6
+17:04:17 | INFO: Finished glTF 2.0 export in 0.04832315444946289 s
+
+EXPORTED_ITEM 68 boots
+17:04:17 | INFO: Starting glTF 2.0 export
+17:04:17 | INFO: Extracting primitive: Item_069_axle_walking_boots
+17:04:17 | INFO: Primitives created: 6
+17:04:17 | INFO: Finished glTF 2.0 export in 0.14958977699279785 s
+
+EXPORTED_ITEM 69 boots
+17:04:17 | INFO: Starting glTF 2.0 export
+17:04:17 | INFO: Extracting primitive: Item_071_brass_sunhat
+17:04:17 | INFO: Primitives created: 3
+17:04:17 | INFO: Finished glTF 2.0 export in 0.028931379318237305 s
+
+EXPORTED_ITEM 71 helmet
+17:04:17 | INFO: Starting glTF 2.0 export
+17:04:17 | INFO: Extracting primitive: Item_072_lily_gate_helm
+17:04:17 | INFO: Primitives created: 3
+17:04:17 | INFO: Finished glTF 2.0 export in 0.04538464546203613 s
+
+EXPORTED_ITEM 72 helmet
+17:04:17 | INFO: Starting glTF 2.0 export
+17:04:17 | INFO: Extracting primitive: Item_073_horned_fur_helm
+17:04:17 | INFO: Primitives created: 3
+17:04:17 | INFO: Finished glTF 2.0 export in 0.15336227416992188 s
+
+EXPORTED_ITEM 73 helmet
+17:04:17 | INFO: Starting glTF 2.0 export
+17:04:17 | INFO: Extracting primitive: Item_074_chimney_welder
+17:04:17 | INFO: Primitives created: 4
+17:04:17 | INFO: Finished glTF 2.0 export in 0.04700660705566406 s
+
+EXPORTED_ITEM 74 helmet
+17:04:17 | INFO: Starting glTF 2.0 export
+17:04:17 | INFO: Extracting primitive: Item_075_star_lens_helm
+17:04:17 | INFO: Primitives created: 4
+17:04:17 | INFO: Finished glTF 2.0 export in 0.031502485275268555 s
+
+EXPORTED_ITEM 75 helmet
+17:04:17 | INFO: Starting glTF 2.0 export
+17:04:17 | INFO: Extracting primitive: Item_077_funeral_signet
+17:04:17 | INFO: Primitives created: 2
+17:04:17 | INFO: Finished glTF 2.0 export in 0.16079998016357422 s
+
+EXPORTED_ITEM 77 ring
+17:04:17 | INFO: Starting glTF 2.0 export
+17:04:17 | INFO: Extracting primitive: Item_078_leech_coil_ring
+17:04:17 | INFO: Primitives created: 3
+17:04:17 | INFO: Finished glTF 2.0 export in 0.07532906532287598 s
+
+EXPORTED_ITEM 78 ring
+17:04:18 | INFO: Starting glTF 2.0 export
+17:04:18 | INFO: Extracting primitive: Item_079_snowflake_ring
+17:04:18 | INFO: Primitives created: 3
+17:04:18 | INFO: Finished glTF 2.0 export in 0.04508543014526367 s
+
+EXPORTED_ITEM 79 ring
+17:04:18 | INFO: Starting glTF 2.0 export
+17:04:18 | INFO: Extracting primitive: Item_080_ember_crucible_ring
+17:04:18 | INFO: Primitives created: 4
+17:04:18 | INFO: Finished glTF 2.0 export in 0.09262800216674805 s
+
+EXPORTED_ITEM 80 ring
+17:04:18 | INFO: Starting glTF 2.0 export
+17:04:18 | INFO: Extracting primitive: Item_081_heartbeat_ring
+17:04:18 | INFO: Primitives created: 3
+17:04:18 | INFO: Finished glTF 2.0 export in 0.03680062294006348 s
+
+EXPORTED_ITEM 81 ring
+17:04:18 | INFO: Starting glTF 2.0 export
+17:04:18 | INFO: Extracting primitive: Item_083_hourglass_pendant
+17:04:18 | INFO: Primitives created: 2
+17:04:18 | INFO: Finished glTF 2.0 export in 0.022701263427734375 s
+
+EXPORTED_ITEM 83 necklace
+17:04:18 | INFO: Starting glTF 2.0 export
+17:04:18 | INFO: Extracting primitive: Item_084_funeral_chime
+17:04:18 | INFO: Primitives created: 3
+17:04:18 | INFO: Finished glTF 2.0 export in 0.02345728874206543 s
+
+EXPORTED_ITEM 84 necklace
+17:04:18 | INFO: Starting glTF 2.0 export
+17:04:18 | INFO: Extracting primitive: Item_085_icicle_teardrop
+17:04:18 | INFO: Primitives created: 3
+17:04:18 | INFO: Finished glTF 2.0 export in 0.1201171875 s
+
+EXPORTED_ITEM 85 necklace
+17:04:18 | INFO: Starting glTF 2.0 export
+17:04:18 | INFO: Extracting primitive: Item_086_bellows_heart
+17:04:18 | INFO: Primitives created: 2
+17:04:18 | INFO: Finished glTF 2.0 export in 0.046633243560791016 s
+
+EXPORTED_ITEM 86 necklace
+17:04:18 | INFO: Starting glTF 2.0 export
+17:04:18 | INFO: Extracting primitive: Item_087_sixroad_compass
+17:04:18 | INFO: Primitives created: 3
+17:04:18 | INFO: Finished glTF 2.0 export in 0.03195619583129883 s
+
+EXPORTED_ITEM 87 necklace
+00:16.656  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_000.png'
+Info: Saved as "items_library.blend"
+RENDERED_ITEM 0
+00:17.047  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_001.png'
+RENDERED_ITEM 1
+00:17.390  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_029.png'
+RENDERED_ITEM 29
+00:17.890  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_052.png'
+RENDERED_ITEM 52
+00:18.359  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_058.png'
+RENDERED_ITEM 58
+00:18.781  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_064.png'
+RENDERED_ITEM 64
+00:19.297  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_070.png'
+RENDERED_ITEM 70
+00:19.765  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_076.png'
+RENDERED_ITEM 76
+00:20.109  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_082.png'
+RENDERED_ITEM 82
+00:20.547  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_002.png'
+RENDERED_ITEM 2
+00:20.922  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_003.png'
+RENDERED_ITEM 3
+00:21.312  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_004.png'
+RENDERED_ITEM 4
+00:21.656  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_005.png'
+RENDERED_ITEM 5
+00:22.000  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_006.png'
+RENDERED_ITEM 6
+00:22.359  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_007.png'
+RENDERED_ITEM 7
+00:22.828  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_008.png'
+RENDERED_ITEM 8
+00:23.203  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_009.png'
+RENDERED_ITEM 9
+00:23.593  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_010.png'
+RENDERED_ITEM 10
+00:24.109  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_011.png'
+RENDERED_ITEM 11
+00:24.593  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_012.png'
+RENDERED_ITEM 12
+00:25.156  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_013.png'
+RENDERED_ITEM 13
+00:25.547  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_014.png'
+RENDERED_ITEM 14
+00:25.937  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_015.png'
+RENDERED_ITEM 15
+00:26.343  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_016.png'
+RENDERED_ITEM 16
+00:26.718  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_017.png'
+RENDERED_ITEM 17
+00:27.109  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_018.png'
+RENDERED_ITEM 18
+00:27.453  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_019.png'
+RENDERED_ITEM 19
+00:27.828  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_020.png'
+RENDERED_ITEM 20
+00:28.187  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_021.png'
+RENDERED_ITEM 21
+00:28.609  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_022.png'
+RENDERED_ITEM 22
+00:29.078  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_023.png'
+RENDERED_ITEM 23
+00:29.672  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_024.png'
+RENDERED_ITEM 24
+00:30.156  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_025.png'
+RENDERED_ITEM 25
+00:30.578  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_026.png'
+RENDERED_ITEM 26
+00:31.078  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_027.png'
+RENDERED_ITEM 27
+00:31.547  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_028.png'
+RENDERED_ITEM 28
+00:31.937  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_030.png'
+RENDERED_ITEM 30
+00:32.297  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_031.png'
+RENDERED_ITEM 31
+00:32.672  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_032.png'
+RENDERED_ITEM 32
+00:33.093  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_033.png'
+RENDERED_ITEM 33
+00:33.515  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_034.png'
+RENDERED_ITEM 34
+00:33.859  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_035.png'
+RENDERED_ITEM 35
+00:34.203  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_036.png'
+RENDERED_ITEM 36
+00:34.578  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_037.png'
+RENDERED_ITEM 37
+00:34.922  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_038.png'
+RENDERED_ITEM 38
+00:35.422  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_039.png'
+RENDERED_ITEM 39
+00:35.781  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_040.png'
+RENDERED_ITEM 40
+00:36.125  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_041.png'
+RENDERED_ITEM 41
+00:36.515  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_042.png'
+RENDERED_ITEM 42
+00:36.890  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_043.png'
+RENDERED_ITEM 43
+00:37.234  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_044.png'
+RENDERED_ITEM 44
+00:37.625  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_045.png'
+RENDERED_ITEM 45
+00:37.968  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_046.png'
+RENDERED_ITEM 46
+00:38.343  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_047.png'
+RENDERED_ITEM 47
+00:38.734  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_048.png'
+RENDERED_ITEM 48
+00:39.250  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_049.png'
+RENDERED_ITEM 49
+00:39.640  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_050.png'
+RENDERED_ITEM 50
+00:40.047  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_051.png'
+RENDERED_ITEM 51
+00:40.484  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_053.png'
+RENDERED_ITEM 53
+00:41.015  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_054.png'
+RENDERED_ITEM 54
+00:41.562  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_055.png'
+RENDERED_ITEM 55
+00:42.062  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_056.png'
+RENDERED_ITEM 56
+00:42.578  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_057.png'
+RENDERED_ITEM 57
+00:43.093  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_059.png'
+RENDERED_ITEM 59
+00:43.500  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_060.png'
+RENDERED_ITEM 60
+00:43.922  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_061.png'
+RENDERED_ITEM 61
+00:44.375  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_062.png'
+RENDERED_ITEM 62
+00:44.922  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_063.png'
+RENDERED_ITEM 63
+00:45.328  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_065.png'
+RENDERED_ITEM 65
+00:45.781  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_066.png'
+RENDERED_ITEM 66
+00:46.265  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_067.png'
+RENDERED_ITEM 67
+00:46.734  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_068.png'
+RENDERED_ITEM 68
+00:47.234  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_069.png'
+RENDERED_ITEM 69
+00:47.718  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_071.png'
+RENDERED_ITEM 71
+00:48.140  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_072.png'
+RENDERED_ITEM 72
+00:48.562  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_073.png'
+RENDERED_ITEM 73
+00:49.031  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_074.png'
+RENDERED_ITEM 74
+00:49.484  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_075.png'
+RENDERED_ITEM 75
+00:49.968  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_077.png'
+RENDERED_ITEM 77
+00:50.437  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_078.png'
+RENDERED_ITEM 78
+00:50.875  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_079.png'
+RENDERED_ITEM 79
+00:51.359  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_080.png'
+RENDERED_ITEM 80
+00:51.859  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_081.png'
+RENDERED_ITEM 81
+00:52.265  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_083.png'
+RENDERED_ITEM 83
+00:52.687  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_084.png'
+RENDERED_ITEM 84
+00:53.187  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_085.png'
+RENDERED_ITEM 85
+00:53.859  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_086.png'
+RENDERED_ITEM 86
+00:54.312  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_087.png'
+RENDERED_ITEM 87
+ITEM_ART_COMPLETE 88
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

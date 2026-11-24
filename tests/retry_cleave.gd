@@ -24,7 +24,7 @@ func _check(value: bool, label: String) -> bool:
 func _block_next_write() -> void:
 	var slot = game.session._slot
 	var next_bank := 1 - int(slot.active_bank)
-	obstruction = slot.directory.path_join("slot-v2-%d.sav.tmp" % next_bank)
+	obstruction = slot.directory.path_join("slot-v3-%d.sav.tmp" % next_bank)
 	_check(DirAccess.make_dir_absolute(obstruction) == OK, "fixture blocked the next temporary save file")
 
 func _allow_write() -> void:

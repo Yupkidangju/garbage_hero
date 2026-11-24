@@ -14,6 +14,23 @@ const MINT = Color("#83dec0")
 const HOT = Color("#ff9164")
 const GRADE = [Color("#c2c8b6"), Color("#dbe5cc"), Color("#84ddac"), Color("#80c5e3"), Color("#d3a3eb"), Color("#ffc272"), Color("#ff9499")]
 const GEO = [Color("#96d39d"), Color("#f1c274"), Color("#bfaccd"), Color("#7ed2bf"), Color("#aad8ed"), Color("#f59b79")]
+const REGION_ART = ["forest","desert","graveyard","swamp","snow","volcano"]
+static var _textures: Dictionary = {}
+
+static func texture(path: String) -> Texture2D:
+	if path.is_empty(): return null
+	if not _textures.has(path):
+		_textures[path] = load(path) if ResourceLoader.exists(path) else null
+	return _textures[path]
+
+static func item_art(item: Dictionary) -> Texture2D:
+	return texture(str(item.get("icon","res://assets/ui/items/item_%03d.png"%int(item.get("design",0)))))
+
+static func skill_art(id: String) -> Texture2D:
+	return texture("res://assets/ui/skills/%s.png"%id)
+
+static func region_art(region: int) -> Texture2D:
+	return texture("res://assets/ui/regions/%s.png"%REGION_ART[clampi(region,0,5)])
 
 static func t(key: String) -> String:
 	return String(TRANSLATION.get_message(key))

@@ -8,8 +8,8 @@ const BRIDGE_HALF_LENGTH:=1.76
 const BRIDGE_HALF_WIDTH:=.75
 const BRIDGE_RAMP_END:=2.14
 const BRIDGE_DECK:=.125
-const HALF_X:=67
-const HALF_Z:=59
+const HALF_X:=131
+const HALF_Z:=115
 const WIDTH:=HALF_X*2+1
 const DEPTH:=HALF_Z*2+1
 
@@ -37,6 +37,11 @@ static func samples(region:int) -> Samples:
 
 static func walking_surface(p:Vector3,region:int) -> float:
 	var ground:=altitude(Vector2(p.x,p.z),region)
+	if region>=0:
+		var long_bridge:=Vector2(Layout.deep_rect(region).get_center().x,-34)
+		var delta:=Vector2(p.x,p.z)-long_bridge
+		if absf(delta.y)<=1.8 and absf(delta.x)<8.0:
+			return maxf(ground,.18*(1.0-smoothstep(6.5,8.0,absf(delta.x))))
 	if region not in BRIDGE_REGIONS: return ground
 	var bridge := Layout.bridge_at(region)
 	var deck:=(p-Vector3(bridge.x,0,bridge.y)).rotated(Vector3.UP,-BRIDGE_YAW)
@@ -79,6 +84,8 @@ static func is_flat(bounds:Rect2,region:int) -> bool:
 		return true
 	var bridge_bounds := Rect2(Layout.bridge_at(region)-Vector2(2.4,1.2),Vector2(4.8,2.4))
 	if region in BRIDGE_REGIONS and bounds.intersects(bridge_bounds,true): return false
+	var river_bridge:=Rect2(Vector2(Layout.deep_rect(region).get_center().x-8,-35.8),Vector2(16,3.6))
+	if bounds.intersects(river_bridge,true): return false
 	var lo:=Vector2i(bounds.position.floor())+Vector2i(HALF_X,HALF_Z)
 	var hi:=Vector2i(bounds.end.ceil())+Vector2i(HALF_X+1,HALF_Z+1)
 	if lo.x<0 or lo.y<0 or hi.x>WIDTH or hi.y>DEPTH: return false
@@ -98,6 +105,7 @@ static func _hills(region:int) -> Array:
 	return hill_shapes[region]
 
 static func sample_height(p:Vector2,region:int) -> float:
+	if region<0: return 0.0
 	var h := 0.0
 	var strength := float(SUMMITS[region])
 	for hill:Rect2 in _hills(region):
@@ -105,4 +113,12 @@ static func sample_height(p:Vector2,region:int) -> float:
 		var roll := maxf(0.0,1.0-offset.length_squared())
 		h += strength*roll*roll
 		strength *= .62
+	# 외곽 능선도 같은 표본 함수로 만들어 발·투사체·전리품이 렌더와 갈라지지 않는다.
+	for center:Vector2 in [Vector2(-104,-61),Vector2(88,70),Vector2(94,-65),Vector2(-101,57)]:
+		var roll:=maxf(0.0,1.0-((p-center)/Vector2(30,32)).length_squared())
+		h+=float(SUMMITS[region])*.6*roll*roll
+	var river:=Layout.deep_rect(region)
+	var nearest:=p.clamp(river.position,river.end)
+	var bank:=p.distance_to(nearest)
+	h*=smoothstep(2.5,10.5,bank)
 	return h

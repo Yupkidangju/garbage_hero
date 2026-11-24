@@ -32,14 +32,15 @@ func _catalog() -> void:
 	for region in 6:
 		var found := {}
 		var local_count := 0
+		var local := Loot.regional_pool(region)
 		for i in 3000:
 			var design := Loot.draw_design(region, rng)
 			found[design] = true
-			if design in Loot.REGIONAL_DESIGNS[region]:
+			if design in local:
 				local_count += 1
-		check(found.size() == 14 and found.has_all(Loot.TOWN_DESIGNS) and found.has_all(Loot.REGIONAL_DESIGNS[region]),
-			"region %d drops each common and its own three designs" % region)
-		check(local_count > 1050 and local_count < 1350, "region %d samples expected 60/40 common/regional split" % region)
+		check(found.size() == 11 + local.size() and found.has_all(Loot.TOWN_DESIGNS) and found.has_all(local),
+			"region %d drops every common, regional design and regional artifact" % region)
+		check(local_count > 1650 and local_count < 1950, "region %d samples expected 40/60 common/regional split" % region)
 	for design in Loot.BLUEPRINTS.size():
 		for grade in 7:
 			var generated := Loot.describe(Loot.weapon(1, design, grade, rng))
@@ -47,7 +48,7 @@ func _catalog() -> void:
 				and not generated.next_stat_text.is_empty(), "localized item %d grade %d" % [design,grade])
 	var legacy_traveler := {"available":true,"region":4,"sold":true,"price":18}
 	var legacy_stock := Equipment.offers("traveler", legacy_traveler)
-	check(legacy_stock.size() == 3 and legacy_stock[0].sold and not legacy_stock[1].sold and not legacy_stock[2].sold,
+	check(legacy_stock.size() == 12 and legacy_stock[0].sold and not legacy_stock[1].sold and not legacy_stock[2].sold,
 		"schema-1 traveler preserves previously sold regional sword")
 
 func _shop_and_swap() -> void:
@@ -104,7 +105,7 @@ func _shop_and_swap() -> void:
 	game._data.traveler = {"available":true,"sold":false,"region":2,"price":18}
 	ui = game.ui_state()
 	var goods: Array = ui.offers.traveler
-	check(goods.size() == 3 and goods[0].design == 3 and goods[0].price == 18, "legacy regional sword keeps price")
+	check(goods.size() == 12 and goods[0].design == 3 and goods[0].price == 18, "legacy regional sword keeps price")
 	var custom: Dictionary = goods[1]
 	var money: int = game._data.coins
 	check(game.act("buy", {"vendor":"traveler","design":custom.design}) and game._data.coins == money-custom.price,

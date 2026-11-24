@@ -13,6 +13,7 @@ var stage: Node3D
 var region := -1
 var difficulty := 0
 var service := ""
+var nearby_cache := ""
 var last_landmark := ""
 var combat_lock := 0.0
 var ui_clock := 0.0
@@ -31,8 +32,15 @@ var transitioning := false
 var shutting_down := false
 var poi
 var save_guard := preload("res://scripts/save_guard.gd").new()
+var benchmark_sandbox: DirAccess
 
 func _ready() -> void:
+	var benchmark_mode := "--benchmark" in OS.get_cmdline_user_args()
+	if benchmark_mode:
+		benchmark_sandbox = preload("res://scripts/runtime_benchmark.gd").prepare_environment()
+		if not benchmark_sandbox:
+			get_tree().quit(2)
+			return
 	get_tree().auto_accept_quit = false
 	ThemeDB.get_default_theme().default_font = preload("res://assets/fonts/NotoSansKR.ttf")
 	TranslationServer.add_translation(preload("res://data/expedition_ko.tres"))
@@ -42,6 +50,7 @@ func _ready() -> void:
 	add_child(hud)
 	hud.command.connect(_command)
 	hud.panel_changed.connect(_panel_changed)
+	hud.celebrated.connect(_sound)
 	poi = GUARDIAN_POI.new()
 	hud.add_child(poi)
 	session = load("res://scripts/session.gd").new()
@@ -51,7 +60,14 @@ func _ready() -> void:
 	session.changed.connect(_session_changed)
 	_setup_sound()
 	if not _load_slot():
-		_show_retry(_load_slot)
+		if benchmark_mode:
+			get_tree().quit(2)
+		else:
+			_show_retry(_load_slot)
+	elif benchmark_mode:
+		var scenario := preload("res://scripts/runtime_benchmark.gd").new()
+		scenario.configure(self,benchmark_sandbox)
+		get_tree().root.add_child.call_deferred(scenario)
 
 func _load_slot() -> bool:
 	var path := OS.get_environment("GARBAGEHERO_SAVE_DIR")
@@ -77,6 +93,8 @@ func _session_changed() -> void:
 	_update_player_gear()
 	if region < 0 and is_instance_valid(world):
 		world.set_traveler_visible(snapshot.get("traveler", {}).get("available", false))
+	elif region >= 0 and is_instance_valid(world):
+		world.set_open_caches(session.world_state(region, difficulty).opened_caches)
 	_refresh()
 
 func _update_player_gear() -> void:
@@ -99,6 +117,7 @@ func _enter(theme: int, rank: int) -> void:
 	region = theme
 	difficulty = rank
 	service = ""
+	nearby_cache = ""
 	last_landmark = ""
 	combat_lock = 0
 	gear_state = {}
@@ -115,6 +134,7 @@ func _enter(theme: int, rank: int) -> void:
 	player.name = "Hero"
 	player.position = world.entry_point()
 	stage.add_child(player)
+	player.bind_terrain(world)
 	_update_player_gear()
 	player.set_feedback(feedback.shake_enabled, feedback.reduced_flash)
 	player.cue.connect(_player_cue)
@@ -128,6 +148,7 @@ func _enter(theme: int, rank: int) -> void:
 		director.announcement.connect(hud.toast)
 		director.save_failed.connect(_show_retry)
 		director.initialize(session, world, player, region, difficulty)
+		world.set_open_caches(director.state.opened_caches)
 	poi.hero = player
 	poi.director = director
 	poi.world = world
@@ -153,6 +174,11 @@ func _physics_process(delta: float) -> void:
 
 func _update_service() -> void:
 	service = world.service_near(player.position)
+	nearby_cache = ""
+	if region >= 0 and service.is_empty():
+		nearby_cache = world.cache_near(player.position)
+		if not nearby_cache.is_empty() and nearby_cache not in session.world_state(region, difficulty).opened_caches:
+			service = "cache"
 	if service == "traveler" and not snapshot.get("traveler", {}).get("available", false):
 		service = ""
 
@@ -160,10 +186,17 @@ func _refresh() -> void:
 	if not is_instance_valid(player) or snapshot.is_empty():
 		return
 	var data := snapshot.duplicate()
+	var district_name := ""
+	if region >= 0:
+		var district: String = world.district_at(player.position)
+		for area: Dictionary in world.map_data().get("districts", []):
+			if area.id == district:
+				district_name = area.name
+				break
 	data.merge({"region": region, "difficulty": difficulty, "hp": player.hp, "max_hp": player.max_hp,
 		"world": director.state if is_instance_valid(director) else {},
 		"area_map": AREA_MAP.snapshot(world, player, director),
-		"service": service, "unlocked": unlocked, "cooldowns": player.cooldowns(),
+		"service": service, "unlocked": unlocked, "cooldowns": player.cooldowns(), "terrain": player.terrain_state(), "district": district_name,
 		"boss": director.guardian_info() if is_instance_valid(director) else {}}, true)
 	hud.refresh(data)
 
@@ -172,7 +205,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed("interact"):
 		_update_service()
-		if service == "return":
+		if service == "cache":
+			_open_nearby_cache()
+		elif service == "return":
 			if combat_lock <= 0:
 				_return_to_town()
 			else:
@@ -198,6 +233,18 @@ func _unhandled_input(event: InputEvent) -> void:
 func _panel_changed(opened: bool) -> void:
 	get_tree().paused = opened or is_instance_valid(error_layer)
 	poi.visible = not opened
+
+func _open_nearby_cache() -> void:
+	for cache: Dictionary in world.cache_points():
+		if cache.id == nearby_cache and player.position.distance_to(cache.pos) <= 2.5:
+			if not session.open_cache(region, difficulty, nearby_cache, cache.pos):
+				if session.last_error == preload("res://data/loot_rules.gd").caption("SAVE_FAILED"):
+					_show_retry(session.open_cache.bind(region, difficulty, nearby_cache, cache.pos))
+			else:
+				_sound("pickup")
+			_update_service()
+			_refresh()
+			return
 
 func _command(action: String, args: Dictionary) -> void:
 	if shutting_down or transitioning:
@@ -339,11 +386,14 @@ func _sound(kind: String) -> void:
 		"hit", "hurt", "slam", "impact", "mace", "nova":
 			clip = "scrap_impact"
 			pitch = 0.78 if kind == "slam" else 1.0
-		"warning", "boss", "death":
+		"warning", "boss", "death", "level_up":
 			clip = "guardian_bell"
-		"pickup", "merge", "menu":
+			pitch = 1.25 if kind == "level_up" else 1.0
+			volume = -15.0 if kind == "level_up" else volume
+		"pickup", "merge", "menu", "fusion":
 			clip = "salvage_chime"
 			volume = -17.0
+			pitch = 0.90 if kind == "fusion" else 1.0
 		"swing1", "swing2", "swing3", "spin", "dodge", "hook", "bow", "staff", "spear", "volley", "rush":
 			clip = "blade_sweep"
 			pitch = 1.16 if kind == "swing1" else 0.94

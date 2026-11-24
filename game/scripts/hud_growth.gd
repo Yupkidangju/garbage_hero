@@ -53,14 +53,22 @@ static func _tree(hud, growth: Dictionary) -> void:
 	for entry in catalog:
 		if str(entry.prerequisite).is_empty(): _branch(hud,list,catalog,entry,selected.id,0)
 	var header: HBoxContainer = hud._row(detail,10)
-	var crest := Control.new()
-	crest.custom_minimum_size = Vector2(38,42)
-	crest.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	header.add_child(crest)
 	var id := str(selected.id)
-	crest.draw.connect(func(): S.icon(crest,id,Vector2(2,4),34,S.MINT))
 	var name_label: Label = hud._label(header,selected.name,23,S.PAPER,true,true)
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var demonstration: HBoxContainer = hud._row(detail,8)
+	var crest: TextureRect = hud._image(demonstration,"res://assets/ui/skills/%s.png"%id,Vector2(146,196))
+	crest.name = "SkillIllustration"
+	var preview = hud.Preview.new()
+	preview.skill = id
+	preview.build = hud._preview_build()
+	var ranks: Dictionary = preview.build.get("progression",{}).get("ranks",{}).duplicate()
+	ranks[id] = maxi(1,int(selected.rank))
+	preview.build.progression.ranks = ranks
+	preview.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	demonstration.add_child(preview)
+	hud._label(detail,S.t("preview_unlearned" if int(selected.rank)==0 else "preview_caption"),14,S.MUTED,false,true)
+	hud._button(detail,S.t("preview_cast"),preview.replay,"ReplaySkill")
 	hud._label(detail,str(selected.description),16,S.PAPER,false,true)
 	var rank := int(selected.rank)
 	var maximum := int(selected.max_rank)
@@ -106,6 +114,12 @@ static func _branch(hud, parent: Control, catalog: Array, entry: Dictionary, sel
 		)
 	var caption := "%s    ·    %s" % [entry.name,S.t("rank_short")%int(entry.rank) if int(entry.rank)>0 else S.t("unlearned")]
 	var b: Button = hud._button(row,caption,_select.bind(hud,str(entry.id)),"Skill"+str(entry.id),entry.id==selected)
+	b.icon = S.skill_art(str(entry.id))
+	b.expand_icon = true
+	b.add_theme_constant_override("icon_max_width",68)
+	b.custom_minimum_size.y = 78
+	b.tooltip_text = str(entry.description)
+	if int(entry.rank)==0: b.add_theme_color_override("icon_normal_color",Color(0.67,0.75,0.73))
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

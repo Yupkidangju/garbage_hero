@@ -4,12 +4,13 @@ signal cue(kind: String)
 signal announcement(message: String)
 signal save_failed(retry: Callable)
 
-const SPECIES := [5, 6, 5, 6, 5, 6]
-const POPULATION := [10, 14, 18, 24]
+const Book=preload("res://data/monsters.gd")
+const SPECIES := [10,10,10,10,10,10]
+const POPULATION := [16,24,32,40]
 const SPAWN_RADIUS := 39.0
 const RETIRE_RADIUS := 48.0
 # 지역마다 앞줄의 방어·근접형과 뒤에서 지원하는 원거리·회복형을 짝짓는다.
-const PARTNERS := [Vector2i(3, 1), Vector2i(3, 1), Vector2i(2, 3), Vector2i(4, 1), Vector2i(2, 4), Vector2i(2, 3)]
+const PARTNERS := [Vector2i(3,1),Vector2i(8,1),Vector2i(2,6),Vector2i(4,6),Vector2i(8,6),Vector2i(2,3)]
 const QUALITY_COLORS := ["beb4a1", "fae7b6", "99dd92", "86dce5", "b59ef3", "ffc06a", "ff92b0"]
 
 var session
@@ -62,6 +63,8 @@ func initialize(store, landscape, player, theme: int, rank: int) -> void:
 	_fill_slots()
 
 func sync() -> void:
+	if not is_inside_tree():
+		return
 	state = session.world_state(region, difficulty)
 	var key := str(state.get("spawn_id", ""))
 	if key != boss_key:
@@ -90,7 +93,7 @@ func _physics_process(delta: float) -> void:
 		if elapsed >= boss_due:
 			marker.queue_free()
 			marker = null
-			boss = _spawn(str(state.phase), 0, boss_key, world.boss_point(), -1)
+			boss = _spawn(str(state.phase), int(state.minis) if state.phase=="mini" else 0, boss_key, world.boss_point(), -1)
 	if state.phase == "rest":
 		rest_clock += delta
 		if rest_clock >= 1.0:
@@ -115,24 +118,24 @@ func _fill_slots() -> void:
 			remove_child(actor)
 			actor.queue_free()
 			enemies[slot]=null
+	var nearby:Array[Vector3]=[]
+	for pos in candidates:
+		var distance_sq:float=pos.distance_squared_to(hero.global_position)
+		if distance_sq>=64. and distance_sq<=SPAWN_RADIUS*SPAWN_RADIUS:
+			nearby.append(pos)
+	if nearby.is_empty():
+		return
 	for slot in enemies.size():
 		if is_instance_valid(enemies[slot]) or elapsed < vacant_at[slot]:
 			continue
 		var chosen := Vector3.INF
 		var distance := INF
 		var partner
-		var index := spawn_counter % int(SPECIES[region])
-		if difficulty > 0 and slot % 7 <= 1:
-			var first := slot % 7 == 0
-			var mate := slot + 1 if first else slot - 1
-			if mate < enemies.size():
-				partner = enemies[mate]
-				index = PARTNERS[region].x if first else PARTNERS[region].y
-		for offset in candidates.size():
-			var pos := candidates[(slot * 7 + spawn_counter * 3 + offset) % candidates.size()]
+		if slot%7 in [1,2]:
+			partner=enemies[slot-slot%7]
+		for offset in nearby.size():
+			var pos := nearby[(slot * 7 + spawn_counter * 3 + offset) % nearby.size()]
 			var from_hero:=pos.distance_to(hero.global_position)
-			if from_hero < 8.0 or from_hero > SPAWN_RADIUS:
-				continue
 			var score:=absf(from_hero-(10.0+slot%6*3.0))
 			if is_instance_valid(partner):
 				score=pos.distance_to(partner.position)+maxf(from_hero-32,0)
@@ -146,6 +149,10 @@ func _fill_slots() -> void:
 				distance = score
 				chosen = pos
 		if chosen.is_finite():
+			var district_id:String=world.district_at(chosen)
+			var district:=int(district_id.get_slice("_",1))
+			var roles:Vector3i=Book.GROUPS[region]
+			var index:int=roles[slot%7] if slot%7<3 else (district*2+slot%7-3)%10
 			spawn_counter += 1
 			enemies[slot] = _spawn("normal", index, field_id + "-" + str(spawn_counter), chosen, slot)
 
@@ -154,26 +161,30 @@ func _spawn(kind: String, index: int, id: String, pos: Vector3, slot: int):
 	enemy.name = "Monster_" + str(spawn_counter) if slot >= 0 else "Guardian"
 	enemy.position = pos
 	enemy.set_meta("safe_point", world.entry_point())
+	var elite:=slot>=0 and slot%11==6
+	var district:String=world.district_at(pos)
+	enemy.set_meta("is_elite",elite)
+	enemy.set_meta("district_id",district)
 	enemy.setup(region, difficulty, kind, index, id)
-	enemy.defeated.connect(_defeated.bind(slot))
+	enemy.defeated.connect(_defeated.bind(slot,elite,district))
 	enemy.cue.connect(func(sound: String): cue.emit(sound))
 	add_child(enemy, true)
 	return enemy
 
-func _defeated(kind: String, id: String, pos: Vector3, slot: int) -> void:
+func _defeated(kind: String, id: String, pos: Vector3, slot: int, elite:=false, district:="") -> void:
 	if slot >= 0:
 		enemies[slot] = null
 		vacant_at[slot] = elapsed + 10.0
 	else:
 		boss = null
-	pending_kills.append({"kind": kind, "id": id, "pos": pos})
+	pending_kills.append({"kind": kind, "id": id, "pos": pos,"elite":elite,"district":district})
 	if not halted and not _drain_kills():
 		save_failed.emit(_drain_kills)
 
 func _drain_kills() -> bool:
 	while not pending_kills.is_empty():
 		var event := pending_kills[0]
-		if not session.record_kill(region, difficulty, event.kind, event.id, event.pos):
+		if not session.record_kill(region, difficulty, event.kind, event.id, event.pos,{"elite":event.elite,"district":event.district}):
 			halted = true
 			return false
 		pending_kills.pop_front()

@@ -2,6 +2,7 @@ extends CanvasLayer
 
 signal command(action: String, args: Dictionary)
 signal panel_changed(opened: bool)
+signal celebrated(kind: String)
 
 const S = preload("res://scripts/hud_style.gd")
 const Art = preload("res://scripts/hud_art.gd")
@@ -11,6 +12,10 @@ const Preferences = preload("res://scripts/hud_settings.gd")
 const GrowthMenu = preload("res://scripts/hud_growth.gd")
 const Equipment = preload("res://scripts/equipment.gd")
 const Loot = preload("res://data/loot_rules.gd")
+const InventoryMenu = preload("res://scripts/hud_inventory.gd")
+const Preview = preload("res://scripts/hud_hero_preview.gd")
+const Workshop = preload("res://scripts/hud_workshop.gd")
+const ITEM_FILTERS = ["all","sword","bow","mace","staff","spear","armor","shield","boots","helmet","ring","necklace"]
 
 var info: Dictionary = {}
 var prefs := Preferences.new()
@@ -41,6 +46,11 @@ var body_font: FontVariation
 var focus_after := ""
 var last_size := Vector2.ZERO
 var render_scheduled := false
+var inventory_filter := "all"
+var last_level := -1
+var merge_signature := 0
+var celebration: PanelContainer
+var celebration_clock := 0.0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -75,6 +85,13 @@ func panel_open() -> bool:
 
 func refresh(data: Dictionary) -> void:
 	var previous_region := int(info.get("region",-1))
+	var level := int(data.get("progression",{}).get("level",1))
+	var merged: Dictionary = data.get("last_merge",{})
+	var signature := hash(merged)
+	if last_level>=0 and level>last_level: _celebrate("level_up",{"levels":level-last_level,"level":level})
+	if last_level>=0 and signature!=merge_signature and merged.has("item"): _celebrate("fusion",merged.item)
+	last_level = level
+	merge_signature = signature
 	info = data
 	if art == null: return
 	art.info = info
@@ -95,6 +112,7 @@ func open_panel(kind: String) -> void:
 	active = kind
 	section = "take" if kind=="chest" and info.get("bag",[]).is_empty() and not info.get("chest",[]).is_empty() else ""
 	selected = -1
+	inventory_filter = "all"
 	materials.clear()
 	binding_target = ""
 	focus_after = ""
@@ -145,6 +163,12 @@ func toast(message: String) -> void:
 		feedback.visible = not lines.is_empty()
 
 func _process(dt: float) -> void:
+	if is_instance_valid(celebration):
+		celebration_clock -= dt
+		celebration.modulate.a = clampf(celebration_clock/0.35,0,1)
+		if celebration_clock<=0:
+			celebration.queue_free()
+			celebration = null
 	if notice_clock <= 0: return
 	notice_clock -= dt
 	if notice_clock <= 0:
@@ -219,7 +243,7 @@ func _layout() -> void:
 			quick.size = qs
 	if not is_instance_valid(modal): return
 	var available := Vector2(maxf(180,frame.x-30),maxf(150,frame.y-28))
-	var target := Vector2(minf(846,available.x),minf(685,available.y))
+	var target := Vector2(minf(1140 if active in ["inventory","skills","coach","elder","shop","traveler","map"] else 846,available.x),minf(685,available.y))
 	if active in ["coach","elder","settings","shop","traveler","chest"]: target.y = minf(570*float(prefs.prefs.text_scale),available.y)
 	if active=="map": target.y = minf(630*float(prefs.prefs.text_scale),available.y)
 	if active in ["pause","return"]: target = Vector2(minf(470,available.x),minf(390*float(prefs.prefs.text_scale),available.y))
@@ -266,7 +290,10 @@ func _render() -> void:
 	modal.name = "Menu"
 	modal.add_theme_stylebox_override("panel",S.box(S.INK,S.BRASS,2,6))
 	shade.add_child(modal)
+	var trim := Workshop.new()
+	modal.add_child(trim)
 	var stack := _col(modal,10)
+	stack.z_index = 1
 	var top := _row(stack,12)
 	var crest := Control.new()
 	crest.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -301,6 +328,7 @@ func _render() -> void:
 			chart.text_scale = prefs.prefs.text_scale
 			chart.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			body.add_child(chart)
+			if int(info.get("region",-1))>=0: _label(body,S.t("map_surface_hint"),14,S.MUTED,false,true)
 		"settings": _options()
 		"skills": GrowthMenu.render(self)
 		"inventory": _inventory()
@@ -346,6 +374,103 @@ func _line(parent: Control) -> void:
 	line.custom_minimum_size.y = 1
 	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(line)
+
+func _image(parent: Control, path: String, minimum: Vector2) -> TextureRect:
+	var picture := TextureRect.new()
+	picture.texture = S.texture(path)
+	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	picture.custom_minimum_size = minimum
+	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(picture)
+	return picture
+
+func _portrait(parent: Control, id: String, title: String, caption: String) -> void:
+	var row := _row(parent,16)
+	_image(row,"res://assets/ui/portraits/%s.png"%id,Vector2(90,96)).name = "Portrait"+id
+	var copy := _col(row,2)
+	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_label(copy,title,23,S.GOLD,true,true)
+	_label(copy,caption,16,S.MUTED,false,true)
+
+func _preview_build() -> Dictionary:
+	var result := info.duplicate(true)
+	result.reduced_flash = bool(prefs.prefs.reduced_flash)
+	return result
+
+func _celebrate(kind: String, item: Dictionary) -> void:
+	if not is_instance_valid(screen): return
+	if is_instance_valid(celebration): celebration.queue_free()
+	celebration = PanelContainer.new()
+	celebration.name = "SuccessIllustration"
+	celebration.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	celebration.z_index = 40
+	celebration.add_theme_stylebox_override("panel",S.box(S.DEEP,S.GOLD if kind=="level_up" else S.MINT,2,5))
+	screen.add_child(celebration)
+	var row := _row(celebration,12)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var picture := _image(row,"res://assets/ui/portraits/hero.png" if kind=="level_up" else "",Vector2(70,70))
+	if kind=="fusion": picture.texture = S.item_art(item)
+	var copy := _col(row,2)
+	copy.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_label(copy,(S.t("level")%int(item.get("level",1))+" · "+S.t("level_success")) if kind=="level_up" else S.t("fusion_success"),22,S.GOLD if kind=="level_up" else S.MINT,true)
+	var levels := int(item.get("levels",1))
+	_label(copy,S.t("level_success_detail")%[3*levels,levels] if kind=="level_up" else _weapon_name(item),16,S.PAPER)
+	celebration.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	celebration.offset_left = -195
+	celebration.offset_right = 195
+	celebration.offset_top = 18
+	celebration.offset_bottom = 104
+	celebration_clock = 2.6 if not bool(prefs.prefs.reduced_flash) else 1.8
+	celebrated.emit(kind)
+
+func _item_filter(parent: Control, items: Array) -> void:
+	var row := _row(parent,8)
+	_label(row,S.t("filter"),15,S.GOLD,true)
+	var previous := _button(row,"‹",_cycle_filter.bind(-1),"FilterPrevious")
+	previous.tooltip_text = S.t("filter_previous")
+	previous.custom_minimum_size.x = 40
+	var filter := OptionButton.new()
+	filter.name = "ItemFilter"
+	filter.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	filter.add_theme_font_size_override("font_size",roundi(16*float(prefs.prefs.text_scale)))
+	filter.add_theme_stylebox_override("normal",S.box(S.PANEL,S.LINE))
+	filter.add_theme_stylebox_override("focus",S.box(S.PANEL,S.MINT,2))
+	filter.custom_minimum_size.y = 42
+	var popup := filter.get_popup()
+	popup.add_theme_font_override("font",body_font)
+	popup.add_theme_font_size_override("font_size",roundi(16*float(prefs.prefs.text_scale)))
+	popup.add_theme_color_override("font_color",S.PAPER)
+	popup.add_theme_color_override("font_hover_color",S.GOLD)
+	popup.add_theme_stylebox_override("panel",S.box(S.DEEP,S.BRASS,1,4))
+	var ids := ITEM_FILTERS
+	for id in ids:
+		var count := items.size() if id=="all" else items.filter(func(item): return _item_category(item)==id).size()
+		var caption := S.t("filter_all") if id=="all" else Loot.caption(("TYPE_" if id in ["sword","bow","mace","staff","spear"] else "SLOT_")+str(id).to_upper())
+		filter.add_item("%s  ·  %d"%[caption,count])
+		filter.set_item_metadata(filter.item_count-1,id)
+	filter.select(maxi(0,ids.find(inventory_filter)))
+	filter.item_selected.connect(func(index):
+		inventory_filter = str(filter.get_item_metadata(index))
+		selected = -1
+		_render()
+	)
+	row.add_child(filter)
+	var next := _button(row,"›",_cycle_filter.bind(1),"FilterNext")
+	next.tooltip_text = S.t("filter_next")
+	next.custom_minimum_size.x = 40
+
+func _cycle_filter(step: int) -> void:
+	var index := maxi(0,ITEM_FILTERS.find(inventory_filter))
+	inventory_filter = ITEM_FILTERS[posmod(index+step,ITEM_FILTERS.size())]
+	selected = -1
+	_render()
+
+func _item_category(item: Dictionary) -> String:
+	return str(item.get("weapon_type",Loot.kind(int(item.get("design",0))))) if item.get("slot","weapon")=="weapon" else str(item.get("slot","armor"))
+
+func _filtered_items(items: Array) -> Array:
+	return items if inventory_filter=="all" else items.filter(func(item): return _item_category(item)==inventory_filter)
 
 func _meter(parent: Control, current: float, maximum: float, tone: Color) -> void:
 	var bar := ProgressBar.new()
@@ -486,6 +611,9 @@ func _item_rows(parent: Control, items: Array, prefix: String, empty: String) ->
 			if item.get("locked",false): caption += "   ·   "+S.t("locked")
 			if materials.has(id): caption += "   ·   "+S.t("merge_mark")
 			var button := _button(rows,caption,_choose.bind(id),prefix+str(id),id==selected)
+			button.icon = S.item_art(item)
+			button.expand_icon = true
+			button.add_theme_constant_override("icon_max_width",42)
 			button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			button.tooltip_text = _weapon_name(item)
@@ -493,9 +621,25 @@ func _item_rows(parent: Control, items: Array, prefix: String, empty: String) ->
 
 func _details(parent: Control, item: Dictionary) -> void:
 	var grade := clampi(int(item.get("grade",0)),0,6)
-	_label(parent,_weapon_name(item),21,S.GRADE[grade],true,true)
-	_label(parent,_type_name(item),15,S.GOLD,false,true)
-	_label(parent,_stats(item),17,S.PAPER,false,true)
+	var display := _row(parent,12)
+	var picture := _image(display,"",Vector2(126,140))
+	picture.texture = S.item_art(item)
+	picture.name = "SelectedItemArtwork"
+	var copy := _col(display,4)
+	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_label(copy,_weapon_name(item),21,S.GRADE[grade],true,true)
+	_label(copy,_type_name(item),15,S.GOLD,false,true)
+	_label(copy,_stats(item),17,S.PAPER,false,true)
+	var role := str(item.get("role",""))
+	if not role.is_empty(): _label(copy,role,14,S.MUTED,false,true)
+	var description := str(item.get("description",item.get("role","")))
+	if not description.is_empty(): _label(parent,description,15,S.MUTED,false,true)
+	var effect := str(item.get("effect_text",""))
+	if not effect.is_empty(): _label(parent,effect,15,S.MINT,false,true).name = "ItemUniqueEffect"
+	var profile := str(item.get("combat_profile_text",""))
+	if not profile.is_empty(): _label(parent,profile,14,S.MUTED,false,true).name = "ItemCombatProfile"
+	var source := str(item.get("source_text",""))
+	if not source.is_empty(): _label(parent,source,14,S.GOLD,false,true).name = "ItemSource"
 	var worn: Dictionary = info.get("equipment",{})
 	var comparison := Equipment.compare_text(item,worn)
 	var blocked: bool = item.get("slot","weapon")=="shield" and worn.get("weapon",{}).get("two_handed",false)
@@ -506,52 +650,7 @@ func _type_name(item: Dictionary) -> String:
 	return category+"   ·   "+S.t("two_handed") if item.get("two_handed",false) else category
 
 func _inventory() -> void:
-	var bag: Array = info.get("bag",[])
-	_balance()
-	var worn: Dictionary = info.get("equipment",{})
-	var count := 0
-	for piece in worn.values():
-		if not piece.is_empty(): count += 1
-	var tabs := _row(body)
-	for tab in [["bag",S.t("bag_tab")],["equipped",S.t("worn_count") % count]]:
-		var b := _button(tabs,tab[1],_section_change.bind(tab[0]),"Tab"+str(tab[0]),section==tab[0] or (section=="" and tab[0]=="bag"))
-		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_button(tabs,S.t("skills"),open_panel.bind("skills"),"OpenSkills")
-	if section=="equipped":
-		_worn_slots(worn)
-		return
-	var auto := bool(info.get("auto",true))
-	_button(body,S.t("auto_on" if auto else "auto_off"),_act.bind("auto",{"enabled":not auto}),"ToggleAuto",auto)
-	_line(body)
-	var sides := _columns()
-	var list: Control = sides[0]
-	var detail: Control = sides[1]
-	_label(list,S.t("bag_tab"),17,S.GOLD,true)
-	var item := _item_rows(list,bag,"BagItem","bag_empty")
-	var valid_ids: Array = []
-	for candidate in bag:
-		if not candidate.get("locked",false): valid_ids.append(int(candidate.id))
-	materials = materials.filter(func(id): return valid_ids.has(id))
-	if not item.is_empty():
-		_details(detail,item)
-		var conflict: bool = item.get("slot","weapon") == "shield" and worn.get("weapon",{}).get("two_handed",false)
-		_button(detail,S.t("equip"),_act.bind("equip",{"id":item.id}),"Equip",true,conflict)
-		if item.get("two_handed",false) and not worn.get("shield",{}).is_empty():
-			_label(detail,S.t("shield_stowed"),15,S.GOLD,false,true)
-		_button(detail,S.t("unlock" if item.locked else "lock"),_act.bind("lock",{"id":item.id}),"Lock")
-	if not auto:
-		var reason := _material_reason(item,bag)
-		if not item.is_empty():
-			_button(detail,S.t("manual_remove" if materials.has(selected) else "manual_pick"),_toggle_material.bind(selected),"Material",false,not reason.is_empty())
-			if int(item.grade)<6:
-				_label(detail,S.t("next_fusion")%str(item.get("next_stat_text","")),15,S.MUTED,false,true)
-		_label(detail,S.t(reason) if reason!="" else S.t("fusion_help"),15,S.MUTED,false,true)
-		_button(detail,S.t("fusion")%materials.size(),_act.bind("merge",{"ids":materials.duplicate()}),"Merge",true,materials.size()!=3)
-	var merged: Dictionary = info.get("last_merge",{})
-	if not merged.is_empty() and merged.has("item"):
-		_line(body)
-		_label(body,"%s   ·   %s   ·   %s"%[S.t("fusion_last"),_weapon_name(merged.item),_stats(merged.item)],16,S.MINT,false,true)
-		_label(body,S.t("fusion_delta")%str(merged.comparison),15,S.MUTED,false,true).name = "LastFusionComparison"
+	InventoryMenu.render(self)
 
 func _worn_slots(worn: Dictionary) -> void:
 	_label(body,GrowthMenu.stats_text(info.get("stats",{})),16,S.MINT,false,true)
@@ -618,6 +717,9 @@ func _coach() -> void:
 		var status := "cleared" if _route_flag("cleared",i,difficulty) else ("open" if _route_flag("unlocked",i,difficulty) else "closed")
 		var caption := "%s     ·   %s"%[S.t("region%d"%i),S.t(status)]
 		var b := _button(list,caption,_route_select.bind(i),"Route%d"%i,i==route)
+		b.icon = S.region_art(i)
+		b.expand_icon = true
+		b.add_theme_constant_override("icon_max_width",64)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var stamp := TravelStamp.new()
@@ -638,6 +740,7 @@ func _quest_select(index: int) -> void:
 	_render()
 
 func _elder() -> void:
+	_portrait(body,"elder",S.t("elder_greeting"),S.t("elder_caption"))
 	var quests: Array = info.get("quests",[])
 	if quests.is_empty():
 		_label(body,S.t("quest_goal"),17,S.PAPER,false,true)
@@ -682,6 +785,7 @@ func _bag_has_room(design: int, grade: int, protected := false) -> bool:
 func _shop() -> void:
 	var visit := active=="traveler"
 	var vendor: Dictionary = info.get("traveler",{})
+	_portrait(body,"traveler" if visit else "shop",S.t("traveler_greeting" if visit else "shop_greeting"),S.t("traveler_caption" if visit else "shop_caption"))
 	_balance()
 	if visit and not vendor.get("available",false):
 		_label(body,S.t("absent"),19,S.MUTED,false,true)
@@ -703,6 +807,11 @@ func _shop() -> void:
 	var vendor_id := "traveler" if visit else "shop"
 	var offers: Array = info.get("offers",{}).get(vendor_id,[])
 	if offers.is_empty(): return
+	_item_filter(body,offers)
+	offers = _filtered_items(offers)
+	if offers.is_empty():
+		_label(body,S.t("filter_empty"),17,S.MUTED,false,true)
+		return
 	var sides := _columns()
 	var list: Control = sides[0]
 	var detail: Control = sides[1]
@@ -718,13 +827,18 @@ func _shop() -> void:
 	for entry in offers:
 		var caption := "%s   ·   %s" % [entry.name,S.t("sold") if entry.sold else S.t("gold_fmt")%int(entry.price)]
 		var b := _button(list,caption,_choose.bind(int(entry.design)),"Offer%d"%int(entry.design),entry.design==selected)
+		b.icon = S.item_art(entry)
+		b.expand_icon = true
+		b.add_theme_constant_override("icon_max_width",52)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var price := int(offer.price)
 	var sold := bool(offer.sold)
-	_label(detail,_weapon_name(offer),21,S.GRADE[clampi(int(offer.grade),0,6)],true,true)
-	_label(detail,_type_name(offer),15,S.GOLD,false,true)
-	_label(detail,str(offer.stat_text),17,S.PAPER,false,true)
+	_details(detail,offer)
+	var owned := 0
+	for item in info.get("bag",[]):
+		if item.design==offer.design: owned += 1
+	_label(detail,S.t("shop_owned")%owned,15,S.MINT)
 	if visit: _label(detail,S.t("visit_stock")%int(offer.stock),15,S.MUTED,false,true)
 	var reason := ""
 	if sold: reason = "sold"

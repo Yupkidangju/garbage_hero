@@ -305,14 +305,33 @@ func _wheel(at: Vector2, direction: MouseButton) -> void:
 func _reveal(button: Button) -> bool:
 	var center := button.get_global_rect().get_center()
 	var ancestor := button.get_parent()
+	var scrolls: Array[ScrollContainer] = []
 	while ancestor:
 		if ancestor is ScrollContainer:
-			var rect: Rect2 = ancestor.get_global_rect()
-			if center.y < rect.position.y + 4 or center.y > rect.end.y - 4:
-				_wheel(rect.get_center(), MOUSE_BUTTON_WHEEL_UP if center.y < rect.position.y else MOUSE_BUTTON_WHEEL_DOWN)
-				next_ui = ticks + 4
-				return false
+			scrolls.append(ancestor)
 		ancestor = ancestor.get_parent()
+	scrolls.reverse()
+	for index in scrolls.size():
+		var scroll := scrolls[index]
+		var rect := scroll.get_global_rect().grow(-5)
+		var target := center
+		if index + 1 < scrolls.size():
+			var inner := scrolls[index+1].get_global_rect().grow(-7)
+			target = target.clamp(inner.position,inner.end)
+		if target.y < rect.position.y or target.y > rect.end.y:
+			var upward := target.y < rect.position.y
+			var scrollbar := scroll.get_v_scroll_bar()
+			if (upward and scrollbar.value<=scrollbar.min_value+0.5) or (not upward and scrollbar.value>=scrollbar.max_value-scrollbar.page-0.5):
+				continue
+			# 바깥 스크롤은 안쪽 목록이 휠을 가로채지 않는 세로 막대 위에서 조작한다.
+			var bar := scroll.get_v_scroll_bar().get_global_rect()
+			var wheel_point := Vector2(bar.get_center().x,rect.get_center().y)
+			for outer in scrolls.slice(0,index):
+				var visible_rect: Rect2 = outer.get_global_rect().grow(-3)
+				wheel_point = wheel_point.clamp(visible_rect.position,visible_rect.end)
+			_wheel(wheel_point,MOUSE_BUTTON_WHEEL_UP if upward else MOUSE_BUTTON_WHEEL_DOWN)
+			next_ui = ticks + 4
+			return false
 	return true
 
 func _click_button(button: Button) -> void:

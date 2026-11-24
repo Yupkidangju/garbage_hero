@@ -1,0 +1,25 @@
+{
+	"action_signals": {
+		"hit": 901,
+		"hook": 5,
+		"hurt": 233,
+		"slam": 2,
+		"spin": 11,
+		"swing1": 189,
+		"swing2": 19
+	},
+	"assets_valid": true,
+	"debug_build": false,
+	"editor_binary": false,
+	"frames": 11507,
+	"gpu": "AMD Radeon 780M Graphics",
+	"max_actors": 41,
+	"median_ms": 11.715,
+	"min_actors": 41,
+	"p95_ms": 19.26,
+	"renderer": "forward_plus",
+	"sample_s": 120.0,
+	"size": "(1920, 1080)",
+	"version": "0.3.0",
+	"warmup_s": 30.0
+}

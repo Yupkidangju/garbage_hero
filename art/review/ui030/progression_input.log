@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.262 - Forward+ - Using Device #0: AMD - AMD Radeon 780M Graphics
+
+SCROLL_DIAGNOSTIC Offer13 target=(350.0, 716.5) scroll=PanelScroll rect=[P: (85.0, 107.0), S: (1110.0, 579.0)] value=157 range=742.0
+ERROR: PROGRESSION_UI Could not scroll to Offer13
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://../tests/progression_input.gd:39)
+       [1] _click (res://../tests/progression_input.gd:109)
+       [2] _settle (res://../tests/progression_input.gd:43)

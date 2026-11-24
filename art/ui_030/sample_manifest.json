@@ -1,0 +1,128 @@
+[
+  {
+    "id": 0,
+    "kind": "sword",
+    "shape": "notched_cleaver",
+    "feature": "asymmetric iron signboard blade with two chips and wrapped grip",
+    "triangles": 21044,
+    "dimensions": [
+      0.4000000059604645,
+      0.13449999690055847,
+      1.4649730920791626
+    ],
+    "icon": "res://assets/ui/items/item_000.png",
+    "model": "res://assets/models/items/item_000.glb"
+  },
+  {
+    "id": 1,
+    "kind": "sword",
+    "shape": "thorn_hook",
+    "feature": "three backward hooks along a curved green blade",
+    "triangles": 19848,
+    "dimensions": [
+      0.4691564738750458,
+      0.13439999520778656,
+      1.5539470911026
+    ],
+    "icon": "res://assets/ui/items/item_001.png",
+    "model": "res://assets/models/items/item_001.glb"
+  },
+  {
+    "id": 29,
+    "kind": "sword",
+    "shape": "starwheel_longsword",
+    "feature": "long narrow blade intersected by a six-spoke brass starwheel guard",
+    "triangles": 34492,
+    "dimensions": [
+      0.5236803293228149,
+      0.15964221954345703,
+      1.7039883136749268
+    ],
+    "icon": "res://assets/ui/items/item_029.png",
+    "model": "res://assets/models/items/item_029.glb"
+  },
+  {
+    "id": 52,
+    "kind": "armor",
+    "shape": "bark_lamellar",
+    "feature": "overlapping bark scales and a raised pinecone shoulder",
+    "triangles": 10200,
+    "dimensions": [
+      0.5068843364715576,
+      0.31608372926712036,
+      0.5399854779243469
+    ],
+    "icon": "res://assets/ui/items/item_052.png",
+    "model": "res://assets/models/items/item_052.glb"
+  },
+  {
+    "id": 58,
+    "kind": "shield",
+    "shape": "pinecone_buckler",
+    "feature": "small round layered pinecone shield with a branch rim",
+    "triangles": 10012,
+    "dimensions": [
+      0.5075114965438843,
+      0.14048337936401367,
+      0.5075114965438843
+    ],
+    "icon": "res://assets/ui/items/item_058.png",
+    "model": "res://assets/models/items/item_058.glb"
+  },
+  {
+    "id": 64,
+    "kind": "boots",
+    "shape": "sand_sail_boots",
+    "feature": "tall tan boots with broad triangular side sail flaps",
+    "triangles": 6612,
+    "dimensions": [
+      0.3171156048774719,
+      0.3254909813404083,
+      0.34379246830940247
+    ],
+    "icon": "res://assets/ui/items/item_064.png",
+    "model": "res://assets/models/items/item_064.glb"
+  },
+  {
+    "id": 70,
+    "kind": "helmet",
+    "shape": "acorn_watchcap",
+    "feature": "deep ridged acorn cap with a single short stalk crest",
+    "triangles": 10436,
+    "dimensions": [
+      0.3740362823009491,
+      0.3740362823009491,
+      0.3611133098602295
+    ],
+    "icon": "res://assets/ui/items/item_070.png",
+    "model": "res://assets/models/items/item_070.glb"
+  },
+  {
+    "id": 76,
+    "kind": "ring",
+    "shape": "pine_knot_ring",
+    "feature": "braided wooden band with a raised seed-shaped knot",
+    "triangles": 25156,
+    "dimensions": [
+      0.362951397895813,
+      0.13831275701522827,
+      0.4614664316177368
+    ],
+    "icon": "res://assets/ui/items/item_076.png",
+    "model": "res://assets/models/items/item_076.glb"
+  },
+  {
+    "id": 82,
+    "kind": "necklace",
+    "shape": "acorn_whistle",
+    "feature": "small pierced wooden acorn whistle with a leaf on its cord",
+    "triangles": 13460,
+    "dimensions": [
+      0.42506852746009827,
+      0.14728586375713348,
+      0.6924043297767639
+    ],
+    "icon": "res://assets/ui/items/item_082.png",
+    "model": "res://assets/models/items/item_082.glb"
+  }
+]

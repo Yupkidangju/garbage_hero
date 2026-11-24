@@ -1,0 +1,1984 @@
+[
+  {
+    "id": 0,
+    "kind": "sword",
+    "region": -1,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_0",
+    "role_key": "ROLE_0",
+    "description_key": "DESC_0",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 0,
+      "shape": "notched_cleaver",
+      "material": "salvaged_iron_leather",
+      "color": "#859393",
+      "accent": "#bc8b55",
+      "feature": "asymmetric iron signboard blade with two chips and wrapped grip"
+    }
+  },
+  {
+    "id": 1,
+    "kind": "sword",
+    "region": 0,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_1",
+    "role_key": "ROLE_1",
+    "description_key": "DESC_1",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 1,
+      "shape": "thorn_hook",
+      "material": "wood_brass",
+      "color": "#4e7549",
+      "accent": "#b9ad69",
+      "feature": "three backward hooks along a curved green blade"
+    }
+  },
+  {
+    "id": 2,
+    "kind": "sword",
+    "region": 1,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_2",
+    "role_key": "ROLE_2",
+    "description_key": "DESC_2",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 2,
+      "shape": "glass_saw",
+      "material": "brass_glass",
+      "color": "#bd9250",
+      "accent": "#7de0d4",
+      "feature": "wide transparent amber blade with five triangular saw teeth"
+    }
+  },
+  {
+    "id": 3,
+    "kind": "sword",
+    "region": 2,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_3",
+    "role_key": "ROLE_3",
+    "description_key": "DESC_3",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 3,
+      "shape": "bell_counterweight",
+      "material": "aged_iron_bronze",
+      "color": "#615c70",
+      "accent": "#d1ac67",
+      "feature": "straight blade and a hanging bronze bell pommel"
+    }
+  },
+  {
+    "id": 4,
+    "kind": "sword",
+    "region": 3,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_4",
+    "role_key": "ROLE_4",
+    "description_key": "DESC_4",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 4,
+      "shape": "reed_sickle",
+      "material": "reed_copper",
+      "color": "#3b8174",
+      "accent": "#b5d689",
+      "feature": "long thin crescent sickle blade with forked reed guard"
+    }
+  },
+  {
+    "id": 5,
+    "kind": "sword",
+    "region": 4,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_5",
+    "role_key": "ROLE_5",
+    "description_key": "DESC_5",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 5,
+      "shape": "frost_saw",
+      "material": "ice_fur_silver",
+      "color": "#80b8d2",
+      "accent": "#e3f5ff",
+      "feature": "blue split-tip blade with a serrated ice ridge"
+    }
+  },
+  {
+    "id": 6,
+    "kind": "sword",
+    "region": 5,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_6",
+    "role_key": "ROLE_6",
+    "description_key": "DESC_6",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 6,
+      "shape": "crucible_falchion",
+      "material": "slag_iron_ember",
+      "color": "#7d4c44",
+      "accent": "#ff813b",
+      "feature": "heavy red single-edged blade with a square furnace vent"
+    }
+  },
+  {
+    "id": 7,
+    "kind": "bow",
+    "region": -1,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_7",
+    "role_key": "ROLE_7",
+    "description_key": "DESC_7",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 0,
+      "shape": "laundry_flatbow",
+      "material": "salvaged_iron_leather",
+      "color": "#859393",
+      "accent": "#bc8b55",
+      "feature": "uneven wooden stave with rope knots and a cloth pennant"
+    }
+  },
+  {
+    "id": 8,
+    "kind": "staff",
+    "region": -1,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_8",
+    "role_key": "ROLE_8",
+    "description_key": "DESC_8",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 0,
+      "shape": "lightbulb_crook",
+      "material": "salvaged_iron_leather",
+      "color": "#859393",
+      "accent": "#bc8b55",
+      "feature": "crooked copper pipe topped by one large bare lightbulb"
+    }
+  },
+  {
+    "id": 9,
+    "kind": "spear",
+    "region": -1,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_9",
+    "role_key": "ROLE_9",
+    "description_key": "DESC_9",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 0,
+      "shape": "fork_rake",
+      "material": "salvaged_iron_leather",
+      "color": "#859393",
+      "accent": "#bc8b55",
+      "feature": "three crooked iron rake prongs on a long wooden shaft"
+    }
+  },
+  {
+    "id": 10,
+    "kind": "mace",
+    "region": -1,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_10",
+    "role_key": "ROLE_10",
+    "description_key": "DESC_10",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 0,
+      "shape": "hex_nut_club",
+      "material": "salvaged_iron_leather",
+      "color": "#859393",
+      "accent": "#bc8b55",
+      "feature": "oversized hollow hex nut mounted across a short iron handle"
+    }
+  },
+  {
+    "id": 11,
+    "kind": "armor",
+    "region": -1,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_11",
+    "role_key": "ROLE_11",
+    "description_key": "DESC_11",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 0,
+      "shape": "tin_apron",
+      "material": "salvaged_iron_leather",
+      "color": "#859393",
+      "accent": "#bc8b55",
+      "feature": "square riveted tin apron with a leather neck loop and cloth skirt"
+    }
+  },
+  {
+    "id": 12,
+    "kind": "shield",
+    "region": -1,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_12",
+    "role_key": "ROLE_12",
+    "description_key": "DESC_12",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 0,
+      "shape": "pot_lid",
+      "material": "salvaged_iron_leather",
+      "color": "#859393",
+      "accent": "#bc8b55",
+      "feature": "round dented pot lid with a central knob and one chipped rim"
+    }
+  },
+  {
+    "id": 13,
+    "kind": "boots",
+    "region": -1,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_13",
+    "role_key": "ROLE_13",
+    "description_key": "DESC_13",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 0,
+      "shape": "patched_workboots",
+      "material": "salvaged_iron_leather",
+      "color": "#859393",
+      "accent": "#bc8b55",
+      "feature": "short square-toed leather work boots with mismatched tin patches"
+    }
+  },
+  {
+    "id": 14,
+    "kind": "helmet",
+    "region": -1,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_14",
+    "role_key": "ROLE_14",
+    "description_key": "DESC_14",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 0,
+      "shape": "kettle_helm",
+      "material": "salvaged_iron_leather",
+      "color": "#859393",
+      "accent": "#bc8b55",
+      "feature": "upturned dented kettle with a curved spout and loop handle"
+    }
+  },
+  {
+    "id": 15,
+    "kind": "ring",
+    "region": -1,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_15",
+    "role_key": "ROLE_15",
+    "description_key": "DESC_15",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 0,
+      "shape": "wire_loop",
+      "material": "salvaged_iron_leather",
+      "color": "#859393",
+      "accent": "#bc8b55",
+      "feature": "uneven double wire loop with a twisted overlap"
+    }
+  },
+  {
+    "id": 16,
+    "kind": "necklace",
+    "region": -1,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_16",
+    "role_key": "ROLE_16",
+    "description_key": "DESC_16",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 0,
+      "shape": "pulley_pendant",
+      "material": "salvaged_iron_leather",
+      "color": "#859393",
+      "accent": "#bc8b55",
+      "feature": "one large rusty grooved pulley hanging on an uneven rope loop"
+    }
+  },
+  {
+    "id": 17,
+    "kind": "bow",
+    "region": 0,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_17",
+    "role_key": "ROLE_17",
+    "description_key": "DESC_17",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 1,
+      "shape": "pine_recurve",
+      "material": "wood_brass",
+      "color": "#4e7549",
+      "accent": "#b9ad69",
+      "feature": "recurved branching limbs and a pinecone grip"
+    }
+  },
+  {
+    "id": 18,
+    "kind": "staff",
+    "region": 1,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_18",
+    "role_key": "ROLE_18",
+    "description_key": "DESC_18",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 2,
+      "shape": "glass_sun",
+      "material": "brass_glass",
+      "color": "#bd9250",
+      "accent": "#7de0d4",
+      "feature": "brass sun disk with seven glass rays above a straight rod"
+    }
+  },
+  {
+    "id": 19,
+    "kind": "mace",
+    "region": 2,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_19",
+    "role_key": "ROLE_19",
+    "description_key": "DESC_19",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 3,
+      "shape": "funeral_bell",
+      "material": "aged_iron_bronze",
+      "color": "#615c70",
+      "accent": "#d1ac67",
+      "feature": "large flared bronze bell hanging sideways from a black handle"
+    }
+  },
+  {
+    "id": 20,
+    "kind": "spear",
+    "region": 3,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_20",
+    "role_key": "ROLE_20",
+    "description_key": "DESC_20",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 4,
+      "shape": "reed_lance",
+      "material": "reed_copper",
+      "color": "#3b8174",
+      "accent": "#b5d689",
+      "feature": "slender leaf-shaped blade tied to a bundled reed shaft"
+    }
+  },
+  {
+    "id": 21,
+    "kind": "bow",
+    "region": 4,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_21",
+    "role_key": "ROLE_21",
+    "description_key": "DESC_21",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 5,
+      "shape": "frost_compound",
+      "material": "ice_fur_silver",
+      "color": "#80b8d2",
+      "accent": "#e3f5ff",
+      "feature": "layered blue hooked limbs with hexagonal ice tips"
+    }
+  },
+  {
+    "id": 22,
+    "kind": "mace",
+    "region": 5,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_22",
+    "role_key": "ROLE_22",
+    "description_key": "DESC_22",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 6,
+      "shape": "ember_anvil",
+      "material": "slag_iron_ember",
+      "color": "#7d4c44",
+      "accent": "#ff813b",
+      "feature": "heavy asymmetric anvil head with a red hot central groove"
+    }
+  },
+  {
+    "id": 23,
+    "kind": "boots",
+    "region": 0,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_23",
+    "role_key": "ROLE_23",
+    "description_key": "DESC_23",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 1,
+      "shape": "pineleaf_runners",
+      "material": "wood_brass",
+      "color": "#4e7549",
+      "accent": "#b9ad69",
+      "feature": "pointed green ankle boots with swept pineleaf cuffs"
+    }
+  },
+  {
+    "id": 24,
+    "kind": "ring",
+    "region": 1,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_24",
+    "role_key": "ROLE_24",
+    "description_key": "DESC_24",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 2,
+      "shape": "scorpion_ring",
+      "material": "brass_glass",
+      "color": "#bd9250",
+      "accent": "#7de0d4",
+      "feature": "open segmented brass ring whose claw and tail meet above the finger"
+    }
+  },
+  {
+    "id": 25,
+    "kind": "helmet",
+    "region": 2,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_25",
+    "role_key": "ROLE_25",
+    "description_key": "DESC_25",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 3,
+      "shape": "bellkeeper_helm",
+      "material": "aged_iron_bronze",
+      "color": "#615c70",
+      "accent": "#d1ac67",
+      "feature": "flared bell-shaped helmet with two vertical eye slits"
+    }
+  },
+  {
+    "id": 26,
+    "kind": "necklace",
+    "region": 3,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_26",
+    "role_key": "ROLE_26",
+    "description_key": "DESC_26",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 4,
+      "shape": "lily_seed_pendant",
+      "material": "reed_copper",
+      "color": "#3b8174",
+      "accent": "#b5d689",
+      "feature": "round green seedpod with five open petals on a reed cord"
+    }
+  },
+  {
+    "id": 27,
+    "kind": "armor",
+    "region": 4,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_27",
+    "role_key": "ROLE_27",
+    "description_key": "DESC_27",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 5,
+      "shape": "patched_parka",
+      "material": "ice_fur_silver",
+      "color": "#80b8d2",
+      "accent": "#e3f5ff",
+      "feature": "thick fur collar and asymmetric blue stitched quilted panels"
+    }
+  },
+  {
+    "id": 28,
+    "kind": "shield",
+    "region": 5,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_28",
+    "role_key": "ROLE_28",
+    "description_key": "DESC_28",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 6,
+      "shape": "slag_tower",
+      "material": "slag_iron_ember",
+      "color": "#7d4c44",
+      "accent": "#ff813b",
+      "feature": "tall asymmetrical slag slab with a glowing furnace slit"
+    }
+  },
+  {
+    "id": 29,
+    "kind": "sword",
+    "region": 0,
+    "district": 4,
+    "artifact": true,
+    "name_key": "DESIGN_29",
+    "role_key": "ROLE_29",
+    "description_key": "DESC_29",
+    "effect_id": "area",
+    "effects": {
+      "area": 0.12
+    },
+    "modifiers": {},
+    "visual": {
+      "variant": 7,
+      "shape": "starwheel_longsword",
+      "material": "clockwork_brass_crystal",
+      "color": "#b59959",
+      "accent": "#70e3d3",
+      "feature": "long narrow blade intersected by a six-spoke brass starwheel guard"
+    }
+  },
+  {
+    "id": 30,
+    "kind": "bow",
+    "region": 1,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_30",
+    "role_key": "ROLE_30",
+    "description_key": "DESC_30",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 2,
+      "shape": "hourglass_longbow",
+      "material": "brass_glass",
+      "color": "#bd9250",
+      "accent": "#7de0d4",
+      "feature": "tall angular double limbs around a brass hourglass"
+    }
+  },
+  {
+    "id": 31,
+    "kind": "bow",
+    "region": 2,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_31",
+    "role_key": "ROLE_31",
+    "description_key": "DESC_31",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 3,
+      "shape": "bell_shortbow",
+      "material": "aged_iron_bronze",
+      "color": "#615c70",
+      "accent": "#d1ac67",
+      "feature": "short compact square arms with two dangling bells"
+    }
+  },
+  {
+    "id": 32,
+    "kind": "bow",
+    "region": 3,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_32",
+    "role_key": "ROLE_32",
+    "description_key": "DESC_32",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 4,
+      "shape": "lily_foldingbow",
+      "material": "reed_copper",
+      "color": "#3b8174",
+      "accent": "#b5d689",
+      "feature": "broad leaf-shaped folding arms and a round lily hub"
+    }
+  },
+  {
+    "id": 33,
+    "kind": "bow",
+    "region": 5,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_33",
+    "role_key": "ROLE_33",
+    "description_key": "DESC_33",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 6,
+      "shape": "bellows_pulleybow",
+      "material": "slag_iron_ember",
+      "color": "#7d4c44",
+      "accent": "#ff813b",
+      "feature": "split metal arms with large pulley wheels and red bellows"
+    }
+  },
+  {
+    "id": 34,
+    "kind": "bow",
+    "region": 1,
+    "district": 4,
+    "artifact": true,
+    "name_key": "DESIGN_34",
+    "role_key": "ROLE_34",
+    "description_key": "DESC_34",
+    "effect_id": "pierce",
+    "effects": {
+      "pierce": 2
+    },
+    "modifiers": {},
+    "visual": {
+      "variant": 7,
+      "shape": "comet_orbitbow",
+      "material": "clockwork_brass_crystal",
+      "color": "#b59959",
+      "accent": "#70e3d3",
+      "feature": "open circular orbit frame with a comet point at its upper tip"
+    }
+  },
+  {
+    "id": 35,
+    "kind": "staff",
+    "region": 0,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_35",
+    "role_key": "ROLE_35",
+    "description_key": "DESC_35",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 1,
+      "shape": "acorn_lantern",
+      "material": "wood_brass",
+      "color": "#4e7549",
+      "accent": "#b9ad69",
+      "feature": "forked branch cradling a hanging ribbed acorn lantern"
+    }
+  },
+  {
+    "id": 36,
+    "kind": "staff",
+    "region": 2,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_36",
+    "role_key": "ROLE_36",
+    "description_key": "DESC_36",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 3,
+      "shape": "funeral_candelabrum",
+      "material": "aged_iron_bronze",
+      "color": "#615c70",
+      "accent": "#d1ac67",
+      "feature": "three uneven candle arms above a dark tapered staff"
+    }
+  },
+  {
+    "id": 37,
+    "kind": "staff",
+    "region": 3,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_37",
+    "role_key": "ROLE_37",
+    "description_key": "DESC_37",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 4,
+      "shape": "lily_sluice",
+      "material": "reed_copper",
+      "color": "#3b8174",
+      "accent": "#b5d689",
+      "feature": "open flower bowl above a short horizontal waterwheel"
+    }
+  },
+  {
+    "id": 38,
+    "kind": "staff",
+    "region": 4,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_38",
+    "role_key": "ROLE_38",
+    "description_key": "DESC_38",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 5,
+      "shape": "icicle_baton",
+      "material": "ice_fur_silver",
+      "color": "#80b8d2",
+      "accent": "#e3f5ff",
+      "feature": "long tapered crystal spear with two offset floating ice fins"
+    }
+  },
+  {
+    "id": 39,
+    "kind": "staff",
+    "region": 5,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_39",
+    "role_key": "ROLE_39",
+    "description_key": "DESC_39",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 6,
+      "shape": "furnace_blower",
+      "material": "slag_iron_ember",
+      "color": "#7d4c44",
+      "accent": "#ff813b",
+      "feature": "cage-shaped furnace head with three flared exhaust pipes"
+    }
+  },
+  {
+    "id": 40,
+    "kind": "staff",
+    "region": 2,
+    "district": 4,
+    "artifact": true,
+    "name_key": "DESIGN_40",
+    "role_key": "ROLE_40",
+    "description_key": "DESC_40",
+    "effect_id": "area",
+    "effects": {
+      "area": 0.2
+    },
+    "modifiers": {},
+    "visual": {
+      "variant": 7,
+      "shape": "armillary_compass",
+      "material": "clockwork_brass_crystal",
+      "color": "#b59959",
+      "accent": "#70e3d3",
+      "feature": "three intersecting brass orbits enclosing a luminous compass needle"
+    }
+  },
+  {
+    "id": 41,
+    "kind": "spear",
+    "region": 0,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_41",
+    "role_key": "ROLE_41",
+    "description_key": "DESC_41",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 1,
+      "shape": "pine_fork",
+      "material": "wood_brass",
+      "color": "#4e7549",
+      "accent": "#b9ad69",
+      "feature": "two spreading hooked branch points with an acorn socket"
+    }
+  },
+  {
+    "id": 42,
+    "kind": "spear",
+    "region": 1,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_42",
+    "role_key": "ROLE_42",
+    "description_key": "DESC_42",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 2,
+      "shape": "scorpion_tail",
+      "material": "brass_glass",
+      "color": "#bd9250",
+      "accent": "#7de0d4",
+      "feature": "segmented curved brass stinger and two glass side barbs"
+    }
+  },
+  {
+    "id": 43,
+    "kind": "spear",
+    "region": 2,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_43",
+    "role_key": "ROLE_43",
+    "description_key": "DESC_43",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 3,
+      "shape": "tomb_banner",
+      "material": "aged_iron_bronze",
+      "color": "#615c70",
+      "accent": "#d1ac67",
+      "feature": "broad gravestone-shaped point with a torn side banner"
+    }
+  },
+  {
+    "id": 44,
+    "kind": "spear",
+    "region": 4,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_44",
+    "role_key": "ROLE_44",
+    "description_key": "DESC_44",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 5,
+      "shape": "goat_horn_pike",
+      "material": "ice_fur_silver",
+      "color": "#80b8d2",
+      "accent": "#e3f5ff",
+      "feature": "twin swept goat horns embracing a long central ice point"
+    }
+  },
+  {
+    "id": 45,
+    "kind": "spear",
+    "region": 5,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_45",
+    "role_key": "ROLE_45",
+    "description_key": "DESC_45",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 6,
+      "shape": "chimney_awl",
+      "material": "slag_iron_ember",
+      "color": "#7d4c44",
+      "accent": "#ff813b",
+      "feature": "square perforated chimney socket and a glowing narrow awl"
+    }
+  },
+  {
+    "id": 46,
+    "kind": "spear",
+    "region": 3,
+    "district": 4,
+    "artifact": true,
+    "name_key": "DESIGN_46",
+    "role_key": "ROLE_46",
+    "description_key": "DESC_46",
+    "effect_id": "area",
+    "effects": {
+      "area": 0.12
+    },
+    "modifiers": {},
+    "visual": {
+      "variant": 7,
+      "shape": "ford_trident",
+      "material": "clockwork_brass_crystal",
+      "color": "#b59959",
+      "accent": "#70e3d3",
+      "feature": "large open crescent trident with a miniature waterwheel center"
+    }
+  },
+  {
+    "id": 47,
+    "kind": "mace",
+    "region": 0,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_47",
+    "role_key": "ROLE_47",
+    "description_key": "DESC_47",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 1,
+      "shape": "acorn_mallet",
+      "material": "wood_brass",
+      "color": "#4e7549",
+      "accent": "#b9ad69",
+      "feature": "large ribbed wooden acorn head with a brass band"
+    }
+  },
+  {
+    "id": 48,
+    "kind": "mace",
+    "region": 1,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_48",
+    "role_key": "ROLE_48",
+    "description_key": "DESC_48",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 2,
+      "shape": "glass_mortar",
+      "material": "brass_glass",
+      "color": "#bd9250",
+      "accent": "#7de0d4",
+      "feature": "hollow square mortar head filled with amber glass shards"
+    }
+  },
+  {
+    "id": 49,
+    "kind": "mace",
+    "region": 3,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_49",
+    "role_key": "ROLE_49",
+    "description_key": "DESC_49",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "max_hp": 0.45
+    },
+    "visual": {
+      "variant": 4,
+      "shape": "sluice_cog",
+      "material": "reed_copper",
+      "color": "#3b8174",
+      "accent": "#b5d689",
+      "feature": "wide eight-tooth gear with two opposed metal jaws"
+    }
+  },
+  {
+    "id": 50,
+    "kind": "mace",
+    "region": 4,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_50",
+    "role_key": "ROLE_50",
+    "description_key": "DESC_50",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {},
+    "visual": {
+      "variant": 5,
+      "shape": "glacier_pendulum",
+      "material": "ice_fur_silver",
+      "color": "#80b8d2",
+      "accent": "#e3f5ff",
+      "feature": "long tapered hexagonal ice weight suspended by a rigid yoke"
+    }
+  },
+  {
+    "id": 51,
+    "kind": "mace",
+    "region": 4,
+    "district": 4,
+    "artifact": true,
+    "name_key": "DESIGN_51",
+    "role_key": "ROLE_51",
+    "description_key": "DESC_51",
+    "effect_id": "lifesteal",
+    "effects": {
+      "lifesteal": 0.06
+    },
+    "modifiers": {},
+    "visual": {
+      "variant": 7,
+      "shape": "oscillator_hammer",
+      "material": "clockwork_brass_crystal",
+      "color": "#b59959",
+      "accent": "#70e3d3",
+      "feature": "paired counterweights around a small piston on a long steel haft"
+    }
+  },
+  {
+    "id": 52,
+    "kind": "armor",
+    "region": 0,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_52",
+    "role_key": "ROLE_52",
+    "description_key": "DESC_52",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 0.7,
+      "max_hp": 1.5
+    },
+    "visual": {
+      "variant": 1,
+      "shape": "bark_lamellar",
+      "material": "wood_brass",
+      "color": "#4e7549",
+      "accent": "#b9ad69",
+      "feature": "overlapping bark scales and a raised pinecone shoulder"
+    }
+  },
+  {
+    "id": 53,
+    "kind": "armor",
+    "region": 1,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_53",
+    "role_key": "ROLE_53",
+    "description_key": "DESC_53",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 1.6,
+      "max_hp": 0.6
+    },
+    "visual": {
+      "variant": 2,
+      "shape": "sunshade_breastplate",
+      "material": "brass_glass",
+      "color": "#bd9250",
+      "accent": "#7de0d4",
+      "feature": "arched brass sunshade shoulder with a ventilated narrow chest"
+    }
+  },
+  {
+    "id": 54,
+    "kind": "armor",
+    "region": 2,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_54",
+    "role_key": "ROLE_54",
+    "description_key": "DESC_54",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 0.65,
+      "max_hp": 1.8
+    },
+    "visual": {
+      "variant": 3,
+      "shape": "tomb_oathplate",
+      "material": "aged_iron_bronze",
+      "color": "#615c70",
+      "accent": "#d1ac67",
+      "feature": "tall gravestone chest plate with a cross brace and torn black sash"
+    }
+  },
+  {
+    "id": 55,
+    "kind": "armor",
+    "region": 3,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_55",
+    "role_key": "ROLE_55",
+    "description_key": "DESC_55",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "speed": 0.006
+    },
+    "visual": {
+      "variant": 4,
+      "shape": "sluice_scalemail",
+      "material": "reed_copper",
+      "color": "#3b8174",
+      "accent": "#b5d689",
+      "feature": "three overlapping crescent watergate plates with green straps"
+    }
+  },
+  {
+    "id": 56,
+    "kind": "armor",
+    "region": 5,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_56",
+    "role_key": "ROLE_56",
+    "description_key": "DESC_56",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 1.9,
+      "max_hp": 0.55
+    },
+    "visual": {
+      "variant": 6,
+      "shape": "crucible_heatplate",
+      "material": "slag_iron_ember",
+      "color": "#7d4c44",
+      "accent": "#ff813b",
+      "feature": "round crucible chest bowl with two broad furnace shoulder shields"
+    }
+  },
+  {
+    "id": 57,
+    "kind": "armor",
+    "region": 5,
+    "district": 4,
+    "artifact": true,
+    "name_key": "DESIGN_57",
+    "role_key": "ROLE_57",
+    "description_key": "DESC_57",
+    "effect_id": "lifesteal",
+    "effects": {
+      "lifesteal": 0.02
+    },
+    "modifiers": {
+      "defense": 1.2,
+      "max_hp": 1.3
+    },
+    "visual": {
+      "variant": 7,
+      "shape": "engine_heartplate",
+      "material": "clockwork_brass_crystal",
+      "color": "#b59959",
+      "accent": "#70e3d3",
+      "feature": "open ribbed chest cage around a glowing heart-shaped piston"
+    }
+  },
+  {
+    "id": 58,
+    "kind": "shield",
+    "region": 0,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_58",
+    "role_key": "ROLE_58",
+    "description_key": "DESC_58",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 0.75,
+      "max_hp": 0.8
+    },
+    "visual": {
+      "variant": 1,
+      "shape": "pinecone_buckler",
+      "material": "wood_brass",
+      "color": "#4e7549",
+      "accent": "#b9ad69",
+      "feature": "small round layered pinecone shield with a branch rim"
+    }
+  },
+  {
+    "id": 59,
+    "kind": "shield",
+    "region": 1,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_59",
+    "role_key": "ROLE_59",
+    "description_key": "DESC_59",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 1.0,
+      "crit": 0.12
+    },
+    "visual": {
+      "variant": 2,
+      "shape": "scorpion_kite",
+      "material": "brass_glass",
+      "color": "#bd9250",
+      "accent": "#7de0d4",
+      "feature": "elongated pointed kite shield with two raised pincer wings"
+    }
+  },
+  {
+    "id": 60,
+    "kind": "shield",
+    "region": 2,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_60",
+    "role_key": "ROLE_60",
+    "description_key": "DESC_60",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 1.45
+    },
+    "visual": {
+      "variant": 3,
+      "shape": "funeral_cross",
+      "material": "aged_iron_bronze",
+      "color": "#615c70",
+      "accent": "#d1ac67",
+      "feature": "wide cross-shaped iron shield with four bell-cut corners"
+    }
+  },
+  {
+    "id": 61,
+    "kind": "shield",
+    "region": 3,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_61",
+    "role_key": "ROLE_61",
+    "description_key": "DESC_61",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 0.8,
+      "speed": 0.006
+    },
+    "visual": {
+      "variant": 4,
+      "shape": "sluice_crescent",
+      "material": "reed_copper",
+      "color": "#3b8174",
+      "accent": "#b5d689",
+      "feature": "open crescent watergate shield with a horizontal rivet bar"
+    }
+  },
+  {
+    "id": 62,
+    "kind": "shield",
+    "region": 4,
+    "district": 1,
+    "artifact": false,
+    "name_key": "DESIGN_62",
+    "role_key": "ROLE_62",
+    "description_key": "DESC_62",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 0.95,
+      "max_hp": 0.6
+    },
+    "visual": {
+      "variant": 5,
+      "shape": "frost_hexagon",
+      "material": "ice_fur_silver",
+      "color": "#80b8d2",
+      "accent": "#e3f5ff",
+      "feature": "wide translucent six-sided ice plate with three inset ribs"
+    }
+  },
+  {
+    "id": 63,
+    "kind": "shield",
+    "region": 0,
+    "district": 4,
+    "artifact": true,
+    "name_key": "DESIGN_63",
+    "role_key": "ROLE_63",
+    "description_key": "DESC_63",
+    "effect_id": "area",
+    "effects": {
+      "area": 0.06
+    },
+    "modifiers": {
+      "defense": 1.2
+    },
+    "visual": {
+      "variant": 7,
+      "shape": "wheel_spoke_guard",
+      "material": "clockwork_brass_crystal",
+      "color": "#b59959",
+      "accent": "#70e3d3",
+      "feature": "large eight-spoke wheel with an offset brass hub and armored rim"
+    }
+  },
+  {
+    "id": 64,
+    "kind": "boots",
+    "region": 1,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_64",
+    "role_key": "ROLE_64",
+    "description_key": "DESC_64",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "speed": 0.8,
+      "max_hp": 0.65
+    },
+    "visual": {
+      "variant": 2,
+      "shape": "sand_sail_boots",
+      "material": "brass_glass",
+      "color": "#bd9250",
+      "accent": "#7de0d4",
+      "feature": "tall tan boots with broad triangular side sail flaps"
+    }
+  },
+  {
+    "id": 65,
+    "kind": "boots",
+    "region": 2,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_65",
+    "role_key": "ROLE_65",
+    "description_key": "DESC_65",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "speed": 0.95,
+      "crit": 0.12
+    },
+    "visual": {
+      "variant": 3,
+      "shape": "bell_pilgrim_shoes",
+      "material": "aged_iron_bronze",
+      "color": "#615c70",
+      "accent": "#d1ac67",
+      "feature": "low curled black shoes carrying small heel bells"
+    }
+  },
+  {
+    "id": 66,
+    "kind": "boots",
+    "region": 3,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_66",
+    "role_key": "ROLE_66",
+    "description_key": "DESC_66",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "speed": 1.3
+    },
+    "visual": {
+      "variant": 4,
+      "shape": "reed_floatboots",
+      "material": "reed_copper",
+      "color": "#3b8174",
+      "accent": "#b5d689",
+      "feature": "wide flat reed-pontoon soles and open laced calves"
+    }
+  },
+  {
+    "id": 67,
+    "kind": "boots",
+    "region": 4,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_67",
+    "role_key": "ROLE_67",
+    "description_key": "DESC_67",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "speed": 0.8,
+      "defense": 0.1
+    },
+    "visual": {
+      "variant": 5,
+      "shape": "icicle_crampons",
+      "material": "ice_fur_silver",
+      "color": "#80b8d2",
+      "accent": "#e3f5ff",
+      "feature": "thick fur cuffs and four long angular crampon spikes"
+    }
+  },
+  {
+    "id": 68,
+    "kind": "boots",
+    "region": 5,
+    "district": 2,
+    "artifact": false,
+    "name_key": "DESIGN_68",
+    "role_key": "ROLE_68",
+    "description_key": "DESC_68",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "speed": 1.0,
+      "atk": 0.12
+    },
+    "visual": {
+      "variant": 6,
+      "shape": "ember_bellows_shoes",
+      "material": "slag_iron_ember",
+      "color": "#7d4c44",
+      "accent": "#ff813b",
+      "feature": "ribbed bellows heels with short metal exhaust nozzles"
+    }
+  },
+  {
+    "id": 69,
+    "kind": "boots",
+    "region": 1,
+    "district": 4,
+    "artifact": true,
+    "name_key": "DESIGN_69",
+    "role_key": "ROLE_69",
+    "description_key": "DESC_69",
+    "effect_id": "area",
+    "effects": {
+      "area": 0.04
+    },
+    "modifiers": {
+      "speed": 1.3
+    },
+    "visual": {
+      "variant": 7,
+      "shape": "axle_walking_boots",
+      "material": "clockwork_brass_crystal",
+      "color": "#b59959",
+      "accent": "#70e3d3",
+      "feature": "segmented brass ankle braces with large circular outer bearings"
+    }
+  },
+  {
+    "id": 70,
+    "kind": "helmet",
+    "region": 0,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_70",
+    "role_key": "ROLE_70",
+    "description_key": "DESC_70",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 0.7,
+      "max_hp": 1.5
+    },
+    "visual": {
+      "variant": 1,
+      "shape": "acorn_watchcap",
+      "material": "wood_brass",
+      "color": "#4e7549",
+      "accent": "#b9ad69",
+      "feature": "deep ridged acorn cap with a single short stalk crest"
+    }
+  },
+  {
+    "id": 71,
+    "kind": "helmet",
+    "region": 1,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_71",
+    "role_key": "ROLE_71",
+    "description_key": "DESC_71",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 1.6,
+      "max_hp": 0.7,
+      "speed": 0.004
+    },
+    "visual": {
+      "variant": 2,
+      "shape": "brass_sunhat",
+      "material": "brass_glass",
+      "color": "#bd9250",
+      "accent": "#7de0d4",
+      "feature": "very broad flat brass brim and a low domed vented crown"
+    }
+  },
+  {
+    "id": 72,
+    "kind": "helmet",
+    "region": 3,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_72",
+    "role_key": "ROLE_72",
+    "description_key": "DESC_72",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 0.8,
+      "max_hp": 1.1,
+      "crit": 0.12
+    },
+    "visual": {
+      "variant": 4,
+      "shape": "lily_gate_helm",
+      "material": "reed_copper",
+      "color": "#3b8174",
+      "accent": "#b5d689",
+      "feature": "open lily petals around a watergate-bar face guard"
+    }
+  },
+  {
+    "id": 73,
+    "kind": "helmet",
+    "region": 4,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_73",
+    "role_key": "ROLE_73",
+    "description_key": "DESC_73",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "defense": 1.2,
+      "max_hp": 1.25
+    },
+    "visual": {
+      "variant": 5,
+      "shape": "horned_fur_helm",
+      "material": "ice_fur_silver",
+      "color": "#80b8d2",
+      "accent": "#e3f5ff",
+      "feature": "thick white fur cap with two short swept goat horns"
+    }
+  },
+  {
+    "id": 74,
+    "kind": "helmet",
+    "region": 5,
+    "district": 3,
+    "artifact": false,
+    "name_key": "DESIGN_74",
+    "role_key": "ROLE_74",
+    "description_key": "DESC_74",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "max_hp": 0.65,
+      "atk": 0.2
+    },
+    "visual": {
+      "variant": 6,
+      "shape": "chimney_welder",
+      "material": "slag_iron_ember",
+      "color": "#7d4c44",
+      "accent": "#ff813b",
+      "feature": "box-shaped welding mask and a short crooked exhaust chimney"
+    }
+  },
+  {
+    "id": 75,
+    "kind": "helmet",
+    "region": 2,
+    "district": 4,
+    "artifact": true,
+    "name_key": "DESIGN_75",
+    "role_key": "ROLE_75",
+    "description_key": "DESC_75",
+    "effect_id": "area",
+    "effects": {
+      "area": 0.06
+    },
+    "modifiers": {
+      "defense": 1.3,
+      "max_hp": 1.1
+    },
+    "visual": {
+      "variant": 7,
+      "shape": "star_lens_helm",
+      "material": "clockwork_brass_crystal",
+      "color": "#b59959",
+      "accent": "#70e3d3",
+      "feature": "round brass observatory dome with a large offset telescope lens"
+    }
+  },
+  {
+    "id": 76,
+    "kind": "ring",
+    "region": 0,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_76",
+    "role_key": "ROLE_76",
+    "description_key": "DESC_76",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "atk": 0.8,
+      "max_hp": 0.55
+    },
+    "visual": {
+      "variant": 1,
+      "shape": "pine_knot_ring",
+      "material": "wood_brass",
+      "color": "#4e7549",
+      "accent": "#b9ad69",
+      "feature": "braided wooden band with a raised seed-shaped knot"
+    }
+  },
+  {
+    "id": 77,
+    "kind": "ring",
+    "region": 2,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_77",
+    "role_key": "ROLE_77",
+    "description_key": "DESC_77",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "atk": 0.6,
+      "crit": 1.6
+    },
+    "visual": {
+      "variant": 3,
+      "shape": "funeral_signet",
+      "material": "aged_iron_bronze",
+      "color": "#615c70",
+      "accent": "#d1ac67",
+      "feature": "flat octagonal dark signet with a tiny bell engraving"
+    }
+  },
+  {
+    "id": 78,
+    "kind": "ring",
+    "region": 3,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_78",
+    "role_key": "ROLE_78",
+    "description_key": "DESC_78",
+    "effect_id": "lifesteal",
+    "effects": {
+      "lifesteal": 0.02
+    },
+    "modifiers": {
+      "atk": 1.1,
+      "crit": 0.65
+    },
+    "visual": {
+      "variant": 4,
+      "shape": "leech_coil_ring",
+      "material": "reed_copper",
+      "color": "#3b8174",
+      "accent": "#b5d689",
+      "feature": "thick coiled leech body ending in a red sucker gem"
+    }
+  },
+  {
+    "id": 79,
+    "kind": "ring",
+    "region": 4,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_79",
+    "role_key": "ROLE_79",
+    "description_key": "DESC_79",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "atk": 0.7,
+      "crit": 1.25,
+      "max_hp": 0.5
+    },
+    "visual": {
+      "variant": 5,
+      "shape": "snowflake_ring",
+      "material": "ice_fur_silver",
+      "color": "#80b8d2",
+      "accent": "#e3f5ff",
+      "feature": "thin silver band supporting a large branching six-point snowflake"
+    }
+  },
+  {
+    "id": 80,
+    "kind": "ring",
+    "region": 5,
+    "district": 4,
+    "artifact": false,
+    "name_key": "DESIGN_80",
+    "role_key": "ROLE_80",
+    "description_key": "DESC_80",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "atk": 1.7,
+      "crit": 0.6
+    },
+    "visual": {
+      "variant": 6,
+      "shape": "ember_crucible_ring",
+      "material": "slag_iron_ember",
+      "color": "#7d4c44",
+      "accent": "#ff813b",
+      "feature": "wide black band supporting a small open red crucible cup"
+    }
+  },
+  {
+    "id": 81,
+    "kind": "ring",
+    "region": 3,
+    "district": 4,
+    "artifact": true,
+    "name_key": "DESIGN_81",
+    "role_key": "ROLE_81",
+    "description_key": "DESC_81",
+    "effect_id": "lifesteal",
+    "effects": {
+      "lifesteal": 0.06
+    },
+    "modifiers": {
+      "atk": 1.0,
+      "crit": 1.0
+    },
+    "visual": {
+      "variant": 7,
+      "shape": "heartbeat_ring",
+      "material": "clockwork_brass_crystal",
+      "color": "#b59959",
+      "accent": "#70e3d3",
+      "feature": "split double band framing a red mechanical heart and two tiny pipes"
+    }
+  },
+  {
+    "id": 82,
+    "kind": "necklace",
+    "region": 0,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_82",
+    "role_key": "ROLE_82",
+    "description_key": "DESC_82",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "crit": 0.7,
+      "speed": 0.006
+    },
+    "visual": {
+      "variant": 1,
+      "shape": "acorn_whistle",
+      "material": "wood_brass",
+      "color": "#4e7549",
+      "accent": "#b9ad69",
+      "feature": "small pierced wooden acorn whistle with a leaf on its cord"
+    }
+  },
+  {
+    "id": 83,
+    "kind": "necklace",
+    "region": 1,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_83",
+    "role_key": "ROLE_83",
+    "description_key": "DESC_83",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "crit": 1.6,
+      "max_hp": 0.65
+    },
+    "visual": {
+      "variant": 2,
+      "shape": "hourglass_pendant",
+      "material": "brass_glass",
+      "color": "#bd9250",
+      "accent": "#7de0d4",
+      "feature": "narrow hourglass in a brass triangular cage"
+    }
+  },
+  {
+    "id": 84,
+    "kind": "necklace",
+    "region": 2,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_84",
+    "role_key": "ROLE_84",
+    "description_key": "DESC_84",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "crit": 0.65,
+      "max_hp": 1.0,
+      "defense": 0.12
+    },
+    "visual": {
+      "variant": 3,
+      "shape": "funeral_chime",
+      "material": "aged_iron_bronze",
+      "color": "#615c70",
+      "accent": "#d1ac67",
+      "feature": "small flared bronze bell suspended from a black chain"
+    }
+  },
+  {
+    "id": 85,
+    "kind": "necklace",
+    "region": 4,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_85",
+    "role_key": "ROLE_85",
+    "description_key": "DESC_85",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "crit": 0.8,
+      "max_hp": 1.6
+    },
+    "visual": {
+      "variant": 5,
+      "shape": "icicle_teardrop",
+      "material": "ice_fur_silver",
+      "color": "#80b8d2",
+      "accent": "#e3f5ff",
+      "feature": "long blue teardrop crystal with a jagged silver cap"
+    }
+  },
+  {
+    "id": 86,
+    "kind": "necklace",
+    "region": 5,
+    "district": 0,
+    "artifact": false,
+    "name_key": "DESIGN_86",
+    "role_key": "ROLE_86",
+    "description_key": "DESC_86",
+    "effect_id": "",
+    "effects": {},
+    "modifiers": {
+      "crit": 0.9,
+      "max_hp": 0.8,
+      "atk": 0.2
+    },
+    "visual": {
+      "variant": 6,
+      "shape": "bellows_heart",
+      "material": "slag_iron_ember",
+      "color": "#7d4c44",
+      "accent": "#ff813b",
+      "feature": "ribbed red bellows heart with two copper valves"
+    }
+  },
+  {
+    "id": 87,
+    "kind": "necklace",
+    "region": 4,
+    "district": 4,
+    "artifact": true,
+    "name_key": "DESIGN_87",
+    "role_key": "ROLE_87",
+    "description_key": "DESC_87",
+    "effect_id": "area",
+    "effects": {
+      "area": 0.12
+    },
+    "modifiers": {
+      "crit": 0.9,
+      "max_hp": 1.15
+    },
+    "visual": {
+      "variant": 7,
+      "shape": "sixroad_compass",
+      "material": "clockwork_brass_crystal",
+      "color": "#b59959",
+      "accent": "#70e3d3",
+      "feature": "large open six-spoke compass dial with a moving central needle"
+    }
+  }
+]

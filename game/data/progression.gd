@@ -134,7 +134,8 @@ static func stats(p: Dictionary, bonuses: Dictionary) -> Dictionary:
 		"crit":clampi(int(bonuses.get("crit", 0)) + p.attributes.agility, 0, 100),
 		"defense":int(bonuses.get("defense", 0)),
 		"max_hp":100 + int(bonuses.get("max_hp", 0)) + 10 * p.attributes.vitality,
-		"speed":5.0 + float(bonuses.get("speed", 0.0))}
+		"speed":5.0 + float(bonuses.get("speed", 0.0)),
+		"effects":bonuses.get("effects", {}).duplicate()}
 
 
 static func valid(p: Variant) -> bool:

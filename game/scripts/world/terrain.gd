@@ -2,6 +2,8 @@ extends RefCounted
 
 const Painter = preload("res://scripts/world/scenery_mesh.gd")
 const GROUND = preload("res://scripts/world/landscape.gdshader")
+const WATER = preload("res://scripts/world/water.gdshader")
+const CollisionSurface = preload("res://scripts/world/collision_surface.gd")
 const HEIGHT = preload("res://scripts/world/height.gd")
 const Layout = preload("res://scripts/world/field_layout.gd")
 const PALETTES = [
@@ -27,7 +29,7 @@ func _init(painter:Painter, area:int) -> void:
 	colors=PALETTES[region+1]
 	if region>=0:
 		layout=Layout.new(region)
-		texture_bounds=Rect2(-72,-72,144,144)
+		texture_bounds=Rect2(-136,-120,272,240)
 
 func ribbon(points:PackedVector2Array,width:float,color:String,y:float,edge_variation:=.06) -> void:
 	var left:=PackedVector3Array()
@@ -81,7 +83,7 @@ func stamp(at:Vector2,half_size:Vector2) -> void:
 
 func generate() -> void:
 	var plane:=PlaneMesh.new()
-	plane.size=Vector2(125,125) if region<0 else Vector2(240,240)
+	plane.size=Vector2(125,125) if region<0 else Vector2(340,310)
 	var material:=ShaderMaterial.new()
 	material.shader=GROUND
 	material.set_shader_parameter("shade",Color(colors[0]))
@@ -116,6 +118,7 @@ func generate() -> void:
 		village_ground()
 	else:
 		field_ground()
+		waterways()
 	tracks.generate_mipmaps()
 	road_texture=ImageTexture.create_from_image(tracks)
 	material.set_shader_parameter("tracks",road_texture)
@@ -152,13 +155,7 @@ func field_surface(material:ShaderMaterial) -> void:
 	ground.name="WalkableRidge"
 	ground.mesh=mesh
 	g.node.add_child(ground)
-	var collider:=CollisionShape3D.new()
-	collider.shape=mesh.create_trimesh_shape()
-	var body:=StaticBody3D.new()
-	body.collision_layer=1
-	body.collision_mask=0
-	body.add_child(collider)
-	g.node.add_child(body)
+	CollisionSurface.add_to(g.node,mesh,region)
 
 func distant_ridges() -> void:
 	var shades:=["849b89","819b8b","bb987a","839691","78998d","8ba8b4","8f7770"]
@@ -166,8 +163,8 @@ func distant_ridges() -> void:
 	for i in 24:
 		var p:=Vector3(-39+i%12*7.15,0,-24-float(i/12)*5.9+g.rng.randf_range(-1.5,1.5))
 		if region>=0:
-			p.x*=2.0
-			p.z-=42.0
+			p.x*=3.4
+			p.z-=103.0
 		var h:=g.rng.randf_range(3.4,9.1)+(2.2 if i>=12 else 0.0)
 		var r:=g.rng.randf_range(4.5,7.8)
 		g.at(p,g.rng.randf()*TAU)
@@ -226,8 +223,94 @@ func field_ground() -> void:
 	stamp(Layout.ARENAS[region],Vector2(7,6.4))
 	for landmark in layout.landmarks:
 		stamp(landmark.pos,Vector2(4.2,3.6))
+	for cache in layout.caches:
+		stamp(cache.pos,Vector2(4.6,4.2))
 	for j in 450:
-		var p:=Vector2(g.rng.randf_range(-63,63),g.rng.randf_range(-55,55))
+		var p:=Vector2(g.rng.randf_range(-127,127),g.rng.randf_range(-111,111))
 		g.at(Vector3(p.x,0,p.y))
 		var s:=g.rng.randf_range(.05,.18)
 		g.patch(0,0,s*1.23,s*.55,colors[5],.034,5,.28)
+
+func _water_face(water:Dictionary,color:String,y:float) -> void:
+	var rect:Rect2=water.rect
+	var holder:=Node3D.new()
+	holder.name="Water_"+water.id.replace(":","_")
+	holder.set_meta("surface_kind",water.kind)
+	g.node.add_child(holder)
+	var fluid:=Painter.new(holder,91)
+	fluid.opaque.shader=WATER
+	fluid.opaque.set_shader_parameter("flow_speed",.25 if water.kind=="swamp" else 1.0)
+	fluid.at(Vector3.ZERO)
+	for iz in ceili(rect.size.y/2.0):
+		for ix in ceili(rect.size.x/2.0):
+			var p:=rect.position+Vector2(ix,iz)*2.0
+			var q:=p+Vector2(2,2)
+			q=q.min(rect.end)
+			var a:=Vector3(p.x,HEIGHT.altitude(p,region)+y,p.y)
+			var b:=Vector3(q.x,HEIGHT.altitude(Vector2(q.x,p.y),region)+y,p.y)
+			var c:=Vector3(q.x,HEIGHT.altitude(q,region)+y,q.y)
+			var d:=Vector3(p.x,HEIGHT.altitude(Vector2(p.x,q.y),region)+y,q.y)
+			fluid.quad(a,b,c,d,Vector3.UP,fluid.clr(color))
+	fluid.finish()
+	for part:MeshInstance3D in holder.get_children():
+		part.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
+func waterways() -> void:
+	for water in layout.waters:
+		var color:="607b6a" if water.kind=="swamp" else ("376f79" if water.kind=="deep" else "8bb6a6")
+		if region==1: color="507f81" if water.kind=="deep" else "a4ba9d"
+		if region==4: color="548caa" if water.kind=="deep" else "b4d9db"
+		if region==5: color="466965" if water.kind=="deep" else "b4a27d"
+		_water_face(water,color,.052 if water.kind=="deep" else .035)
+	var river:=Layout.deep_rect(region)
+	g.at(Vector3.ZERO)
+	for side:float in [-1.,1.]:
+		var x:=river.get_center().x+side*river.size.x*.5
+		for j in 68:
+			var z:=river.position.y+j*2.0
+			g.at(Vector3(x+side*.16,0,z))
+			g.patch(0,0,.18,.65,"c1d3be",.065,6,.12)
+			if j%3==0:
+				g.block(Vector3(side*.6,.10,0),Vector3(.34,.20,.8),colors[5])
+	for crossing in layout.crossings:
+		var center:Vector2=crossing.pos
+		if crossing.kind=="ford":
+			for j in 15:
+				g.at(Vector3(center.x-7+j,0,center.y+sin(j)*.26))
+				g.patch(0,0,.38,.63,"d7ceb0",.061,7,.07)
+		else:
+			g.at(Vector3(center.x,0,center.y))
+			for j in 40:
+				var x:=-7.8+j*.4
+				var h:=HEIGHT.walking_surface(Vector3(center.x+x,0,center.y),region)
+				g.block(Vector3(x,h-.045,0),Vector3(.38,.09,3.6),["ad8d65","c4a678","b89a6c"][j%3])
+			for z:float in [-1.72,1.72]:
+				for x:float in [-6.,-3.,0.,3.,6.]:
+					g.column(x,z,.18,.9,.09,.075,"876b50",6)
+				g.tube(Vector3(-6,.96,z),Vector3(6,.96,z),.045,.045,"b7a17b",6)
+			# 교량 충돌도 보행면과 동일한 완만한 양쪽 램프를 쓴다.
+			var faces:=PackedVector3Array()
+			for j in 32:
+				var x:=-8+j*.5
+				var a:=Vector3(center.x+x,HEIGHT.walking_surface(Vector3(center.x+x,0,center.y),region),center.y-1.8)
+				var b:=a+Vector3.BACK*3.6
+				var c:=Vector3(center.x+x+.5,HEIGHT.walking_surface(Vector3(center.x+x+.5,0,center.y),region),center.y-1.8)
+				faces.append_array(PackedVector3Array([a,c,b,c,c+Vector3.BACK*3.6,b]))
+			var bridge_body:=StaticBody3D.new()
+			bridge_body.collision_mask=0
+			var bridge_shape:=CollisionShape3D.new()
+			var triangles:=ConcavePolygonShape3D.new()
+			triangles.set_faces(faces)
+			bridge_shape.shape=triangles
+			bridge_body.add_child(bridge_shape)
+			g.node.add_child(bridge_body)
+	# 깊은 수역은 통로 스트립을 뺀 실체 충돌체다. 큰 돌진도 물리 벽을 관통하지 않는다.
+	var bridge:Dictionary=layout.crossings[0]
+	var ford:Dictionary=layout.crossings[1]
+	var segments:=[Vector2(river.position.y,bridge.pos.y-bridge.half_size.y),
+		Vector2(bridge.pos.y+bridge.half_size.y,ford.pos.y-ford.half_size.y),
+		Vector2(ford.pos.y+ford.half_size.y,river.end.y)]
+	for span:Vector2 in segments:
+		g.at(Vector3.ZERO)
+		g.frame=Transform3D.IDENTITY
+		g.solid(Vector3(river.get_center().x,.8,(span.x+span.y)*.5),Vector3(river.size.x,2.4,span.y-span.x))

@@ -1,0 +1,36 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.262 - Forward+ - Using Device #0: AMD - AMD Radeon 780M Graphics
+
+UI030 starting prepared fixture
+UI030_CHECK 1 PASS I opens inventory and pauses
+UI030_CHECK 2 PASS actual hero uses an isolated World3D
+UI030_CHECK 3 PASS preview cannot join combat or collision
+UI030_CHECK 4 PASS preview uses actual build
+UI030_CHECK 5 PASS all seven equipment image slots exist
+UI030_CHECK 6 PASS native viewport capture inventory-030
+UI030_CHECK 7 PASS three identical designs enable fusion
+UI030_CHECK 8 PASS clicked fusion commits three to one
+UI030_CHECK 9 PASS fusion success has an illustrated feedback panel
+UI030_CHECK 10 PASS native viewport capture fusion-030
+UI030_CHECK 11 PASS icon-grid equip reaches actual weapon
+UI030_CHECK 12 PASS character preview changes with actual equipment
+UI030_CHECK 13 PASS two-hand shield reason disables equip
+UI030_CHECK 14 PASS skill selection has live cast viewport
+UI030_CHECK 15 PASS replay starts actual volley combat move
+UI030_CHECK 16 PASS illustrated skill learn and assign commits
+UI030_CHECK 17 PASS native viewport capture skills-030
+UI030_CHECK 18 PASS attributes still change real combat stats
+UI030_CHECK 19 PASS all preview time leaves main player and group unchanged
+UI030_CHECK 20 PASS keyboard selects an item type filter
+UI030_CHECK 21 PASS native viewport capture inventory-030-150
+UI030_CHECK 22 PASS all unlocked commission designs can be purchased
+UI030_CHECK 23 PASS illustrated shop Buy commits quoted price
+UI030_CHECK 24 PASS native viewport capture shop-030-150
+UI030_CHECK 25 PASS elder portrait is present
+UI030_CHECK 26 PASS native viewport capture elder-030-150
+UI030_CHECK 27 PASS unlocked illustrated destination is actionable
+UI030_CHECK 28 PASS native viewport capture coach-030-150
+UI030_CHECK 29 PASS map uses expanded world and five actual districts
+UI030_CHECK 30 PASS map water crossing and treasure marks share world data
+UI030_CHECK 31 PASS native viewport capture map-030-150
+UI030: 31 checks, 0 failures, 22 actual mouse clicks; prepared fixture, isolated save C:/Users/temp/AppData/Local/Temp/garbagehero-ui030-202611241659291092896

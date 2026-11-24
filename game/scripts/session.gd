@@ -29,7 +29,7 @@ func _new_slot() -> Dictionary:
 		rng.randi()
 		seeds[name_key] = rng.state
 	var data := {"schema":Slot.SCHEMA, "seq":0, "coins":0, "next_id":2, "bag":[], "chest":[],
-		"progression":Growth.fresh(), "gear_slots":{},
+		"progression":Growth.fresh(), "gear_slots":{}, "cache_cycles":{},
 		"equipped":{"id":1, "order":1, "design":0, "grade":0, "atk":10, "crit":3, "locked":false},
 		"auto":true, "first_merge":false, "forest_kills":0, "bonus_stage":0, "routes":routes,
 		"claimed":[false,false,false,false,false,false,false], "active_route":-1, "pending_traveler":-1,
@@ -48,11 +48,13 @@ func start_slot(folder: String = "user://save") -> bool:
 			return _fail("LOAD_FAILED")
 		return _commit(_begin())
 	var restored: bool = _slot.recovered
-	var migrated: bool = _data.schema == 1
-	if migrated:
+	var migrated: bool = _data.schema < Slot.SCHEMA
+	if _data.schema == 1:
 		_data.progression = Growth.from_legacy(_data.first_merge, _data.routes[0].cleared)
 		_data.gear_slots = {}
+	if migrated:
 		Quests.initialize(_data)
+		_data.cache_cycles = {}
 		_data.schema = Slot.SCHEMA
 	if _data.active_route >= 0:
 		if not act("return", {}):
@@ -118,6 +120,10 @@ func world_state(region: int, difficulty: int) -> Dictionary:
 	for item in view.drops:
 		drops.append(Loot.describe(item))
 	view.drops = drops
+	view.opened_caches = []
+	for id in _data.cache_cycles.get(str(index), {}):
+		if _data.cache_cycles[str(index)][id] == view.cycle:
+			view.opened_caches.append(id)
 	return view
 
 func ui_state() -> Dictionary:
@@ -136,7 +142,7 @@ func ui_state() -> Dictionary:
 	return {"coins":_data.coins, "bag":bag, "chest":chest, "equipped":Loot.describe(_data.equipped),
 		"equipment":equipment, "progression":Growth.describe(_data.progression),
 		"stats":Growth.stats(_data.progression, Equipment.bonuses(_data)),
-		"offers":{"shop":Equipment.offers("shop", _data.traveler), "traveler":Equipment.offers("traveler", _data.traveler)},
+		"offers":{"shop":Equipment.offers("shop", _data.traveler, _data), "traveler":Equipment.offers("traveler", _data.traveler, _data)},
 		"auto":_data.auto, "first_merge":_data.first_merge, "forest_clear":cleared[0], "ending":cleared[23],
 		"traveler":_data.traveler.duplicate(true), "quests":Quests.views(_data), "cleared":cleared, "last_merge":_last_merge.duplicate(true)}
 
@@ -191,7 +197,7 @@ func _accept_normal(data: Dictionary, spawn_id: String) -> bool:
 		ranges.remove_at(i+1)
 	return true
 
-func record_kill(region: int, difficulty: int, kind: String, spawn_id: String, pos: Vector3) -> bool:
+func record_kill(region: int, difficulty: int, kind: String, spawn_id: String, pos: Vector3, context: Dictionary = {}) -> bool:
 	var index := _route(region, difficulty)
 	if _data.is_empty() or index < 0 or index != _data.active_route or spawn_id.is_empty() or not pos.is_finite():
 		return false
@@ -203,12 +209,13 @@ func record_kill(region: int, difficulty: int, kind: String, spawn_id: String, p
 	var rng := _stream(next, "loot")
 	var level := Loot.field_level(region, difficulty)
 	var draws := 0
+	var elite := kind == "normal" and is_same(context.get("elite", false), true)
 	match kind:
 		"normal":
 			if not _accept_normal(next, spawn_id):
 				return false
-			next.coins += 1
-			draws = 1 if rng.randf() < 0.22 + 0.0025 * (level - 1) else 0
+			next.coins += 3 if elite else 1
+			draws = 1 if elite or rng.randf() < 0.22 + 0.0025 * (level - 1) else 0
 			if index == 0:
 				next.forest_kills += 1
 				if next.bonus_stage < 3 and next.forest_kills >= (next.bonus_stage + 1) * 3:
@@ -241,14 +248,43 @@ func record_kill(region: int, difficulty: int, kind: String, spawn_id: String, p
 			route.minis = 0
 			route.rest = 30
 	var levels: int = Growth.gain(next.progression, Loot.field_level(region, difficulty), kind)
+	if elite:
+		levels += Growth.gain(next.progression, Loot.field_level(region, difficulty), kind)
 	if levels > 0:
 		_messages.append(Growth.level_notice(next.progression, levels))
 	for i in draws:
-		var design: int = Loot.draw_design(region, rng)
+		var design: int = Loot.draw_design(region, rng, str(context.get("district", "")))
 		var grade := Loot.draw_grade(level, rng)
 		var offset := Vector3(0.35, 0, 0) if i == 1 else Vector3.ZERO
 		_ground_item(next, route, design, grade, pos + offset, rng)
 	next.rng.loot = rng.state
+	return _commit(next)
+
+func open_cache(region: int, difficulty: int, key: String, pos: Vector3) -> bool:
+	var index := _route(region, difficulty)
+	if index < 0 or _data.get("active_route", -1) != index or not Quests.FieldLayout.valid_cache(region, key) or not pos.is_finite() or _slot.unreadable:
+		return false
+	var route: Dictionary = _data.routes[index]
+	if _data.cache_cycles.get(str(index), {}).get(key, 0) == route.cycle:
+		return _fail("CACHE_EMPTY")
+	var next := _begin()
+	if not next.cache_cycles.has(str(index)):
+		next.cache_cycles[str(index)] = {}
+	next.cache_cycles[str(index)][key] = route.cycle
+	next.quest_history.caches[key] = true
+	next.coins += 8 + difficulty * 4
+	var rng := _stream(next, "loot")
+	var layout := Quests.FieldLayout.new(region)
+	var district := ""
+	for cache: Dictionary in layout.caches:
+		if cache.id == key:
+			district = layout.district_at(cache.pos)
+			break
+	var design: int = Loot.draw_design(region, rng, district)
+	var grade := Loot.draw_grade(mini(70, Loot.field_level(region, difficulty) + 6), rng)
+	_ground_item(next, next.routes[index], design, grade, pos, rng)
+	next.rng.loot = rng.state
+	_messages.append(Loot.caption("CACHE_OPEN"))
 	return _commit(next)
 
 func tick_rest(region: int, difficulty: int, seconds: int) -> bool:
@@ -329,7 +365,8 @@ func act(action: String, args: Dictionary = {}) -> bool:
 				return true
 			next.active_route = -1
 			if next.pending_traveler >= 0:
-				next.traveler = {"available":true,"sold":false,"region":next.pending_traveler,"price":18}
+				var visit_route: int = _route(next.pending_traveler, int(_data.active_route / 6))
+				next.traveler = {"available":true,"sold":false,"region":next.pending_traveler,"price":18, "visit":next.routes[visit_route].cycle}
 				next.pending_traveler = -1
 		"pickup":
 			if town:

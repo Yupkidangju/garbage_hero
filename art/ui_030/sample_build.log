@@ -1,0 +1,83 @@
+D:\godot\garbagehero\art\ui_030\build_items.py:25: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat.use_nodes = True
+D:\godot\garbagehero\art\ui_030\build_items.py:541: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world=bpy.data.worlds.new('Slate studio ambient');world.use_nodes=True
+INFO Draco is available, use library at C:\Program Files\Blender Foundation\Blender 5.2\5.2\scripts\addons_core\io_scene_gltf2\bf_intern_draco_bridge.dll
+INFO MeshOptimizer is available, use library at C:\Program Files\Blender Foundation\Blender 5.2\5.2\scripts\addons_core\io_scene_gltf2\bf_intern_meshopt_bridge.dll
+17:02:42 | INFO: Starting glTF 2.0 export
+17:02:42 | INFO: Extracting primitive: Item_000_notched_cleaver
+17:02:43 | INFO: Primitives created: 7
+17:02:43 | INFO: Finished glTF 2.0 export in 0.2705986499786377 s
+
+EXPORTED_ITEM 0 sword
+17:02:43 | INFO: Starting glTF 2.0 export
+17:02:43 | INFO: Extracting primitive: Item_001_thorn_hook
+17:02:43 | INFO: Primitives created: 4
+17:02:43 | INFO: Finished glTF 2.0 export in 0.20056915283203125 s
+
+EXPORTED_ITEM 1 sword
+17:02:43 | INFO: Starting glTF 2.0 export
+17:02:43 | INFO: Extracting primitive: Item_029_starwheel_longsword
+17:02:43 | INFO: Primitives created: 5
+17:02:43 | INFO: Finished glTF 2.0 export in 0.2330489158630371 s
+
+EXPORTED_ITEM 29 sword
+17:02:43 | INFO: Starting glTF 2.0 export
+17:02:43 | INFO: Extracting primitive: Item_052_bark_lamellar
+17:02:43 | INFO: Primitives created: 5
+17:02:43 | INFO: Finished glTF 2.0 export in 0.11607027053833008 s
+
+EXPORTED_ITEM 52 armor
+17:02:43 | INFO: Starting glTF 2.0 export
+17:02:43 | INFO: Extracting primitive: Item_058_pinecone_buckler
+17:02:44 | INFO: Primitives created: 4
+17:02:44 | INFO: Finished glTF 2.0 export in 0.12405848503112793 s
+
+EXPORTED_ITEM 58 shield
+17:02:44 | INFO: Starting glTF 2.0 export
+17:02:44 | INFO: Extracting primitive: Item_064_sand_sail_boots
+17:02:44 | INFO: Primitives created: 5
+17:02:44 | INFO: Finished glTF 2.0 export in 0.26512813568115234 s
+
+EXPORTED_ITEM 64 boots
+17:02:44 | INFO: Starting glTF 2.0 export
+17:02:44 | INFO: Extracting primitive: Item_070_acorn_watchcap
+17:02:44 | INFO: Primitives created: 3
+17:02:44 | INFO: Finished glTF 2.0 export in 0.18238258361816406 s
+
+EXPORTED_ITEM 70 helmet
+17:02:44 | INFO: Starting glTF 2.0 export
+17:02:44 | INFO: Extracting primitive: Item_076_pine_knot_ring
+17:02:44 | INFO: Primitives created: 4
+17:02:45 | INFO: Finished glTF 2.0 export in 0.3004012107849121 s
+
+EXPORTED_ITEM 76 ring
+17:02:45 | INFO: Starting glTF 2.0 export
+17:02:45 | INFO: Extracting primitive: Item_082_acorn_whistle
+17:02:45 | INFO: Primitives created: 5
+17:02:45 | INFO: Finished glTF 2.0 export in 0.08574271202087402 s
+
+EXPORTED_ITEM 82 necklace
+00:10.718  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_000.png'
+Info: Saved as "items_sample.blend"
+RENDERED_ITEM 0
+00:11.140  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_001.png'
+RENDERED_ITEM 1
+00:11.578  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_029.png'
+RENDERED_ITEM 29
+00:12.000  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_052.png'
+RENDERED_ITEM 52
+00:12.593  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_058.png'
+RENDERED_ITEM 58
+00:13.093  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_064.png'
+RENDERED_ITEM 64
+00:13.734  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_070.png'
+RENDERED_ITEM 70
+00:14.156  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_076.png'
+RENDERED_ITEM 76
+00:14.531  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_082.png'
+RENDERED_ITEM 82
+ITEM_ART_COMPLETE 9
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

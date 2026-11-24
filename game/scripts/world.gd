@@ -18,8 +18,11 @@ var materials:Array[ShaderMaterial]=[]
 var hero_cache:Node3D
 var anchors:Dictionary={}
 var sites:Array[Vector3]=[]
+var _site_anchors:Array[Vector2]=[]
 var _map:Dictionary={}
 var _obstacles:Dictionary={}
+var _layout:Layout
+var _cache_lids:Dictionary={}
 
 func _ready() -> void:
 	add_to_group("world")
@@ -28,6 +31,50 @@ func ground_at(world_pos:Vector3) -> float:
 	var local:=axes.to_local(world_pos)
 	local.y=Height.walking_surface(local,region)
 	return axes.to_global(local).y
+
+func ground_normal_at(world_pos:Vector3) -> Vector3:
+	var dx:=ground_at(world_pos+Vector3.RIGHT*.025)-ground_at(world_pos-Vector3.RIGHT*.025)
+	var dz:=ground_at(world_pos+Vector3.BACK*.025)-ground_at(world_pos-Vector3.BACK*.025)
+	return Vector3(-dx,.05,-dz).normalized()
+
+func surface_at(world_pos:Vector3) -> Dictionary:
+	var result:=movement_surface_at(world_pos)
+	result.height=ground_at(world_pos)
+	result.normal=ground_normal_at(world_pos)
+	return result
+
+func movement_surface_at(world_pos:Vector3) -> Dictionary:
+	var local:=axes.to_local(world_pos)
+	var result:Dictionary={"kind":"ground","speed":1.0,"walkable":true}
+	if region>=0: result=_layout.surface_at(Vector2(local.x,local.z))
+	else: result.walkable=_map.bounds.has_point(Vector2(local.x,local.z))
+	return result
+
+func walkable_at(world_pos:Vector3) -> bool:
+	var local:=axes.to_local(world_pos)
+	if region>=0: return _layout.walkable_at(Vector2(local.x,local.z))
+	return _map.bounds.has_point(Vector2(local.x,local.z))
+
+func constrain_motion(origin:Vector3,displacement:Vector3,radius:float) -> Vector3:
+	var from:=axes.to_local(origin)
+	var delta:=axes.global_basis.inverse()*displacement
+	var start:=Vector2(from.x,from.z)
+	var step:=Vector2(delta.x,delta.z)
+	var count:=maxi(1,ceili(step.length()/.20))
+	step/=count
+	var point:=start
+	for i in count:
+		if _body_surface_clear(point+step,radius):
+			point+=step
+		else:
+			if _body_surface_clear(point+Vector2(step.x,0),radius): point.x+=step.x
+			if _body_surface_clear(point+Vector2(0,step.y),radius): point.y+=step.y
+	var adjusted:=axes.global_basis*Vector3(point.x-start.x,delta.y,point.y-start.y)
+	return adjusted
+
+func _body_surface_clear(point:Vector2,radius:float) -> bool:
+	if region>=0: return _layout.clear_for_body(point,radius)
+	return _map.bounds.grow(-radius).has_point(point)
 
 func flat_below(mark: Transform3D, bounds: Rect2) -> bool:
 	var transform_to_ground := axes.global_transform.affine_inverse() * mark
@@ -52,7 +99,10 @@ func build(area:int) -> void:
 	traveler=null
 	anchors.clear()
 	sites.clear()
+	_site_anchors.clear()
 	_obstacles.clear()
+	_cache_lids.clear()
+	_layout=null
 	axes=Node3D.new()
 	axes.name="Landscape"
 	axes.rotation.y=PI*.25
@@ -76,9 +126,14 @@ func build(area:int) -> void:
 		materials.append(shopkeeper.fade)
 		traveler.visible=traveler_visible
 	else:
-		Fields.new(painter,region,landscape).generate()
+		var fields:=Fields.new(painter,region,landscape)
+		fields.generate()
+		_cache_lids=fields.cache_lids
 		var layout:=landscape.layout
-		_map.merge({"stream":layout.stream,"routes":layout.routes,"landmarks":layout.landmarks},true)
+		_layout=layout
+		_map.merge({"stream":layout.stream,"routes":layout.routes,"landmarks":layout.landmarks,
+			"districts":layout.districts,"caches":layout.caches,"waters":layout.waters,
+			"crossings":layout.crossings,"sideareas":layout.sideareas},true)
 		anchors["return"]=entry_point()
 		_index_obstacles()
 		for pocket in layout.pockets:
@@ -86,7 +141,9 @@ func build(area:int) -> void:
 				var p:=pocket+offset
 				if p.distance_to(Layout.ENTRY)<7.3 or p.distance_to(Layout.ARENAS[region])<7.0 or not _clear(p): continue
 				if region in Height.BRIDGE_REGIONS and p.distance_squared_to(Layout.bridge_at(region))<9: continue
+				if not _approach_clear(p,pocket): continue
 				sites.append(_floor_point(p))
+				_site_anchors.append(pocket)
 	painter.finish()
 	materials.append(painter.fade)
 
@@ -131,6 +188,42 @@ func service_points() -> Dictionary:
 func map_data() -> Dictionary:
 	return _map
 
+func district_at(pos:Vector3) -> String:
+	if region<0: return ""
+	var local:=axes.to_local(pos)
+	return _layout.district_at(Vector2(local.x,local.z))
+
+func district_points() -> Array[Dictionary]:
+	var result:Array[Dictionary]=[]
+	if region<0: return result
+	for district in _layout.districts:
+		var point:=district.duplicate()
+		point.pos=_floor_point(district.pos)
+		result.append(point)
+	return result
+
+func cache_points() -> Array[Dictionary]:
+	var result:Array[Dictionary]=[]
+	if region<0: return result
+	for cache in _layout.caches:
+		var point:=cache.duplicate()
+		point.pos=_floor_point(cache.pos)
+		point.district=_layout.district_at(cache.pos)
+		result.append(point)
+	return result
+
+func cache_near(pos:Vector3) -> String:
+	if region<0: return ""
+	var local:=axes.to_local(pos)
+	for cache in _layout.caches:
+		if Vector2(local.x,local.z).distance_squared_to(cache.pos)<=4: return cache.id
+	return ""
+
+func set_open_caches(ids:Array) -> void:
+	for id:String in _cache_lids:
+		var lid:Node3D=_cache_lids[id]
+		if is_instance_valid(lid): lid.rotation.x=-1.05 if ids.has(id) else 0.0
+
 func landmark_near(pos:Vector3) -> String:
 	if region<0: return ""
 	var local:=axes.to_local(pos)
@@ -164,16 +257,25 @@ func _index_obstacles() -> void:
 				_obstacles[cell].append(bounds)
 
 func _clear(pos:Vector2) -> bool:
+	if region>=0 and not _layout.clear_for_body(pos,.74): return false
 	for bounds:Rect2 in _obstacles.get(Vector2i((pos/8).floor()),[]):
 		if bounds.has_point(pos): return false
 	return true
 
+func _approach_clear(point:Vector2,anchor:Vector2) -> bool:
+	var steps:=maxi(1,ceili(point.distance_to(anchor)/.35))
+	for i in steps+1:
+		var p:=point.lerp(anchor,float(i)/steps)
+		if not _clear(p): return false
+		if region in Height.BRIDGE_REGIONS and p.distance_squared_to(Layout.bridge_at(region))<9: return false
+	return true
+
 func drop_point(old_position:Vector3) -> Vector3:
 	var local:=axes.to_local(old_position)
-	var inner:=Layout.BOUNDS.grow(-1)
+	var inner:Rect2=_map.bounds.grow(-1)
 	var point:=Vector2(local.x,local.z).clamp(inner.position,inner.end)
 	if _clear(point): return _floor_point(point)
-	for step in range(1,12):
+	for step in range(1,32):
 		for i in 12:
 			var p:=point+Vector2.from_angle(i*TAU/12)*(.75*step)
 			if inner.has_point(p) and _clear(p): return _floor_point(p)

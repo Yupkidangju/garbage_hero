@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CONTACT_ENGINE DEFAULT
+CONTACT_WORLD {"max_shapes_per_body":1,"static_bodies":18,"total_shapes":17}
+CONTACT_FIXED {"actors":41,"average_ms":3.06996666666667,"mask":7,"median_ms":3.012,"p95_ms":3.48,"samples":180,"shape":"cylinder","slide_collisions":6840,"travel_m":0.0}
+CONTACT_FIXED {"actors":41,"average_ms":5.72191111111111,"mask":7,"median_ms":5.596,"p95_ms":6.997,"samples":180,"shape":"cylinder","slide_collisions":12060,"travel_m":0.1}
+CONTACT_FIXED {"actors":41,"average_ms":2.57355,"mask":3,"median_ms":2.44,"p95_ms":3.03,"samples":180,"shape":"cylinder","slide_collisions":6480,"travel_m":0.0}
+CONTACT_FIXED {"actors":41,"average_ms":4.82959444444444,"mask":3,"median_ms":4.886,"p95_ms":6.249,"samples":180,"shape":"cylinder","slide_collisions":10980,"travel_m":0.1}
+CONTACT_ZERO_PLANE { "triangles": 31644, "original_triangles": 120520, "plane_y": 0.0 }
+CONTACT_FIXED {"actors":41,"average_ms":0.886349999999999,"mask":7,"median_ms":0.85,"p95_ms":1.08,"samples":180,"shape":"plane_cylinder","slide_collisions":9000,"travel_m":0.0}
+CONTACT_FIXED {"actors":41,"average_ms":2.27420555555556,"mask":7,"median_ms":2.21,"p95_ms":2.775,"samples":180,"shape":"plane_cylinder","slide_collisions":16740,"travel_m":0.1}
+CONTACT_FIXED {"actors":41,"average_ms":0.871772222222223,"mask":3,"median_ms":0.83,"p95_ms":1.119,"samples":180,"shape":"plane_cylinder","slide_collisions":6480,"travel_m":0.0}
+CONTACT_FIXED {"actors":41,"average_ms":1.36566111111111,"mask":3,"median_ms":1.299,"p95_ms":1.704,"samples":180,"shape":"plane_cylinder","slide_collisions":16200,"travel_m":0.1}
+CONTACT_COMPLETE [{"actors":41,"average_ms":3.06996666666667,"mask":7,"median_ms":3.012,"p95_ms":3.48,"samples":180,"shape":"cylinder","slide_collisions":6840,"travel_m":0.0},{"actors":41,"average_ms":5.72191111111111,"mask":7,"median_ms":5.596,"p95_ms":6.997,"samples":180,"shape":"cylinder","slide_collisions":12060,"travel_m":0.1},{"actors":41,"average_ms":2.57355,"mask":3,"median_ms":2.44,"p95_ms":3.03,"samples":180,"shape":"cylinder","slide_collisions":6480,"travel_m":0.0},{"actors":41,"average_ms":4.82959444444444,"mask":3,"median_ms":4.886,"p95_ms":6.249,"samples":180,"shape":"cylinder","slide_collisions":10980,"travel_m":0.1},{"actors":41,"average_ms":0.886349999999999,"mask":7,"median_ms":0.85,"p95_ms":1.08,"samples":180,"shape":"plane_cylinder","slide_collisions":9000,"travel_m":0.0},{"actors":41,"average_ms":2.27420555555556,"mask":7,"median_ms":2.21,"p95_ms":2.775,"samples":180,"shape":"plane_cylinder","slide_collisions":16740,"travel_m":0.1},{"actors":41,"average_ms":0.871772222222223,"mask":3,"median_ms":0.83,"p95_ms":1.119,"samples":180,"shape":"plane_cylinder","slide_collisions":6480,"travel_m":0.0},{"actors":41,"average_ms":1.36566111111111,"mask":3,"median_ms":1.299,"p95_ms":1.704,"samples":180,"shape":"plane_cylinder","slide_collisions":16200,"travel_m":0.1}]

@@ -3,6 +3,8 @@
 [resource]
 locale = "ko"
 messages = {
+"treasure_name": "%s의 잊힌 보물",
+"treasure_goal": "%s의 동굴·폐허·전망대 중 한 곳에서 보물상자를 열어 보세요.",
 &"level_name": "견습 수리공의 첫 원정",
 &"level_goal": "필드에서 몬스터를 처치하고 레벨 %d에 도달하세요.",
 &"train_name": "기술 수첩의 새 장",

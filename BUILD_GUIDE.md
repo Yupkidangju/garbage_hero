@@ -22,4 +22,16 @@ python scripts/build.py --target linux --test --smoke
 - 릴리즈하려면 `game/project.godot`의 `config/version`과 CHANGELOG의 버전 절을 맞춘 후 해당 커밋에 `vX.Y.Z` 태그를 푸시한다. 태그와 게임 버전이 다르면 빌드가 실패한다.
 - 두 플랫폼이 모두 통과하면 게시 작업이 GitHub 초안 릴리즈에 검증된 패키지와 `SHA256SUMS.txt`를 올리고 공개한다. Actions 내 쓰기 권한은 게시 작업에 설정했다. [워크플로](.github/workflows/build-release.yml)
 
-다운로드 폴더에서 Linux는 `sha256sum --check SHA256SUMS.txt`로 두 파일을 확인할 수 있다. Windows는 `Get-FileHash -Algorithm SHA256 .\GarbageHero-v0.1.0-windows-x86_64.zip` 결과를 목록의 같은 파일과 비교한다.
+다운로드 폴더에서 Linux는 `sha256sum --check SHA256SUMS.txt`로 두 파일을 확인할 수 있다. Windows는 `Get-FileHash -Algorithm SHA256 .\GarbageHero-v0.3.0-windows-x86_64.zip` 결과를 목록의 같은 파일과 비교한다.
+
+## 배포용 성능 검증
+
+압축을 푼 배포 파일에도 명시적으로 실행하는 준비된 벤치마크가 포함된다. 임시 저장에 불지옥 화산 40일반+1보스를 만들고 실제 전투·렌더를 수행한 뒤 종료한다. Windows 예시는 기록 폴더가 이미 있을 때 실행한다.
+
+```powershell
+.\GarbageHero.exe --resolution 1920x1080 --disable-vsync -- --benchmark --benchmark-output=C:/bench/performance.json 2>&1 | Out-String
+```
+
+Linux에서는 `./GarbageHero.x86_64 --resolution 1920x1080 --disable-vsync -- --benchmark --benchmark-output=/tmp/garbagehero-performance.json`으로 실행한다. 기본은 30초 예열 후 120초 수집이다. `--benchmark-warmup=3 --benchmark-seconds=12`는 짧은 진단용이다. 메뉴를 열어 전투가 멈추면 점수를 취소하고 종료 코드 6과 오류 결과를 남긴다.
+
+종료 코드 0은 수집 완료를 뜻한다. 성능 통과는 실제 GPU·Forward+·1920×1080, debug/editor 빌드 false, min/max_actors 41, warmup_s 30·sample_s 120, 실제 기술 신호와 p95_ms 16.7 이하를 함께 확인한다. 헤드리스 결과는 기능 검사용이다. 편집기 소스 실행도 `tests/field_performance.gd`를 통해 같은 공통 실행기를 사용한다. [0.3.0 실측](tasks/evidence/performance030-release.json)

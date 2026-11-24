@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+species=78 attacks=100
+uphill mark elevation=1.166 max_vertex_error=0.004
+ERROR: Enemy movement cannot tunnel across deep water
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] expect (res://tests/enemy_test.gd:28)
+       [1] hill_check (res://tests/enemy_test.gd:234)
+ERROR: Ground warnings stop at the actual shoreline
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] expect (res://tests/enemy_test.gd:28)
+       [1] hill_check (res://tests/enemy_test.gd:244)
+MONSTER_TEST failures=2

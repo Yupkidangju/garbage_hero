@@ -1,0 +1,273 @@
+D:\godot\garbagehero\art\ui_030\build_items.py:25: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat.use_nodes = True
+D:\godot\garbagehero\art\ui_030\build_items.py:552: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  world=bpy.data.worlds.new('Slate studio ambient');world.use_nodes=True
+EXPORTED_ITEM 0 sword
+EXPORTED_ITEM 1 sword
+EXPORTED_ITEM 29 sword
+EXPORTED_ITEM 52 armor
+EXPORTED_ITEM 58 shield
+EXPORTED_ITEM 64 boots
+EXPORTED_ITEM 70 helmet
+EXPORTED_ITEM 76 ring
+EXPORTED_ITEM 82 necklace
+EXPORTED_ITEM 2 sword
+EXPORTED_ITEM 3 sword
+EXPORTED_ITEM 4 sword
+EXPORTED_ITEM 5 sword
+EXPORTED_ITEM 6 sword
+EXPORTED_ITEM 7 bow
+EXPORTED_ITEM 8 staff
+EXPORTED_ITEM 9 spear
+EXPORTED_ITEM 10 mace
+EXPORTED_ITEM 11 armor
+EXPORTED_ITEM 12 shield
+EXPORTED_ITEM 13 boots
+EXPORTED_ITEM 14 helmet
+EXPORTED_ITEM 15 ring
+EXPORTED_ITEM 16 necklace
+EXPORTED_ITEM 17 bow
+EXPORTED_ITEM 18 staff
+EXPORTED_ITEM 19 mace
+EXPORTED_ITEM 20 spear
+EXPORTED_ITEM 21 bow
+EXPORTED_ITEM 22 mace
+EXPORTED_ITEM 23 boots
+EXPORTED_ITEM 24 ring
+EXPORTED_ITEM 25 helmet
+EXPORTED_ITEM 26 necklace
+EXPORTED_ITEM 27 armor
+EXPORTED_ITEM 28 shield
+EXPORTED_ITEM 30 bow
+EXPORTED_ITEM 31 bow
+EXPORTED_ITEM 32 bow
+EXPORTED_ITEM 33 bow
+EXPORTED_ITEM 34 bow
+EXPORTED_ITEM 35 staff
+EXPORTED_ITEM 36 staff
+EXPORTED_ITEM 37 staff
+EXPORTED_ITEM 38 staff
+EXPORTED_ITEM 39 staff
+EXPORTED_ITEM 40 staff
+EXPORTED_ITEM 41 spear
+EXPORTED_ITEM 42 spear
+EXPORTED_ITEM 43 spear
+EXPORTED_ITEM 44 spear
+EXPORTED_ITEM 45 spear
+EXPORTED_ITEM 46 spear
+EXPORTED_ITEM 47 mace
+EXPORTED_ITEM 48 mace
+EXPORTED_ITEM 49 mace
+EXPORTED_ITEM 50 mace
+EXPORTED_ITEM 51 mace
+EXPORTED_ITEM 53 armor
+EXPORTED_ITEM 54 armor
+EXPORTED_ITEM 55 armor
+EXPORTED_ITEM 56 armor
+EXPORTED_ITEM 57 armor
+EXPORTED_ITEM 59 shield
+EXPORTED_ITEM 60 shield
+EXPORTED_ITEM 61 shield
+EXPORTED_ITEM 62 shield
+EXPORTED_ITEM 63 shield
+EXPORTED_ITEM 65 boots
+EXPORTED_ITEM 66 boots
+EXPORTED_ITEM 67 boots
+EXPORTED_ITEM 68 boots
+EXPORTED_ITEM 69 boots
+EXPORTED_ITEM 71 helmet
+EXPORTED_ITEM 72 helmet
+EXPORTED_ITEM 73 helmet
+EXPORTED_ITEM 74 helmet
+EXPORTED_ITEM 75 helmet
+EXPORTED_ITEM 77 ring
+EXPORTED_ITEM 78 ring
+EXPORTED_ITEM 79 ring
+EXPORTED_ITEM 80 ring
+EXPORTED_ITEM 81 ring
+EXPORTED_ITEM 83 necklace
+EXPORTED_ITEM 84 necklace
+EXPORTED_ITEM 85 necklace
+EXPORTED_ITEM 86 necklace
+EXPORTED_ITEM 87 necklace
+00:09.500  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_000.png'
+Info: Saved as "items_library.blend"
+RENDERED_ITEM 0
+00:09.813  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_001.png'
+RENDERED_ITEM 1
+00:10.219  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_029.png'
+RENDERED_ITEM 29
+00:10.766  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_052.png'
+RENDERED_ITEM 52
+00:11.391  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_058.png'
+RENDERED_ITEM 58
+00:11.781  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_064.png'
+RENDERED_ITEM 64
+00:12.297  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_070.png'
+RENDERED_ITEM 70
+00:12.813  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_076.png'
+RENDERED_ITEM 76
+00:13.219  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_082.png'
+RENDERED_ITEM 82
+00:13.563  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_002.png'
+RENDERED_ITEM 2
+00:14.047  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_003.png'
+RENDERED_ITEM 3
+00:14.422  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_004.png'
+RENDERED_ITEM 4
+00:14.766  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_005.png'
+RENDERED_ITEM 5
+00:15.297  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_006.png'
+RENDERED_ITEM 6
+00:15.688  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_007.png'
+RENDERED_ITEM 7
+00:16.109  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_008.png'
+RENDERED_ITEM 8
+00:16.547  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_009.png'
+RENDERED_ITEM 9
+00:17.031  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_010.png'
+RENDERED_ITEM 10
+00:17.609  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_011.png'
+RENDERED_ITEM 11
+00:18.047  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_012.png'
+RENDERED_ITEM 12
+00:18.609  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_013.png'
+RENDERED_ITEM 13
+00:19.016  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_014.png'
+RENDERED_ITEM 14
+00:19.578  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_015.png'
+RENDERED_ITEM 15
+00:19.906  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_016.png'
+RENDERED_ITEM 16
+00:20.297  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_017.png'
+RENDERED_ITEM 17
+00:20.672  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_018.png'
+RENDERED_ITEM 18
+00:21.141  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_019.png'
+RENDERED_ITEM 19
+00:21.484  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_020.png'
+RENDERED_ITEM 20
+00:21.891  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_021.png'
+RENDERED_ITEM 21
+00:22.422  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_022.png'
+RENDERED_ITEM 22
+00:22.828  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_023.png'
+RENDERED_ITEM 23
+00:23.297  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_024.png'
+RENDERED_ITEM 24
+00:23.844  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_025.png'
+RENDERED_ITEM 25
+00:24.281  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_026.png'
+RENDERED_ITEM 26
+00:24.828  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_027.png'
+RENDERED_ITEM 27
+00:25.375  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_028.png'
+RENDERED_ITEM 28
+00:25.734  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_030.png'
+RENDERED_ITEM 30
+00:26.203  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_031.png'
+RENDERED_ITEM 31
+00:26.531  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_032.png'
+RENDERED_ITEM 32
+00:27.094  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_033.png'
+RENDERED_ITEM 33
+00:27.688  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_034.png'
+RENDERED_ITEM 34
+00:28.078  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_035.png'
+RENDERED_ITEM 35
+00:28.563  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_036.png'
+RENDERED_ITEM 36
+00:28.969  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_037.png'
+RENDERED_ITEM 37
+00:29.453  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_038.png'
+RENDERED_ITEM 38
+00:29.922  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_039.png'
+RENDERED_ITEM 39
+00:30.422  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_040.png'
+RENDERED_ITEM 40
+00:30.797  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_041.png'
+RENDERED_ITEM 41
+00:31.297  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_042.png'
+RENDERED_ITEM 42
+00:31.703  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_043.png'
+RENDERED_ITEM 43
+00:32.094  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_044.png'
+RENDERED_ITEM 44
+00:32.594  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_045.png'
+RENDERED_ITEM 45
+00:32.984  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_046.png'
+RENDERED_ITEM 46
+00:33.453  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_047.png'
+RENDERED_ITEM 47
+00:33.797  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_048.png'
+RENDERED_ITEM 48
+00:34.125  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_049.png'
+RENDERED_ITEM 49
+00:34.547  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_050.png'
+RENDERED_ITEM 50
+00:34.938  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_051.png'
+RENDERED_ITEM 51
+00:35.375  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_053.png'
+RENDERED_ITEM 53
+00:35.938  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_054.png'
+RENDERED_ITEM 54
+00:36.391  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_055.png'
+RENDERED_ITEM 55
+00:36.750  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_056.png'
+RENDERED_ITEM 56
+00:37.281  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_057.png'
+RENDERED_ITEM 57
+00:37.703  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_059.png'
+RENDERED_ITEM 59
+00:38.297  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_060.png'
+RENDERED_ITEM 60
+00:38.766  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_061.png'
+RENDERED_ITEM 61
+00:39.234  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_062.png'
+RENDERED_ITEM 62
+00:39.750  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_063.png'
+RENDERED_ITEM 63
+00:40.156  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_065.png'
+RENDERED_ITEM 65
+00:40.625  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_066.png'
+RENDERED_ITEM 66
+00:41.063  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_067.png'
+RENDERED_ITEM 67
+00:41.563  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_068.png'
+RENDERED_ITEM 68
+00:42.016  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_069.png'
+RENDERED_ITEM 69
+00:42.531  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_071.png'
+RENDERED_ITEM 71
+00:42.984  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_072.png'
+RENDERED_ITEM 72
+00:43.422  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_073.png'
+RENDERED_ITEM 73
+00:43.844  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_074.png'
+RENDERED_ITEM 74
+00:44.313  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_075.png'
+RENDERED_ITEM 75
+00:44.703  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_077.png'
+RENDERED_ITEM 77
+00:45.109  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_078.png'
+RENDERED_ITEM 78
+00:45.578  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_079.png'
+RENDERED_ITEM 79
+00:45.984  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_080.png'
+RENDERED_ITEM 80
+00:46.359  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_081.png'
+RENDERED_ITEM 81
+00:46.750  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_083.png'
+RENDERED_ITEM 83
+00:47.219  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_084.png'
+RENDERED_ITEM 84
+00:47.578  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_085.png'
+RENDERED_ITEM 85
+00:48.000  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_086.png'
+RENDERED_ITEM 86
+00:48.422  render           | Saved: 'D:\godot\garbagehero\game\assets\ui\items\item_087.png'
+RENDERED_ITEM 87
+ITEM_ART_COMPLETE 88
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:38:20)
+
+Blender quit

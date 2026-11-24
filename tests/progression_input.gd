@@ -81,11 +81,19 @@ func _click(id: String) -> void:
 		while ancestor:
 			if ancestor is ScrollContainer: scrolls.append(ancestor)
 			ancestor = ancestor.get_parent()
+		# 바깥 페이지가 가린 목록은 먼저 페이지를 올린 뒤 목록 안을 스크롤한다.
+		scrolls.reverse()
 		var scrolled := false
 		for scroll in scrolls:
 			var r := scroll.get_global_rect().grow(-3)
 			if point.y < r.position.y or point.y > r.end.y:
-				_wheel_event(r.get_center(),point.y < r.position.y)
+				var up := point.y < r.position.y
+				var bar := scroll.get_v_scroll_bar()
+				var maximum := maxi(0,roundi(bar.max_value-bar.page))
+				if (up and scroll.scroll_vertical<=0) or (not up and scroll.scroll_vertical>=maximum): continue
+				if attempt==54:
+					print("SCROLL_DIAGNOSTIC ",id," target=",point," scroll=",scroll.name," rect=",r," value=",scroll.scroll_vertical," range=",scroll.get_v_scroll_bar().max_value)
+				_wheel_event(r.get_center(),up)
 				await _settle()
 				scrolled = true
 				break

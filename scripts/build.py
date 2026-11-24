@@ -2,6 +2,7 @@
 
 import argparse
 import hashlib
+import json
 import os
 from pathlib import Path
 import re
@@ -23,8 +24,13 @@ TARGETS = {
 QA = ["game/tests/session_test.gd", "game/tests/progression_test.gd",
       "game/tests/equipment_test.gd", "game/tests/quest_book_test.gd",
       "game/tests/expansion_session_test.gd", "game/tests/arsenal_test.gd", "game/tests/world_test.gd",
+      "game/tests/expansion_030_test.gd", "game/tests/item_expansion_test.gd",
+      "game/tests/content_030_test.gd", "game/tests/ecology_test.gd",
+      "game/tests/combat_expansion_test.gd", "game/tests/world_traversal_test.gd",
+      "game/tests/terrain_query_test.gd",
+      "game/tests/mark_geometry_test.gd",
       "game/tests/player_test.gd", "game/tests/enemy_test.gd",
-      "tests/retry_cleave.gd", "tests/mixed_groups.gd", "tests/forest_paths.gd", "tests/progression_input.gd"]
+      "tests/retry_cleave.gd", "tests/mixed_groups.gd", "tests/forest_paths.gd", "tests/progression_input.gd", "tests/ui_030.gd"]
 
 
 def version():
@@ -88,6 +94,24 @@ def native_target():
     return {"win32": "windows", "linux": "linux"}.get(sys.platform)
 
 
+def test_benchmark_cancel(godot):
+    with tempfile.TemporaryDirectory(prefix="garbagehero-benchmark-cancel-") as folder:
+        result = Path(folder) / "result.json"
+        process = subprocess.run(
+            [godot, "--headless", "--fixed-fps", "60", "--path", str(GAME),
+             "--script", str(ROOT / "tests/benchmark_cancel.gd"), "--", "--benchmark",
+             "--benchmark-warmup=1", "--benchmark-seconds=10", f"--benchmark-output={result}"],
+            cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            encoding="utf-8", errors="replace", timeout=90)
+        print(process.stdout, end="", flush=True)
+        data = json.loads(result.read_text("utf-8")) if result.is_file() else {}
+        if process.returncode != 6 or "error" not in data or "p95_ms" in data:
+            raise RuntimeError("A paused benchmark must reject its result.")
+        if re.search(r'^\s*(?:SCRIPT ERROR|ERROR):', process.stdout, re.M):
+            raise RuntimeError("Benchmark cancellation produced an engine error.")
+        print("Paused benchmark rejected after collecting active samples.", flush=True)
+
+
 def smoke(archive, target, release):
     if native_target() != target:
         raise RuntimeError("Run the package smoke test on its target operating system.")
@@ -141,6 +165,7 @@ def main():
     if args.test:
         for test in QA:
             run([godot, "--headless", "--fixed-fps", "60", "--path", GAME, "--script", ROOT / test])
+        test_benchmark_cancel(godot)
     for target in TARGETS if args.target == "all" else [args.target]:
         artifact = package(target, godot, dist, release)
         if args.smoke:

@@ -1,0 +1,84 @@
+TEST game/tests/session_test.gd EXIT 0
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Session tests: 1176 checks, 0 failures.
+
+TEST game/tests/progression_test.gd EXIT 1
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Progression: 66 checks, 1 failures
+ERROR: unarmed hero with three allocated stats
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/progression_test.gd:22)
+       [1] _levels_and_stats (res://tests/progression_test.gd:40)
+       [2] _initialize (res://tests/progression_test.gd:10)
+
+TEST game/tests/equipment_test.gd EXIT 0
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Equipment tests: 736 checks, 0 failures.
+
+TEST game/tests/quest_book_test.gd EXIT 0
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Quest book: 140 checks, 0 failures.
+
+TEST game/tests/expansion_session_test.gd EXIT 0
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Historical campaign migrated from seq 2329, 9 cleared routes, weapon attack 45.
+Expansion session: 115 checks, 0 failures
+
+TEST game/tests/arsenal_test.gd EXIT 0
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Arsenal combat checks: 0 failure(s)
+
+TEST game/tests/world_test.gd EXIT 0
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+world: 25514 checks, 0 failures
+
+TEST game/tests/player_test.gd EXIT 0
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Player physics checks: 0 failure(s), 579 rendered frames
+
+TEST game/tests/enemy_test.gd EXIT 0
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+species=78 attacks=100
+uphill mark elevation=1.166 max_vertex_error=0.004
+MONSTER_TEST failures=0
+
+TEST tests/retry_cleave.gd EXIT 0
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Cleave save-retry integration: 0 failures
+
+TEST tests/mixed_groups.gd EXIT 0
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+MIXED_GROUPS pairs=12 failures=0
+
+TEST tests/forest_paths.gd EXIT 0
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+FOREST_WALK branches=2 round_trip_waypoints=210
+
+TEST tests/progression_input.gd EXIT 1
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: PROGRESSION_UI Could not scroll to Offer13
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (D:/godot/garbagehero/tests/progression_input.gd:39)
+       [1] _click (D:/godot/garbagehero/tests/progression_input.gd:107)
+       [2] _settle (D:/godot/garbagehero/tests/progression_input.gd:43)
+WARNING: 9 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 2 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+
+FAILED ['game/tests/progression_test.gd', 'tests/progression_input.gd']

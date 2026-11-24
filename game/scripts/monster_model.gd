@@ -17,6 +17,7 @@ const PALETTES := [
 	["8c5e5e","443e4b","dcc49d","ad6046","ffad60"]]
 static var geometry := {}
 static var body_paint:ShaderMaterial
+static var elite_mesh:Mesh
 var animator: AnimationPlayer
 var pieces: Array[Node3D] = []
 var pose := "Idle"
@@ -50,7 +51,7 @@ func build(id:String, region:int, kind:String) -> void:
 			animator = players[0]
 		play("Idle")
 		return
-	flying = id in ["bee","crow","moth","icebat","bellowsbat","wraith","candle","spark","frostlamp"]
+	flying = id in ["bee","crow","moth","icebat","bellowsbat","wraith","candle","spark","frostlamp","nectar_sprite","lantern_owl","dune_vulture","bellwisp","dragonfly","owlfrost"]
 	base_size = 1.0 if kind == "normal" else (1.55 if kind == "mini" else 2.12)
 	body.scale = Vector3.ONE * base_size
 	if geometry.has(id):
@@ -73,6 +74,9 @@ func build(id:String, region:int, kind:String) -> void:
 	trim = palette[3]
 	gold = palette[4]
 	part("Body")
+	if expanded():
+		finish_part()
+		return
 	match id:
 		"mouse","jerboa","boar","fox","bellgoat","deer","ram","camel":
 			quadruped()
@@ -87,6 +91,321 @@ func build(id:String, region:int, kind:String) -> void:
 		_:
 			biped()
 	finish_part()
+
+func mark_elite() -> void:
+	# 테두리 색만 바꾸지 않고, 머리 위 세 갈래 표식과 등 깃발을 실루엣에 더한다.
+	if elite_mesh==null:
+		var holder:=Node3D.new()
+		var paint:=Painter.new(holder,3012)
+		for side:float in [-1.,0.,1.]:
+			paint.tube(Vector3(side*.19,1.38,0),Vector3(side*.28,1.78-absf(side)*.10,0),.075,.003,"ffd37a",6)
+		paint.tube(Vector3(.33,.70,.24),Vector3(.33,1.48,.24),.025,.020,"714e42",6)
+		paint.block(Vector3(.53,1.34,.24),Vector3(.39,.24,.045),"b85445")
+		paint.finish()
+		elite_mesh=holder.get_child(0).mesh
+		holder.free()
+	var badge:=MeshInstance3D.new()
+	badge.name="EliteCrest"
+	badge.mesh=elite_mesh
+	add_child(badge)
+	body.scale*=1.12
+
+func legs(height:float,width:float,color:String) -> void:
+	for side:float in [-1.,1.]:
+		part("StepA" if side<0 else "StepB",Vector3(side*width,height,0))
+		rod(Vector3(side*width,height,0),Vector3(side*width,.12,-.03),.082,.056,color)
+		oval(side*width,.09,-.10,.12,.085,.18,ivory)
+
+func sail(span:float,height:float,shape:int) -> void:
+	for side:float in [-1.,1.]:
+		part("WingL" if side<0 else "WingR",Vector3(side*.12,height,0))
+		var a:=Vector3(side*.12,height,.13)
+		var tip:=Vector3(side*span,height+.22,-.14)
+		var rear:=Vector3(side*span*.68,height-.02,.40)
+		p.tri(a,tip,rear,Vector3.UP,p.clr(ivory if shape==0 else trim))
+		rod(a,tip,.045,.012,shadow_col)
+		if shape==0:
+			for n in 4:
+				var root:=a.lerp(tip,.42+n*.15)
+				rod(root,root+Vector3(side*.12,-.055,.33),.070,.005,skin)
+		elif shape==2:
+			p.tri(a,Vector3(side*span,height-.08,.56),rear,Vector3.UP,p.clr(gold))
+
+func expanded() -> bool:
+	match species:
+		"cone_urchin","crystalurchin":
+			oval(0,.36,.06,.41,.30,.47,skin)
+			oval(0,.30,-.43,.24,.17,.23,ivory)
+			eyes(.12,.37,-.60,.047)
+			for n in 13:
+				var angle:=n*2.4
+				var at:=Vector3(cos(angle)*.31,.51+sin(n*1.2)*.09,sin(angle)*.36)
+				rod(at,at+Vector3(cos(angle)*.20,.30+fmod(n*.11,.24),sin(angle)*.22),.105,.005,gold if species=="crystalurchin" else "8f6440")
+			if species=="crystalurchin":
+				rod(Vector3(0,.47,.09),Vector3(.05,1.17,.09),.20,.004,"c4f4f7")
+			feet4(.27,.28,.29)
+		"branch_mantis":
+			rod(Vector3(0,.46,.33),Vector3(0,1.15,0),.24,.12,trim)
+			oval(0,1.37,-.12,.30,.19,.17,skin)
+			eyes(.21,1.40,-.26,.065)
+			for side:float in [-1.,1.]:
+				rod(Vector3(side*.16,1.47,-.10),Vector3(side*.35,1.82,-.08),.025,.007,ivory)
+				part("ArmL" if side<0 else "ArmR",Vector3(side*.17,1.07,0))
+				rod(Vector3(side*.17,1.07,0),Vector3(side*.55,.96,-.20),.075,.060,skin)
+				rod(Vector3(side*.55,.96,-.20),Vector3(side*.67,1.41,-.45),.065,.035,trim)
+				rod(Vector3(side*.67,1.41,-.45),Vector3(side*.30,1.12,-.63),.13,.003,ivory)
+			feet4(.29,.58,.24)
+		"nectar_sprite":
+			oval(0,.88,0,.16,.25,.15,gold)
+			for n in 6:
+				var a:=n*TAU/6
+				oval(cos(a)*.25,1.10+sin(a)*.22,0,.18,.20,.07,"e9a0a4")
+			oval(0,1.10,-.09,.18,.18,.11,ivory)
+			eyes(.075,1.12,-.19,.038)
+			rod(Vector3(0,.71,0),Vector3(0,.32,.06),.10,.006,trim)
+			sail(.62,.85,2)
+		"logsnail":
+			oval(0,.18,.08,.40,.16,.76,skin)
+			oval(0,.58,.26,.43,.43,.48,"936846")
+			for n in 4:
+				p.ring(Vector3(0,.59,.26),Vector3.RIGHT,.38-n*.075,.035,ivory,16)
+			oval(0,.36,-.50,.23,.22,.24,trim)
+			for side:float in [-1.,1.]:
+				rod(Vector3(side*.13,.44,-.57),Vector3(side*.22,.77,-.66),.043,.027,skin)
+				oval(side*.22,.77,-.68,.060,.065,.040,gold)
+		"lantern_owl","owlfrost","dune_vulture":
+			var vulture:=species=="dune_vulture"
+			oval(0,.71,.04,.29,.38,.31,skin)
+			if vulture:
+				rod(Vector3(0,.83,-.16),Vector3(0,1.26,-.24),.085,.10,ivory)
+			oval(0,1.15 if not vulture else 1.32,-.09,.32 if not vulture else .19,.28,.20,shadow_col)
+			if not vulture:
+				for side:float in [-1.,1.]:
+					oval(side*.15,1.16,-.24,.17,.20,.065,ivory)
+					rod(Vector3(side*.18,1.32,-.04),Vector3(side*.32,1.64,.01),.11,.004,gold if species=="owlfrost" else skin)
+			eyes(.14 if not vulture else .11,1.17 if not vulture else 1.35,-.31,.061)
+			rod(Vector3(0,1.13,-.28),Vector3(0,1.04,-.47),.08,.004,gold)
+			if species=="lantern_owl":
+				p.ring(Vector3(0,.35,-.25),Vector3.FORWARD,.09,.024,ivory)
+				oval(0,.20,-.25,.13,.16,.12,gold)
+			elif species=="owlfrost":
+				for n in 3:
+					rod(Vector3((n-1)*.14,.51,.15),Vector3((n-1)*.25,.13,.42),.09,.002,"b6e9ef")
+			sail(1.05 if vulture else .79,.86,0)
+		"oasis_sage","snowmender","ashpriest":
+			var priest:=species=="ashpriest"
+			rod(Vector3(0,.25,.03),Vector3(0,1.05,0),.34,.20,trim)
+			oval(0,1.20,-.04,.23,.24,.20,ivory)
+			eyes(.10,1.21,-.215,.048)
+			if species=="oasis_sage":
+				for n in 5:
+					var a:=n*TAU/5
+					rod(Vector3(0,1.40,0),Vector3(cos(a)*.45,1.62,sin(a)*.33),.10,.004,"6c9c75")
+				oval(-.38,.66,-.05,.20,.27,.19,gold)
+			elif priest:
+				rod(Vector3(0,1.30,0),Vector3(0,1.85,.05),.27,.004,shadow_col)
+				p.ring(Vector3(0,1.23,-.07),Vector3.FORWARD,.29,.035,gold)
+			else:
+				oval(0,1.39,.02,.35,.18,.29,skin)
+				p.block(Vector3(0,.78,-.24),Vector3(.38,.32,.05),"d7e7d8")
+			for side:float in [-1.,1.]:
+				part("ArmL" if side<0 else "ArmR",Vector3(side*.20,1.,0))
+				rod(Vector3(side*.20,1.,0),Vector3(side*.40,.72,-.17),.10,.07,skin)
+				if side>0:
+					rod(Vector3(side*.40,.25,-.17),Vector3(side*.40,1.55,-.17),.028,.023,shadow_col)
+					if priest:
+						p.ring(Vector3(side*.40,1.52,-.17),Vector3.FORWARD,.17,.040,gold)
+					else:
+						oval(side*.40,1.54,-.17,.14,.17,.13,gold)
+			legs(.36,.15,shadow_col)
+		"sandshield","pineshield":
+			oval(0,.59,.07,.34,.43,.30,trim)
+			oval(0,1.02,-.04,.25,.23,.20,skin)
+			eyes(.105,1.04,-.21,.05)
+			if species=="sandshield":
+				p.ring(Vector3(0,1.19,.04),Vector3.UP,.20,.045,ivory)
+				oval(-.28,.63,-.28,.46,.49,.11,"c99a66")
+				p.ring(Vector3(-.28,.63,-.40),Vector3.FORWARD,.35,.037,gold)
+			else:
+				for n in 3:
+					rod(Vector3(-.26,.35+n*.28,-.32),Vector3(-.26,.74+n*.26,-.32),.43-n*.085,.005,"66846e")
+				rod(Vector3(.34,.57,-.10),Vector3(.35,1.45,-.10),.035,.018,shadow_col)
+				rod(Vector3(.35,1.19,-.10),Vector3(.35,1.63,-.10),.14,.004,ivory)
+			legs(.37,.20,shadow_col)
+		"hourglass":
+			for side:float in [-1.,1.]:
+				rod(Vector3(side*.27,.30,0),Vector3(side*.27,1.29,0),.045,.045,gold)
+			p.column(0,0,.30,.10,.36,.36,shadow_col)
+			p.column(0,0,1.22,.10,.36,.36,shadow_col)
+			rod(Vector3(0,.43,0),Vector3(0,.79,0),.23,.025,ivory)
+			rod(Vector3(0,.79,0),Vector3(0,1.17,0),.025,.23,skin)
+			eyes(.09,1.09,-.19,.049)
+			legs(.30,.18,trim)
+		"bonehound","frost_mammoth","badger_captain","basalt_drake":
+			var mammoth:=species=="frost_mammoth"
+			var drake:=species=="basalt_drake"
+			var h:=.75 if mammoth else .54
+			oval(0,h,.10,.50 if mammoth else .38,h*.74,.65,skin)
+			oval(0,h+.14,-.50,.36 if mammoth else .26,.30,.34,ivory if species=="bonehound" else skin)
+			eyes(.18,h+.23,-.73,.061)
+			if species=="bonehound":
+				for n in 5:
+					p.ring(Vector3(0,h,.34-n*.14),Vector3.FORWARD,.28,.041,ivory,12)
+				rod(Vector3(0,h-.02,-.63),Vector3(0,h-.03,-.97),.17,.09,ivory)
+			elif mammoth:
+				rod(Vector3(0,h-.02,-.69),Vector3(0,.23,-.91),.15,.085,skin)
+				rod(Vector3(0,.23,-.91),Vector3(.13,.28,-1.06),.085,.025,skin)
+				for side:float in [-1.,1.]:
+					rod(Vector3(side*.22,h-.05,-.63),Vector3(side*.48,h-.08,-.98),.10,.065,ivory)
+					rod(Vector3(side*.48,h-.08,-.98),Vector3(side*.43,h+.23,-1.13),.065,.002,gold)
+					oval(side*.39,h+.15,-.35,.24,.30,.10,trim)
+			elif drake:
+				for n in 5:
+					rod(Vector3(0,h+.30,-.25+n*.22),Vector3(0,h+.72,-.22+n*.22),.14,.004,gold)
+				rod(Vector3(0,h,.54),Vector3(.22,.37,1.26),.23,.06,shadow_col)
+				rod(Vector3(.22,.37,1.26),Vector3(.38,.48,1.62),.06,.001,gold)
+				for side:float in [-1.,1.]:
+					p.tri(Vector3(side*.28,h,.20),Vector3(side*.95,h+.48,.45),Vector3(side*.44,h-.05,.71),Vector3.UP,p.clr(trim))
+			else:
+				p.block(Vector3(0,h+.41,.12),Vector3(.70,.20,.75),trim)
+				for side:float in [-1.,1.]:
+					oval(side*.20,h+.41,-.49,.13,.17,.12,shadow_col)
+				rod(Vector3(.47,.28,-.24),Vector3(.47,1.40,-.24),.042,.033,shadow_col)
+				p.block(Vector3(.47,1.30,-.24),Vector3(.56,.36,.12),ivory)
+			feet4(.33,h*.76,.38)
+		"gravearcher","reedarcher","shroudweaver","bone_conductor":
+			var reed:=species=="reedarcher"
+			var h:=.95 if reed else .72
+			rod(Vector3(0,.46,.05),Vector3(0,h+.27,0),.20,.13,trim)
+			oval(0,h+.46,-.045,.22,.22,.17,ivory)
+			eyes(.09,h+.48,-.20,.045)
+			if species=="bone_conductor":
+				p.column(0,0,h+.62,.33,.29,.21,shadow_col)
+				for n in 4:
+					p.ring(Vector3(0,.63+n*.13,0),Vector3.UP,.23,.030,ivory,12)
+			elif species=="shroudweaver":
+				rod(Vector3(0,h+.50,.05),Vector3(0,h+.82,.12),.30,.005,skin)
+				for n in 4:
+					rod(Vector3((n-1.5)*.10,.70,.13),Vector3((n-1.5)*.18,.15,.24),.06,.006,ivory)
+			elif reed:
+				rod(Vector3(0,h+.35,-.15),Vector3(0,h+.34,-.53),.09,.004,gold)
+				for n in 3:
+					rod(Vector3(.15,h+.55,0),Vector3(.22+n*.10,h+.90,0),.045,.003,trim)
+			for side:float in [-1.,1.]:
+				part("ArmL" if side<0 else "ArmR",Vector3(side*.15,h+.14,0))
+				var hand:=Vector3(side*.40,h,-.22)
+				rod(Vector3(side*.15,h+.14,0),hand,.06,.045,ivory)
+				if species=="shroudweaver":
+					rod(Vector3(side*.15,h-.04,0),hand+Vector3(side*.18,-.26,.08),.05,.020,skin)
+				elif side<0 and species!="bone_conductor":
+					var bow_col:String=trim if reed else "a39b86"
+					rod(hand+Vector3(0,-.43,0),hand+Vector3(0,0,-.18),.032,.040,bow_col)
+					rod(hand+Vector3(0,0,-.18),hand+Vector3(0,.43,0),.040,.024,bow_col)
+					rod(hand+Vector3(0,-.43,0),hand+Vector3(0,.43,0),.008,.008,ivory)
+				elif species=="bone_conductor" and side>0:
+					rod(hand,hand+Vector3(.24,.55,-.14),.022,.003,gold)
+			legs(.54 if reed else .42,.15,ivory)
+		"coffin":
+			p.block(Vector3(0,.88,.04),Vector3(.68,1.40,.42),shadow_col)
+			p.block(Vector3(0,.88,-.20),Vector3(.55,1.22,.065),"a58a70")
+			p.block(Vector3(0,.99,-.25),Vector3(.34,.085,.045),ivory)
+			p.block(Vector3(0,.99,-.25),Vector3(.085,.44,.045),ivory)
+			eyes(.15,1.30,-.25,.06)
+			part("ArmL",Vector3(-.34,.95,-.19))
+			p.block(Vector3(.0,.88,-.34),Vector3(.58,1.25,.08),trim,Vector3(0,-.30,0))
+			legs(.28,.24,skin)
+		"bellwisp":
+			rod(Vector3(0,.56,0),Vector3(0,1.15,0),.40,.15,gold)
+			p.ring(Vector3(0,.56,0),Vector3.UP,.40,.055,ivory)
+			oval(0,.56,0,.11,.19,.11,shadow_col)
+			eyes(.14,.89,-.26,.06)
+			for side:float in [-1.,1.]:
+				rod(Vector3(side*.20,.57,.05),Vector3(side*.37,.15,.18),.095,.005,skin)
+			p.ring(Vector3(0,1.24,0),Vector3.FORWARD,.10,.03,ivory)
+		"mossheron":
+			oval(0,.85,.11,.29,.31,.39,trim)
+			rod(Vector3(0,1.02,-.14),Vector3(0,1.56,-.20),.12,.10,skin)
+			oval(0,1.57,-.27,.18,.18,.23,skin)
+			rod(Vector3(0,1.54,-.39),Vector3(0,1.48,-.82),.10,.003,ivory)
+			eyes(.12,1.63,-.42,.043)
+			for n in 5:
+				rod(Vector3(0,1.67,-.18),Vector3((n-2)*.14,1.93,.08),.055,.003,"8fae6e")
+			legs(.67,.16,shadow_col)
+			sail(.47,.91,1)
+		"bogclam":
+			oval(0,.20,.03,.65,.18,.60,skin)
+			oval(0,.38,.12,.58,.14,.55,ivory)
+			oval(0,.68,.27,.59,.40,.18,trim)
+			for n in 7:
+				var angle:float=(n-3)*.33
+				rod(Vector3(0,.42,.32),Vector3(sin(angle)*.59,.68+cos(angle)*.35,.19),.045,.022,ivory)
+			oval(0,.42,-.20,.28,.15,.27,gold)
+			eyes(.13,.47,-.42,.06)
+		"dragonfly":
+			rod(Vector3(0,.79,-.30),Vector3(0,.75,.86),.14,.025,trim)
+			oval(0,.84,-.34,.22,.17,.17,gold)
+			eyes(.17,.88,-.44,.072)
+			for side:float in [-1.,1.]:
+				part("WingL" if side<0 else "WingR",Vector3(side*.08,.85,0))
+				for row in 2:
+					var z:float=-.12+row*.29
+					p.quad(Vector3(side*.05,.85,z),Vector3(side*.94,.91,z-.16),Vector3(side*.87,.89,z+.06),Vector3(side*.1,.85,z+.1),Vector3.UP,p.clr("c3dfce"))
+					rod(Vector3(side*.08,.855,z),Vector3(side*.91,.92,z-.10),.018,.005,ivory)
+		"snowhare":
+			oval(0,.36,.11,.28,.34,.42,ivory)
+			oval(0,.65,-.24,.22,.24,.22,skin)
+			for side:float in [-1.,1.]:
+				rod(Vector3(side*.12,.80,-.20),Vector3(side*.21,1.43,-.10),.10,.018,ivory)
+				p.block(Vector3(side*.23,.09,-.10),Vector3(.16,.12,.76),trim)
+				rod(Vector3(side*.23,.11,-.48),Vector3(side*.23,.22,-.58),.055,.020,gold)
+			eyes(.13,.69,-.41,.052)
+			oval(0,.43,.48,.15,.17,.15,ivory)
+		"slaglobster","cinderscorpion","sand_tortoise":
+			var tortoise:=species=="sand_tortoise"
+			oval(0,.40,.14,.50 if tortoise else .32,.35,.62,trim)
+			oval(0,.37,-.43,.25,.20,.24,skin)
+			eyes(.15,.43,-.59,.06)
+			if tortoise:
+				for n in 3:
+					rod(Vector3((n-1)*.26,.60,.13),Vector3((n-1)*.25,1.10-absf(n-1)*.20,.13),.17,.003,gold)
+				p.ring(Vector3(0,.66,.16),Vector3.UP,.42,.045,ivory)
+			else:
+				var tail:=Vector3(0,.43,.54)
+				for n in 5:
+					var next:=tail+Vector3(.07,.18 if species=="cinderscorpion" else -.035,-.02 if n>2 else .13)
+					rod(tail,next,.11-n*.014,.09-n*.012,shadow_col)
+					tail=next
+				rod(tail,tail+Vector3(-.08,-.19,-.26),.08,.003,gold)
+			for side:float in [-1.,1.]:
+				if not tortoise:
+					part("ArmL" if side<0 else "ArmR",Vector3(side*.27,.37,-.20))
+					var claw:=Vector3(side*.61,.43,-.48)
+					rod(Vector3(side*.27,.37,-.20),claw,.09,.12,skin)
+					rod(claw,claw+Vector3(side*.14,.04,-.38),.14,.005,ivory)
+					rod(claw,claw+Vector3(-side*.15,.06,-.29),.11,.005,gold)
+			feet4(.40,.35,.34)
+		"obsidianspire":
+			for n in 5:
+				var a:=n*TAU/5
+				var at:=Vector3(cos(a)*.28,.08,sin(a)*.28)
+				rod(at,at+Vector3(cos(a)*.10,.70+fmod(n*.29,.60),sin(a)*.10),.22,.002,shadow_col)
+			rod(Vector3(0,.15,0),Vector3(.05,1.65,0),.29,.003,trim)
+			p.block(Vector3(0,.81,-.25),Vector3(.26,.085,.065),gold)
+			for side:float in [-1.,1.]:
+				oval(side*.085,.84,-.29,.033,.043,.03,"fff3bb")
+		"mire_hydra":
+			oval(0,.38,.17,.59,.34,.65,trim)
+			for n in range(-1,2):
+				part("Head%d"%n,Vector3(n*.29,.48,-.14))
+				var neck:=Vector3(n*.45,1.05+(.22 if n==0 else 0.),-.34)
+				rod(Vector3(n*.29,.48,-.14),neck,.17,.13,skin)
+				oval(neck.x,neck.y,neck.z-.13,.22,.17,.30,skin)
+				for side:float in [-1.,1.]:
+					oval(neck.x+side*.13,neck.y+.07,neck.z-.32,.044,.052,.03,gold)
+			feet4(.39,.31,.36)
+		_:
+			return false
+	return true
 
 func part(label:String, pivot := Vector3.ZERO) -> void:
 	finish_part()
@@ -462,3 +781,8 @@ func advance(delta:float) -> void:
 				piece.rotation.z = sin(clock*(20.0 if species=="bee" else 8.0))*.46*(1 if label=="WingR" else -1)
 			"Tail":
 				piece.rotation.y = step*.16
+			"ArmL","ArmR":
+				piece.rotation.x = -.45*clampf(age*3.,0.,1.) if pose=="Windup" else (.58*maxf(0.,1.-age*2.) if pose=="Attack" else step*.045)
+			_:
+				if label.begins_with("Head"):
+					piece.rotation.y=sin(clock*2.+float(label.right(1)))*.13

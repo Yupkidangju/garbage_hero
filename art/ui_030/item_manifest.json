@@ -1,0 +1,1234 @@
+[
+  {
+    "id": 0,
+    "kind": "sword",
+    "shape": "notched_cleaver",
+    "feature": "asymmetric iron signboard blade with two chips and wrapped grip",
+    "triangles": 3148,
+    "dimensions": [
+      0.4000000059604645,
+      0.13449999690055847,
+      1.465000033378601
+    ],
+    "icon": "res://assets/ui/items/item_000.png",
+    "model": "res://assets/models/items/item_000.glb"
+  },
+  {
+    "id": 1,
+    "kind": "sword",
+    "shape": "thorn_hook",
+    "feature": "three backward hooks along a curved green blade",
+    "triangles": 2704,
+    "dimensions": [
+      0.4693450927734375,
+      0.13439999520778656,
+      1.5533952713012695
+    ],
+    "icon": "res://assets/ui/items/item_001.png",
+    "model": "res://assets/models/items/item_001.glb"
+  },
+  {
+    "id": 29,
+    "kind": "sword",
+    "shape": "starwheel_longsword",
+    "feature": "long narrow blade intersected by a six-spoke brass starwheel guard",
+    "triangles": 4244,
+    "dimensions": [
+      0.5260000228881836,
+      0.15960319340229034,
+      1.7034577131271362
+    ],
+    "icon": "res://assets/ui/items/item_029.png",
+    "model": "res://assets/models/items/item_029.glb"
+  },
+  {
+    "id": 52,
+    "kind": "armor",
+    "shape": "bark_lamellar",
+    "feature": "overlapping bark scales and a raised pinecone shoulder",
+    "triangles": 5144,
+    "dimensions": [
+      0.5076420307159424,
+      0.31750667095184326,
+      0.5399854779243469
+    ],
+    "icon": "res://assets/ui/items/item_052.png",
+    "model": "res://assets/models/items/item_052.glb"
+  },
+  {
+    "id": 58,
+    "kind": "shield",
+    "shape": "pinecone_buckler",
+    "feature": "small round layered pinecone shield with a branch rim",
+    "triangles": 3412,
+    "dimensions": [
+      0.5096560716629028,
+      0.14048337936401367,
+      0.5099999904632568
+    ],
+    "icon": "res://assets/ui/items/item_058.png",
+    "model": "res://assets/models/items/item_058.glb"
+  },
+  {
+    "id": 64,
+    "kind": "boots",
+    "shape": "sand_sail_boots",
+    "feature": "tall tan boots with broad triangular side sail flaps",
+    "triangles": 1516,
+    "dimensions": [
+      0.31723451614379883,
+      0.3261900842189789,
+      0.34379246830940247
+    ],
+    "icon": "res://assets/ui/items/item_064.png",
+    "model": "res://assets/models/items/item_064.glb"
+  },
+  {
+    "id": 70,
+    "kind": "helmet",
+    "shape": "acorn_watchcap",
+    "feature": "deep ridged acorn cap with a single short stalk crest",
+    "triangles": 3740,
+    "dimensions": [
+      0.3756561279296875,
+      0.37599998712539673,
+      0.3594863712787628
+    ],
+    "icon": "res://assets/ui/items/item_070.png",
+    "model": "res://assets/models/items/item_070.glb"
+  },
+  {
+    "id": 76,
+    "kind": "ring",
+    "shape": "pine_knot_ring",
+    "feature": "braided wooden band with a raised seed-shaped knot",
+    "triangles": 2028,
+    "dimensions": [
+      0.36385855078697205,
+      0.13831275701522827,
+      0.46199071407318115
+    ],
+    "icon": "res://assets/ui/items/item_076.png",
+    "model": "res://assets/models/items/item_076.glb"
+  },
+  {
+    "id": 82,
+    "kind": "necklace",
+    "shape": "acorn_whistle",
+    "feature": "small pierced wooden acorn whistle with a leaf on its cord",
+    "triangles": 1828,
+    "dimensions": [
+      0.4258585572242737,
+      0.14800000190734863,
+      0.6929879188537598
+    ],
+    "icon": "res://assets/ui/items/item_082.png",
+    "model": "res://assets/models/items/item_082.glb"
+  },
+  {
+    "id": 2,
+    "kind": "sword",
+    "shape": "glass_saw",
+    "feature": "wide transparent amber blade with five triangular saw teeth",
+    "triangles": 2632,
+    "dimensions": [
+      0.49820131063461304,
+      0.16664952039718628,
+      1.553472876548767
+    ],
+    "icon": "res://assets/ui/items/item_002.png",
+    "model": "res://assets/models/items/item_002.glb"
+  },
+  {
+    "id": 3,
+    "kind": "sword",
+    "shape": "bell_counterweight",
+    "feature": "straight blade and a hanging bronze bell pommel",
+    "triangles": 3500,
+    "dimensions": [
+      0.4000000059604645,
+      0.1451999992132187,
+      1.8664870262145996
+    ],
+    "icon": "res://assets/ui/items/item_003.png",
+    "model": "res://assets/models/items/item_003.glb"
+  },
+  {
+    "id": 4,
+    "kind": "sword",
+    "shape": "reed_sickle",
+    "feature": "long thin crescent sickle blade with forked reed guard",
+    "triangles": 2592,
+    "dimensions": [
+      0.8608548045158386,
+      0.13439999520778656,
+      1.524999976158142
+    ],
+    "icon": "res://assets/ui/items/item_004.png",
+    "model": "res://assets/models/items/item_004.glb"
+  },
+  {
+    "id": 5,
+    "kind": "sword",
+    "shape": "frost_saw",
+    "feature": "blue split-tip blade with a serrated ice ridge",
+    "triangles": 2904,
+    "dimensions": [
+      0.4591933488845825,
+      0.14646583795547485,
+      1.5530829429626465
+    ],
+    "icon": "res://assets/ui/items/item_005.png",
+    "model": "res://assets/models/items/item_005.glb"
+  },
+  {
+    "id": 6,
+    "kind": "sword",
+    "shape": "crucible_falchion",
+    "feature": "heavy red single-edged blade with a square furnace vent",
+    "triangles": 2848,
+    "dimensions": [
+      0.48000001907348633,
+      0.16099999845027924,
+      1.4937936067581177
+    ],
+    "icon": "res://assets/ui/items/item_006.png",
+    "model": "res://assets/models/items/item_006.glb"
+  },
+  {
+    "id": 7,
+    "kind": "bow",
+    "shape": "laundry_flatbow",
+    "feature": "uneven wooden stave with rope knots and a cloth pennant",
+    "triangles": 4092,
+    "dimensions": [
+      0.5169194936752319,
+      0.15600000321865082,
+      1.4054932594299316
+    ],
+    "icon": "res://assets/ui/items/item_007.png",
+    "model": "res://assets/models/items/item_007.glb"
+  },
+  {
+    "id": 8,
+    "kind": "staff",
+    "shape": "lightbulb_crook",
+    "feature": "crooked copper pipe topped by one large bare lightbulb",
+    "triangles": 2732,
+    "dimensions": [
+      0.44599997997283936,
+      0.2199999988079071,
+      1.644494652748108
+    ],
+    "icon": "res://assets/ui/items/item_008.png",
+    "model": "res://assets/models/items/item_008.glb"
+  },
+  {
+    "id": 9,
+    "kind": "spear",
+    "shape": "fork_rake",
+    "feature": "three crooked iron rake prongs on a long wooden shaft",
+    "triangles": 3004,
+    "dimensions": [
+      0.39399999380111694,
+      0.10559999942779541,
+      2.0950000286102295
+    ],
+    "icon": "res://assets/ui/items/item_009.png",
+    "model": "res://assets/models/items/item_009.glb"
+  },
+  {
+    "id": 10,
+    "kind": "mace",
+    "shape": "hex_nut_club",
+    "feature": "oversized hollow hex nut mounted across a short iron handle",
+    "triangles": 2320,
+    "dimensions": [
+      0.6082602739334106,
+      0.18078461289405823,
+      1.319137692451477
+    ],
+    "icon": "res://assets/ui/items/item_010.png",
+    "model": "res://assets/models/items/item_010.glb"
+  },
+  {
+    "id": 11,
+    "kind": "armor",
+    "shape": "tin_apron",
+    "feature": "square riveted tin apron with a leather neck loop and cloth skirt",
+    "triangles": 1264,
+    "dimensions": [
+      0.39970850944519043,
+      0.3310000002384186,
+      0.4690525531768799
+    ],
+    "icon": "res://assets/ui/items/item_011.png",
+    "model": "res://assets/models/items/item_011.glb"
+  },
+  {
+    "id": 12,
+    "kind": "shield",
+    "shape": "pot_lid",
+    "feature": "round dented pot lid with a central knob and one chipped rim",
+    "triangles": 1336,
+    "dimensions": [
+      0.5397250056266785,
+      0.1850000023841858,
+      0.5400000214576721
+    ],
+    "icon": "res://assets/ui/items/item_012.png",
+    "model": "res://assets/models/items/item_012.glb"
+  },
+  {
+    "id": 13,
+    "kind": "boots",
+    "shape": "patched_workboots",
+    "feature": "short square-toed leather work boots with mismatched tin patches",
+    "triangles": 1604,
+    "dimensions": [
+      0.18954122066497803,
+      0.3261900842189789,
+      0.2552224397659302
+    ],
+    "icon": "res://assets/ui/items/item_013.png",
+    "model": "res://assets/models/items/item_013.glb"
+  },
+  {
+    "id": 14,
+    "kind": "helmet",
+    "shape": "kettle_helm",
+    "feature": "upturned dented kettle with a curved spout and loop handle",
+    "triangles": 1408,
+    "dimensions": [
+      0.5637409687042236,
+      0.37599998712539673,
+      0.29058846831321716
+    ],
+    "icon": "res://assets/ui/items/item_014.png",
+    "model": "res://assets/models/items/item_014.glb"
+  },
+  {
+    "id": 15,
+    "kind": "ring",
+    "shape": "wire_loop",
+    "feature": "uneven double wire loop with a twisted overlap",
+    "triangles": 1304,
+    "dimensions": [
+      0.36385855078697205,
+      0.11261368542909622,
+      0.3811613619327545
+    ],
+    "icon": "res://assets/ui/items/item_015.png",
+    "model": "res://assets/models/items/item_015.glb"
+  },
+  {
+    "id": 16,
+    "kind": "necklace",
+    "shape": "pulley_pendant",
+    "feature": "one large rusty grooved pulley hanging on an uneven rope loop",
+    "triangles": 2232,
+    "dimensions": [
+      0.4258585572242737,
+      0.07323908805847168,
+      0.7430000305175781
+    ],
+    "icon": "res://assets/ui/items/item_016.png",
+    "model": "res://assets/models/items/item_016.glb"
+  },
+  {
+    "id": 17,
+    "kind": "bow",
+    "shape": "pine_recurve",
+    "feature": "recurved branching limbs and a pinecone grip",
+    "triangles": 5224,
+    "dimensions": [
+      0.6210318803787231,
+      0.1606633961200714,
+      1.5437507629394531
+    ],
+    "icon": "res://assets/ui/items/item_017.png",
+    "model": "res://assets/models/items/item_017.glb"
+  },
+  {
+    "id": 18,
+    "kind": "staff",
+    "shape": "glass_sun",
+    "feature": "brass sun disk with seven glass rays above a straight rod",
+    "triangles": 3312,
+    "dimensions": [
+      0.5893003940582275,
+      0.11599999666213989,
+      1.847227692604065
+    ],
+    "icon": "res://assets/ui/items/item_018.png",
+    "model": "res://assets/models/items/item_018.glb"
+  },
+  {
+    "id": 19,
+    "kind": "mace",
+    "shape": "funeral_bell",
+    "feature": "large flared bronze bell hanging sideways from a black handle",
+    "triangles": 2952,
+    "dimensions": [
+      0.4351412355899811,
+      0.43560001254081726,
+      1.345900058746338
+    ],
+    "icon": "res://assets/ui/items/item_019.png",
+    "model": "res://assets/models/items/item_019.glb"
+  },
+  {
+    "id": 20,
+    "kind": "spear",
+    "shape": "reed_lance",
+    "feature": "slender leaf-shaped blade tied to a bundled reed shaft",
+    "triangles": 2880,
+    "dimensions": [
+      0.23000000417232513,
+      0.1340000033378601,
+      2.2249999046325684
+    ],
+    "icon": "res://assets/ui/items/item_020.png",
+    "model": "res://assets/models/items/item_020.glb"
+  },
+  {
+    "id": 21,
+    "kind": "bow",
+    "shape": "frost_compound",
+    "feature": "layered blue hooked limbs with hexagonal ice tips",
+    "triangles": 4272,
+    "dimensions": [
+      0.5483083724975586,
+      0.15735161304473877,
+      1.8600000143051147
+    ],
+    "icon": "res://assets/ui/items/item_021.png",
+    "model": "res://assets/models/items/item_021.glb"
+  },
+  {
+    "id": 22,
+    "kind": "mace",
+    "shape": "ember_anvil",
+    "feature": "heavy asymmetric anvil head with a red hot central groove",
+    "triangles": 2456,
+    "dimensions": [
+      0.7774456739425659,
+      0.26100000739097595,
+      1.274999976158142
+    ],
+    "icon": "res://assets/ui/items/item_022.png",
+    "model": "res://assets/models/items/item_022.glb"
+  },
+  {
+    "id": 23,
+    "kind": "boots",
+    "shape": "pineleaf_runners",
+    "feature": "pointed green ankle boots with swept pineleaf cuffs",
+    "triangles": 1988,
+    "dimensions": [
+      0.2593803107738495,
+      0.35428586602211,
+      0.33649319410324097
+    ],
+    "icon": "res://assets/ui/items/item_023.png",
+    "model": "res://assets/models/items/item_023.glb"
+  },
+  {
+    "id": 24,
+    "kind": "ring",
+    "shape": "scorpion_ring",
+    "feature": "open segmented brass ring whose claw and tail meet above the finger",
+    "triangles": 1224,
+    "dimensions": [
+      0.39364081621170044,
+      0.08446789532899857,
+      0.49791425466537476
+    ],
+    "icon": "res://assets/ui/items/item_024.png",
+    "model": "res://assets/models/items/item_024.glb"
+  },
+  {
+    "id": 25,
+    "kind": "helmet",
+    "shape": "bellkeeper_helm",
+    "feature": "flared bell-shaped helmet with two vertical eye slits",
+    "triangles": 1712,
+    "dimensions": [
+      0.4496561288833618,
+      0.44999998807907104,
+      0.31299036741256714
+    ],
+    "icon": "res://assets/ui/items/item_025.png",
+    "model": "res://assets/models/items/item_025.glb"
+  },
+  {
+    "id": 26,
+    "kind": "necklace",
+    "shape": "lily_seed_pendant",
+    "feature": "round green seedpod with five open petals on a reed cord",
+    "triangles": 2312,
+    "dimensions": [
+      0.4258585572242737,
+      0.09300000220537186,
+      0.7072367072105408
+    ],
+    "icon": "res://assets/ui/items/item_026.png",
+    "model": "res://assets/models/items/item_026.glb"
+  },
+  {
+    "id": 27,
+    "kind": "armor",
+    "shape": "patched_parka",
+    "feature": "thick fur collar and asymmetric blue stitched quilted panels",
+    "triangles": 4588,
+    "dimensions": [
+      0.4714292287826538,
+      0.3407021164894104,
+      0.4759891629219055
+    ],
+    "icon": "res://assets/ui/items/item_027.png",
+    "model": "res://assets/models/items/item_027.glb"
+  },
+  {
+    "id": 28,
+    "kind": "shield",
+    "shape": "slag_tower",
+    "feature": "tall asymmetrical slag slab with a glowing furnace slit",
+    "triangles": 780,
+    "dimensions": [
+      0.49000000953674316,
+      0.21199999749660492,
+      0.6295050382614136
+    ],
+    "icon": "res://assets/ui/items/item_028.png",
+    "model": "res://assets/models/items/item_028.glb"
+  },
+  {
+    "id": 30,
+    "kind": "bow",
+    "shape": "hourglass_longbow",
+    "feature": "tall angular double limbs around a brass hourglass",
+    "triangles": 4400,
+    "dimensions": [
+      0.5979006290435791,
+      0.17716068029403687,
+      1.7002880573272705
+    ],
+    "icon": "res://assets/ui/items/item_030.png",
+    "model": "res://assets/models/items/item_030.glb"
+  },
+  {
+    "id": 31,
+    "kind": "bow",
+    "shape": "bell_shortbow",
+    "feature": "short compact square arms with two dangling bells",
+    "triangles": 5568,
+    "dimensions": [
+      0.5880717039108276,
+      0.14720000326633453,
+      1.0653471946716309
+    ],
+    "icon": "res://assets/ui/items/item_031.png",
+    "model": "res://assets/models/items/item_031.glb"
+  },
+  {
+    "id": 32,
+    "kind": "bow",
+    "shape": "lily_foldingbow",
+    "feature": "broad leaf-shaped folding arms and a round lily hub",
+    "triangles": 4252,
+    "dimensions": [
+      0.6164634227752686,
+      0.14720000326633453,
+      1.382265567779541
+    ],
+    "icon": "res://assets/ui/items/item_032.png",
+    "model": "res://assets/models/items/item_032.glb"
+  },
+  {
+    "id": 33,
+    "kind": "bow",
+    "shape": "bellows_pulleybow",
+    "feature": "split metal arms with large pulley wheels and red bellows",
+    "triangles": 8764,
+    "dimensions": [
+      0.5337367653846741,
+      0.14720000326633453,
+      1.7459685802459717
+    ],
+    "icon": "res://assets/ui/items/item_033.png",
+    "model": "res://assets/models/items/item_033.glb"
+  },
+  {
+    "id": 34,
+    "kind": "bow",
+    "shape": "comet_orbitbow",
+    "feature": "open circular orbit frame with a comet point at its upper tip",
+    "triangles": 5736,
+    "dimensions": [
+      0.8057249784469604,
+      0.14720000326633453,
+      1.7200000286102295
+    ],
+    "icon": "res://assets/ui/items/item_034.png",
+    "model": "res://assets/models/items/item_034.glb"
+  },
+  {
+    "id": 35,
+    "kind": "staff",
+    "shape": "acorn_lantern",
+    "feature": "forked branch cradling a hanging ribbed acorn lantern",
+    "triangles": 4616,
+    "dimensions": [
+      0.42691534757614136,
+      0.27429986000061035,
+      1.8138628005981445
+    ],
+    "icon": "res://assets/ui/items/item_035.png",
+    "model": "res://assets/models/items/item_035.glb"
+  },
+  {
+    "id": 36,
+    "kind": "staff",
+    "shape": "funeral_candelabrum",
+    "feature": "three uneven candle arms above a dark tapered staff",
+    "triangles": 3412,
+    "dimensions": [
+      0.5498600602149963,
+      0.1120000034570694,
+      1.875
+    ],
+    "icon": "res://assets/ui/items/item_036.png",
+    "model": "res://assets/models/items/item_036.glb"
+  },
+  {
+    "id": 37,
+    "kind": "staff",
+    "shape": "lily_sluice",
+    "feature": "open flower bowl above a short horizontal waterwheel",
+    "triangles": 5556,
+    "dimensions": [
+      0.4654190242290497,
+      0.352164626121521,
+      1.674992561340332
+    ],
+    "icon": "res://assets/ui/items/item_037.png",
+    "model": "res://assets/models/items/item_037.glb"
+  },
+  {
+    "id": 38,
+    "kind": "staff",
+    "shape": "icicle_baton",
+    "feature": "long tapered crystal spear with two offset floating ice fins",
+    "triangles": 2368,
+    "dimensions": [
+      0.42421042919158936,
+      0.18935492634773254,
+      1.9550000429153442
+    ],
+    "icon": "res://assets/ui/items/item_038.png",
+    "model": "res://assets/models/items/item_038.glb"
+  },
+  {
+    "id": 39,
+    "kind": "staff",
+    "shape": "furnace_blower",
+    "feature": "cage-shaped furnace head with three flared exhaust pipes",
+    "triangles": 4616,
+    "dimensions": [
+      0.5099999904632568,
+      0.30300891399383545,
+      1.8650000095367432
+    ],
+    "icon": "res://assets/ui/items/item_039.png",
+    "model": "res://assets/models/items/item_039.glb"
+  },
+  {
+    "id": 40,
+    "kind": "staff",
+    "shape": "armillary_compass",
+    "feature": "three intersecting brass orbits enclosing a luminous compass needle",
+    "triangles": 4048,
+    "dimensions": [
+      0.49572497606277466,
+      0.44018054008483887,
+      1.7811566591262817
+    ],
+    "icon": "res://assets/ui/items/item_040.png",
+    "model": "res://assets/models/items/item_040.glb"
+  },
+  {
+    "id": 41,
+    "kind": "spear",
+    "shape": "pine_fork",
+    "feature": "two spreading hooked branch points with an acorn socket",
+    "triangles": 2940,
+    "dimensions": [
+      0.4687362611293793,
+      0.15000000596046448,
+      2.1821370124816895
+    ],
+    "icon": "res://assets/ui/items/item_041.png",
+    "model": "res://assets/models/items/item_041.glb"
+  },
+  {
+    "id": 42,
+    "kind": "spear",
+    "shape": "scorpion_tail",
+    "feature": "segmented curved brass stinger and two glass side barbs",
+    "triangles": 3248,
+    "dimensions": [
+      0.4189999997615814,
+      0.15600000321865082,
+      2.2161426544189453
+    ],
+    "icon": "res://assets/ui/items/item_042.png",
+    "model": "res://assets/models/items/item_042.glb"
+  },
+  {
+    "id": 43,
+    "kind": "spear",
+    "shape": "tomb_banner",
+    "feature": "broad gravestone-shaped point with a torn side banner",
+    "triangles": 2304,
+    "dimensions": [
+      0.4881368577480316,
+      0.13279999792575836,
+      2.1449999809265137
+    ],
+    "icon": "res://assets/ui/items/item_043.png",
+    "model": "res://assets/models/items/item_043.glb"
+  },
+  {
+    "id": 44,
+    "kind": "spear",
+    "shape": "goat_horn_pike",
+    "feature": "twin swept goat horns embracing a long central ice point",
+    "triangles": 2792,
+    "dimensions": [
+      0.5372297167778015,
+      0.14979591965675354,
+      2.265000104904175
+    ],
+    "icon": "res://assets/ui/items/item_044.png",
+    "model": "res://assets/models/items/item_044.glb"
+  },
+  {
+    "id": 45,
+    "kind": "spear",
+    "shape": "chimney_awl",
+    "feature": "square perforated chimney socket and a glowing narrow awl",
+    "triangles": 2852,
+    "dimensions": [
+      0.18000000715255737,
+      0.16699999570846558,
+      2.325000047683716
+    ],
+    "icon": "res://assets/ui/items/item_045.png",
+    "model": "res://assets/models/items/item_045.glb"
+  },
+  {
+    "id": 46,
+    "kind": "spear",
+    "shape": "ford_trident",
+    "feature": "large open crescent trident with a miniature waterwheel center",
+    "triangles": 5112,
+    "dimensions": [
+      0.5777044892311096,
+      0.12015517055988312,
+      2.2950000762939453
+    ],
+    "icon": "res://assets/ui/items/item_046.png",
+    "model": "res://assets/models/items/item_046.glb"
+  },
+  {
+    "id": 47,
+    "kind": "mace",
+    "shape": "acorn_mallet",
+    "feature": "large ribbed wooden acorn head with a brass band",
+    "triangles": 3632,
+    "dimensions": [
+      0.46000000834465027,
+      0.4399999976158142,
+      1.3849906921386719
+    ],
+    "icon": "res://assets/ui/items/item_047.png",
+    "model": "res://assets/models/items/item_047.glb"
+  },
+  {
+    "id": 48,
+    "kind": "mace",
+    "shape": "glass_mortar",
+    "feature": "hollow square mortar head filled with amber glass shards",
+    "triangles": 2752,
+    "dimensions": [
+      0.41499999165534973,
+      0.33000001311302185,
+      1.4049999713897705
+    ],
+    "icon": "res://assets/ui/items/item_048.png",
+    "model": "res://assets/models/items/item_048.glb"
+  },
+  {
+    "id": 49,
+    "kind": "mace",
+    "shape": "sluice_cog",
+    "feature": "wide eight-tooth gear with two opposed metal jaws",
+    "triangles": 4496,
+    "dimensions": [
+      0.75,
+      0.18000000715255737,
+      1.4079843759536743
+    ],
+    "icon": "res://assets/ui/items/item_049.png",
+    "model": "res://assets/models/items/item_049.glb"
+  },
+  {
+    "id": 50,
+    "kind": "mace",
+    "shape": "glacier_pendulum",
+    "feature": "long tapered hexagonal ice weight suspended by a rigid yoke",
+    "triangles": 2420,
+    "dimensions": [
+      0.4399999976158142,
+      0.3087838888168335,
+      1.3335317373275757
+    ],
+    "icon": "res://assets/ui/items/item_050.png",
+    "model": "res://assets/models/items/item_050.glb"
+  },
+  {
+    "id": 51,
+    "kind": "mace",
+    "shape": "oscillator_hammer",
+    "feature": "paired counterweights around a small piston on a long steel haft",
+    "triangles": 2972,
+    "dimensions": [
+      0.6700000166893005,
+      0.25999999046325684,
+      1.274999976158142
+    ],
+    "icon": "res://assets/ui/items/item_051.png",
+    "model": "res://assets/models/items/item_051.glb"
+  },
+  {
+    "id": 53,
+    "kind": "armor",
+    "shape": "sunshade_breastplate",
+    "feature": "arched brass sunshade shoulder with a ventilated narrow chest",
+    "triangles": 1508,
+    "dimensions": [
+      0.7400000095367432,
+      0.335999995470047,
+      0.4949948787689209
+    ],
+    "icon": "res://assets/ui/items/item_053.png",
+    "model": "res://assets/models/items/item_053.glb"
+  },
+  {
+    "id": 54,
+    "kind": "armor",
+    "shape": "tomb_oathplate",
+    "feature": "tall gravestone chest plate with a cross brace and torn black sash",
+    "triangles": 916,
+    "dimensions": [
+      0.39970850944519043,
+      0.36899998784065247,
+      0.5191510915756226
+    ],
+    "icon": "res://assets/ui/items/item_054.png",
+    "model": "res://assets/models/items/item_054.glb"
+  },
+  {
+    "id": 55,
+    "kind": "armor",
+    "shape": "sluice_scalemail",
+    "feature": "three overlapping crescent watergate plates with green straps",
+    "triangles": 1540,
+    "dimensions": [
+      0.39970850944519043,
+      0.3797854483127594,
+      0.48500001430511475
+    ],
+    "icon": "res://assets/ui/items/item_055.png",
+    "model": "res://assets/models/items/item_055.glb"
+  },
+  {
+    "id": 56,
+    "kind": "armor",
+    "shape": "crucible_heatplate",
+    "feature": "round crucible chest bowl with two broad furnace shoulder shields",
+    "triangles": 1900,
+    "dimensions": [
+      0.7200000286102295,
+      0.38099998235702515,
+      0.49499303102493286
+    ],
+    "icon": "res://assets/ui/items/item_056.png",
+    "model": "res://assets/models/items/item_056.glb"
+  },
+  {
+    "id": 57,
+    "kind": "armor",
+    "shape": "engine_heartplate",
+    "feature": "open ribbed chest cage around a glowing heart-shaped piston",
+    "triangles": 2192,
+    "dimensions": [
+      0.39970850944519043,
+      0.4269999861717224,
+      0.4630454182624817
+    ],
+    "icon": "res://assets/ui/items/item_057.png",
+    "model": "res://assets/models/items/item_057.glb"
+  },
+  {
+    "id": 59,
+    "kind": "shield",
+    "shape": "scorpion_kite",
+    "feature": "elongated pointed kite shield with two raised pincer wings",
+    "triangles": 404,
+    "dimensions": [
+      0.6178162693977356,
+      0.2241877019405365,
+      0.6969540119171143
+    ],
+    "icon": "res://assets/ui/items/item_059.png",
+    "model": "res://assets/models/items/item_059.glb"
+  },
+  {
+    "id": 60,
+    "kind": "shield",
+    "shape": "funeral_cross",
+    "feature": "wide cross-shaped iron shield with four bell-cut corners",
+    "triangles": 856,
+    "dimensions": [
+      0.5,
+      0.13500000536441803,
+      0.6299999952316284
+    ],
+    "icon": "res://assets/ui/items/item_060.png",
+    "model": "res://assets/models/items/item_060.glb"
+  },
+  {
+    "id": 61,
+    "kind": "shield",
+    "shape": "sluice_crescent",
+    "feature": "open crescent watergate shield with a horizontal rivet bar",
+    "triangles": 736,
+    "dimensions": [
+      0.5049999952316284,
+      0.11999999731779099,
+      0.5995374321937561
+    ],
+    "icon": "res://assets/ui/items/item_061.png",
+    "model": "res://assets/models/items/item_061.glb"
+  },
+  {
+    "id": 62,
+    "kind": "shield",
+    "shape": "frost_hexagon",
+    "feature": "wide translucent six-sided ice plate with three inset ribs",
+    "triangles": 484,
+    "dimensions": [
+      0.5600000023841858,
+      0.14100000262260437,
+      0.5196152329444885
+    ],
+    "icon": "res://assets/ui/items/item_062.png",
+    "model": "res://assets/models/items/item_062.glb"
+  },
+  {
+    "id": 63,
+    "kind": "shield",
+    "shape": "wheel_spoke_guard",
+    "feature": "large eight-spoke wheel with an offset brass hub and armored rim",
+    "triangles": 2888,
+    "dimensions": [
+      0.6460000276565552,
+      0.10999999940395355,
+      0.6459686160087585
+    ],
+    "icon": "res://assets/ui/items/item_063.png",
+    "model": "res://assets/models/items/item_063.glb"
+  },
+  {
+    "id": 65,
+    "kind": "boots",
+    "shape": "bell_pilgrim_shoes",
+    "feature": "low curled black shoes carrying small heel bells",
+    "triangles": 2572,
+    "dimensions": [
+      0.18979567289352417,
+      0.38155800104141235,
+      0.2552224397659302
+    ],
+    "icon": "res://assets/ui/items/item_065.png",
+    "model": "res://assets/models/items/item_065.glb"
+  },
+  {
+    "id": 66,
+    "kind": "boots",
+    "shape": "reed_floatboots",
+    "feature": "wide flat reed-pontoon soles and open laced calves",
+    "triangles": 2712,
+    "dimensions": [
+      0.2240000069141388,
+      0.34619009494781494,
+      0.2552224397659302
+    ],
+    "icon": "res://assets/ui/items/item_066.png",
+    "model": "res://assets/models/items/item_066.glb"
+  },
+  {
+    "id": 67,
+    "kind": "boots",
+    "shape": "icicle_crampons",
+    "feature": "thick fur cuffs and four long angular crampon spikes",
+    "triangles": 2756,
+    "dimensions": [
+      0.20933373272418976,
+      0.3261900842189789,
+      0.33499178290367126
+    ],
+    "icon": "res://assets/ui/items/item_067.png",
+    "model": "res://assets/models/items/item_067.glb"
+  },
+  {
+    "id": 68,
+    "kind": "boots",
+    "shape": "ember_bellows_shoes",
+    "feature": "ribbed bellows heels with short metal exhaust nozzles",
+    "triangles": 2100,
+    "dimensions": [
+      0.2727934718132019,
+      0.3578532338142395,
+      0.2552224397659302
+    ],
+    "icon": "res://assets/ui/items/item_068.png",
+    "model": "res://assets/models/items/item_068.glb"
+  },
+  {
+    "id": 69,
+    "kind": "boots",
+    "shape": "axle_walking_boots",
+    "feature": "segmented brass ankle braces with large circular outer bearings",
+    "triangles": 2340,
+    "dimensions": [
+      0.2095412313938141,
+      0.3261900842189789,
+      0.2552224397659302
+    ],
+    "icon": "res://assets/ui/items/item_069.png",
+    "model": "res://assets/models/items/item_069.glb"
+  },
+  {
+    "id": 71,
+    "kind": "helmet",
+    "shape": "brass_sunhat",
+    "feature": "very broad flat brass brim and a low domed vented crown",
+    "triangles": 1300,
+    "dimensions": [
+      0.5667076110839844,
+      0.5667076110839844,
+      0.25058844685554504
+    ],
+    "icon": "res://assets/ui/items/item_071.png",
+    "model": "res://assets/models/items/item_071.glb"
+  },
+  {
+    "id": 72,
+    "kind": "helmet",
+    "shape": "lily_gate_helm",
+    "feature": "open lily petals around a watergate-bar face guard",
+    "triangles": 2328,
+    "dimensions": [
+      0.4015823006629944,
+      0.42913806438446045,
+      0.36310696601867676
+    ],
+    "icon": "res://assets/ui/items/item_072.png",
+    "model": "res://assets/models/items/item_072.glb"
+  },
+  {
+    "id": 73,
+    "kind": "helmet",
+    "shape": "horned_fur_helm",
+    "feature": "thick white fur cap with two short swept goat horns",
+    "triangles": 2812,
+    "dimensions": [
+      0.6171844005584717,
+      0.3834042251110077,
+      0.36203816533088684
+    ],
+    "icon": "res://assets/ui/items/item_073.png",
+    "model": "res://assets/models/items/item_073.glb"
+  },
+  {
+    "id": 74,
+    "kind": "helmet",
+    "shape": "chimney_welder",
+    "feature": "box-shaped welding mask and a short crooked exhaust chimney",
+    "triangles": 1280,
+    "dimensions": [
+      0.3938855528831482,
+      0.3880000114440918,
+      0.4568146765232086
+    ],
+    "icon": "res://assets/ui/items/item_074.png",
+    "model": "res://assets/models/items/item_074.glb"
+  },
+  {
+    "id": 75,
+    "kind": "helmet",
+    "shape": "star_lens_helm",
+    "feature": "round brass observatory dome with a large offset telescope lens",
+    "triangles": 2100,
+    "dimensions": [
+      0.44362661242485046,
+      0.397794246673584,
+      0.2867394983768463
+    ],
+    "icon": "res://assets/ui/items/item_075.png",
+    "model": "res://assets/models/items/item_075.glb"
+  },
+  {
+    "id": 77,
+    "kind": "ring",
+    "shape": "funeral_signet",
+    "feature": "flat octagonal dark signet with a tiny bell engraving",
+    "triangles": 736,
+    "dimensions": [
+      0.36385855078697205,
+      0.21921634674072266,
+      0.4020000100135803
+    ],
+    "icon": "res://assets/ui/items/item_077.png",
+    "model": "res://assets/models/items/item_077.glb"
+  },
+  {
+    "id": 78,
+    "kind": "ring",
+    "shape": "leech_coil_ring",
+    "feature": "thick coiled leech body ending in a red sucker gem",
+    "triangles": 1260,
+    "dimensions": [
+      0.37509435415267944,
+      0.1127128154039383,
+      0.3848550319671631
+    ],
+    "icon": "res://assets/ui/items/item_078.png",
+    "model": "res://assets/models/items/item_078.glb"
+  },
+  {
+    "id": 79,
+    "kind": "ring",
+    "shape": "snowflake_ring",
+    "feature": "thin silver band supporting a large branching six-point snowflake",
+    "triangles": 2908,
+    "dimensions": [
+      0.36385855078697205,
+      0.07271281629800797,
+      0.5353662967681885
+    ],
+    "icon": "res://assets/ui/items/item_079.png",
+    "model": "res://assets/models/items/item_079.glb"
+  },
+  {
+    "id": 80,
+    "kind": "ring",
+    "shape": "ember_crucible_ring",
+    "feature": "wide black band supporting a small open red crucible cup",
+    "triangles": 1696,
+    "dimensions": [
+      0.38982313871383667,
+      0.23000000417232513,
+      0.4449976682662964
+    ],
+    "icon": "res://assets/ui/items/item_080.png",
+    "model": "res://assets/models/items/item_080.glb"
+  },
+  {
+    "id": 81,
+    "kind": "ring",
+    "shape": "heartbeat_ring",
+    "feature": "split double band framing a red mechanical heart and two tiny pipes",
+    "triangles": 2528,
+    "dimensions": [
+      0.36385855078697205,
+      0.11117690801620483,
+      0.45721691846847534
+    ],
+    "icon": "res://assets/ui/items/item_081.png",
+    "model": "res://assets/models/items/item_081.glb"
+  },
+  {
+    "id": 83,
+    "kind": "necklace",
+    "shape": "hourglass_pendant",
+    "feature": "narrow hourglass in a brass triangular cage",
+    "triangles": 1360,
+    "dimensions": [
+      0.4258585572242737,
+      0.12435349076986313,
+      0.7788982391357422
+    ],
+    "icon": "res://assets/ui/items/item_083.png",
+    "model": "res://assets/models/items/item_083.glb"
+  },
+  {
+    "id": 84,
+    "kind": "necklace",
+    "shape": "funeral_chime",
+    "feature": "small flared bronze bell suspended from a black chain",
+    "triangles": 1776,
+    "dimensions": [
+      0.4258585572242737,
+      0.22439999878406525,
+      0.70899498462677
+    ],
+    "icon": "res://assets/ui/items/item_084.png",
+    "model": "res://assets/models/items/item_084.glb"
+  },
+  {
+    "id": 85,
+    "kind": "necklace",
+    "shape": "icicle_teardrop",
+    "feature": "long blue teardrop crystal with a jagged silver cap",
+    "triangles": 988,
+    "dimensions": [
+      0.4258585572242737,
+      0.14599600434303284,
+      0.7430000305175781
+    ],
+    "icon": "res://assets/ui/items/item_085.png",
+    "model": "res://assets/models/items/item_085.glb"
+  },
+  {
+    "id": 86,
+    "kind": "necklace",
+    "shape": "bellows_heart",
+    "feature": "ribbed red bellows heart with two copper valves",
+    "triangles": 2220,
+    "dimensions": [
+      0.4258585572242737,
+      0.11499999463558197,
+      0.7021747827529907
+    ],
+    "icon": "res://assets/ui/items/item_086.png",
+    "model": "res://assets/models/items/item_086.glb"
+  },
+  {
+    "id": 87,
+    "kind": "necklace",
+    "shape": "sixroad_compass",
+    "feature": "large open six-spoke compass dial with a moving central needle",
+    "triangles": 2796,
+    "dimensions": [
+      0.4258585572242737,
+      0.07500000298023224,
+      0.7645483613014221
+    ],
+    "icon": "res://assets/ui/items/item_087.png",
+    "model": "res://assets/models/items/item_087.glb"
+  }
+]

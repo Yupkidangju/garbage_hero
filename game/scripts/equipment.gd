@@ -21,9 +21,17 @@ static func _add_stats(total: Dictionary, item: Dictionary, factor: int = 1) -> 
 		total[stat] += item.get(stat, 0) * factor
 
 static func bonuses(data: Dictionary) -> Dictionary:
-	var total := {"atk":4 if data.equipped.is_empty() else 0, "crit":0, "defense":0, "max_hp":0, "speed":0.0}
+	var total := {"atk":4 if data.equipped.is_empty() else 0, "crit":0, "defense":0, "max_hp":0, "speed":0.0,
+		"effects":{"pierce":0, "lifesteal":0.0, "area":0.0}}
 	for slot: String in SLOTS:
-		_add_stats(total, _worn(data, slot))
+		var item := _worn(data, slot)
+		_add_stats(total, item)
+		var passive := Loot.effects(int(item.get("design", -1)))
+		for effect: String in passive:
+			total.effects[effect] += passive[effect]
+	for effect: String in Loot.EFFECT_CAPS:
+		total.effects[effect] = minf(total.effects[effect], Loot.EFFECT_CAPS[effect])
+	total.effects.pierce = int(total.effects.pierce)
 	return total
 
 static func compare_text(item: Dictionary, equipment: Dictionary) -> String:
@@ -119,7 +127,31 @@ static func unequip(data: Dictionary, id: int = -1) -> String:
 	_stow(data, Loot.slot(item.design))
 	return ""
 
-static func offers(vendor: String, traveler: Dictionary) -> Array[Dictionary]:
+static func town_designs(data: Dictionary) -> Array:
+	var designs := Loot.TOWN_DESIGNS.duplicate()
+	var cleared_regions := {}
+	var routes: Array = data.get("routes", [])
+	for index in routes.size():
+		if routes[index].get("cleared", false):
+			cleared_regions[index % 6] = true
+	for region in 6:
+		if cleared_regions.has(region):
+			designs.append_array(Loot.regional_pool(region))
+	return designs
+
+static func _offer_price(design: int, regional: bool, index: int) -> int:
+	if regional and index < REGIONAL_PRICES.size():
+		return REGIONAL_PRICES[index]
+	var base_index := Loot.TOWN_DESIGNS.find(design)
+	if not regional and base_index >= 0:
+		return TOWN_PRICES[base_index]
+	var profile := Loot.catalog(design)
+	var price := 34 if profile.artifact else 18 + int(profile.region) * 2
+	if Loot.kind(design) in ["staff", "armor", "necklace"]:
+		price += 4
+	return price + (4 if regional else 0)
+
+static func offers(vendor: String, traveler: Dictionary, data: Dictionary = {}) -> Array[Dictionary]:
 	var products: Array[Dictionary] = []
 	var regional := vendor == "traveler"
 	var region := int(traveler.get("region", -1))
@@ -127,21 +159,25 @@ static func offers(vendor: String, traveler: Dictionary) -> Array[Dictionary]:
 		return products
 	if vendor not in ["shop", "traveler"]:
 		return products
-	var designs: Array = Loot.REGIONAL_DESIGNS[region] if regional else Loot.TOWN_DESIGNS
-	var prices: Array = REGIONAL_PRICES if regional else TOWN_PRICES
+	var designs: Array = Loot.REGIONAL_DESIGNS[region].duplicate() if regional else town_designs(data)
+	if regional:
+		var artifacts: Array = Loot.ARTIFACT_DESIGNS[region]
+		designs.append(artifacts[posmod(int(traveler.get("visit", 0)), artifacts.size())])
 	var grade := 1 if regional else 0
 	for index in designs.size():
 		var design: int = designs[index]
 		var product := Loot.design_view(design, grade)
-		product.price = prices[index]
+		product.price = _offer_price(design, regional, index)
 		product.sold = regional and (design in traveler.get("sold_designs", []) or (index == 0 and traveler.get("sold", false)))
 		product.stock = (0 if product.sold else 1) if regional else -1
+		product.source = "traveler" if regional else ("basic" if design in Loot.TOWN_DESIGNS else "commission")
+		product.rotation = int(traveler.get("visit", 0)) if regional else 0
 		product.stat_text = Loot.range_text(design, grade)
 		products.append(product)
 	return products
 
 static func buy(data: Dictionary, vendor: String, design: int = -1) -> String:
-	var products := offers(vendor, data.traveler)
+	var products := offers(vendor, data.traveler, data)
 	var offer: Dictionary = {}
 	for product in products:
 		if design == -1 or product.design == design:

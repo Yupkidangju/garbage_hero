@@ -8,6 +8,8 @@ const Model = preload("res://scripts/monster_model.gd")
 const Mark = preload("res://scripts/monster_attack.gd")
 const SAFE_RADIUS := 4.0
 const NORMAL_PURSUIT := [6.0, 9.0, 12.1, 12.1]
+const DASH_ACTIONS := ["charge","charge_short","antler","ice_ram","leap","dive","owl_swoop","bone_pounce","water_skim","hare_skate"]
+const GUARDS := ["shield","carapace","shove","sidestep","log_guard","sand_guard","pine_guard","clam_snap","coffin_latch"]
 
 var region := 0
 var difficulty := 0
@@ -50,12 +52,14 @@ var ice_pillar:StaticBody3D
 var pillar_ttl := 0.
 var stride_blocked := 0.0
 var turn_sign := 1.0
+var is_elite := false
+var support_charges := 3
 
 func setup(area:int, rank:int, category:String, variant:int, id:String) -> void:
 	region = clampi(area,0,5)
 	difficulty = clampi(rank,0,3)
 	kind = category
-	index = posmod(variant, Book.NORMAL[region].size())
+	index = posmod(variant, Book.NORMAL[region].size() if kind=="normal" else (2 if kind=="mini" else 1))
 	spawn_id = id
 	var row := Book.species(region,kind,index)
 	species = row[0]
@@ -67,8 +71,14 @@ func setup(area:int, rank:int, category:String, variant:int, id:String) -> void:
 	speed = row[4]
 	reach = row[5]
 	hit_radius = row[6]
-	var key := "NORMAL_%s_%s" % [region,index] if kind=="normal" else "%s_%s"%[kind.to_upper(),region]
-	display_name = Book.NAMES.get_message(key)
+	display_name = Book.NAMES.get_message(Book.display_key(region,kind,index))
+	is_elite = kind=="normal" and bool(get_meta("is_elite",false))
+	if is_elite:
+		max_hp=roundi(max_hp*1.7)
+		hp=max_hp
+		power=roundi(power*1.25)
+		hit_radius*=1.15
+		display_name=Book.NAMES.get_message("ELITE_PREFIX")%display_name
 	salt = absi(hash(id))%240
 	turn_sign = 1.0 if salt%2 else -1.0
 
@@ -89,6 +99,8 @@ func _ready() -> void:
 	add_child(collider)
 	add_child(visual)
 	visual.build(species,region,kind)
+	if is_elite:
+		visual.mark_elite()
 	visual.clock = salt*.088
 	visual.play("Idle")
 	hero = get_tree().get_first_node_in_group("player") as Node3D
@@ -148,6 +160,10 @@ func _physics_process(delta:float) -> void:
 		seek()
 	else:
 		update_cast(delta)
+	if terrain and terrain.has_method("surface_at"):
+		var surface:Dictionary=terrain.movement_surface_at(global_position) if terrain.has_method("movement_surface_at") else terrain.surface_at(global_position)
+		velocity.x*=float(surface.speed)
+		velocity.z*=float(surface.speed)
 	bound_motion(delta)
 	var had_motion := Vector2(velocity.x,velocity.z).length()>.2
 	var before := global_position
@@ -166,18 +182,21 @@ func _physics_process(delta:float) -> void:
 				break
 
 func bound_motion(delta:float) -> void:
-	if not has_meta("safe_point"):
+	if delta<=0:
 		return
-	var center:Vector3=get_meta("safe_point")
-	var from:=flat(global_position-center)
 	var motion:=flat(velocity)*delta
-	var closest:=Geometry3D.get_closest_point_to_segment(Vector3.ZERO,from,from+motion) if motion.length_squared()>.000001 else from
-	if closest.length()<SAFE_RADIUS+hit_radius and motion.dot(from)<0:
-		var normal:=from.normalized()
-		var inward:=motion.dot(normal)
-		motion-=normal*inward
-		velocity.x=motion.x/delta
-		velocity.z=motion.z/delta
+	if has_meta("safe_point"):
+		var center:Vector3=get_meta("safe_point")
+		var from:=flat(global_position-center)
+		var closest:=Geometry3D.get_closest_point_to_segment(Vector3.ZERO,from,from+motion) if motion.length_squared()>.000001 else from
+		if closest.length()<SAFE_RADIUS+hit_radius and motion.dot(from)<0:
+			var normal:=from.normalized()
+			var inward:=motion.dot(normal)
+			motion-=normal*inward
+	if terrain and terrain.has_method("constrain_motion"):
+		motion=terrain.constrain_motion(global_position,motion,hit_radius)
+	velocity.x=motion.x/delta
+	velocity.z=motion.z/delta
 
 func walk(dir:Vector3) -> void:
 	velocity.x=dir.x
@@ -256,10 +275,10 @@ func update_cast(delta:float) -> void:
 			visual.position.y=-.85*sin(PI*approach)
 		else:
 			visual.position.y=(1.05 if move_style=="breach" else 1.50)*sin(PI*approach)
-	if phase=="active" and move_style in ["charge","charge_short","antler","ice_ram","leap","dive"]:
+	if phase=="active" and move_style in DASH_ACTIONS:
 		velocity.x = facing.x*dash_speed
 		velocity.z = facing.z*dash_speed
-		if move_style in ["leap","dive"]:
+		if move_style in ["leap","dive","owl_swoop","bone_pounce","water_skim","hare_skate"]:
 			var progress:=1.-clampf(remaining/active_duration,0.,1.)
 			visual.position.y = .66*sin(progress*PI)
 	if remaining>0.0:
@@ -310,6 +329,14 @@ func mark(at:Vector3,dir:Vector3,shape:String,extent:float,breadth:float,angle:f
 
 func line(at:Vector3,dir:Vector3,dist:float,width:float,delay:float,active:float,style:String="",extra:String="") -> void:
 	# 능선을 따라 오르는 사격은 지면 위를 진행하고 벽에만 막힌다.
+	if terrain and terrain.has_method("surface_at"):
+		var steps:=maxi(1,ceili(dist/.30))
+		for step in steps+1:
+			var point:=at+dir*dist*step/steps
+			var walkable:bool=terrain.walkable_at(point) if terrain.has_method("walkable_at") else bool(terrain.surface_at(point).walkable)
+			if not walkable:
+				dist=maxf(0.,dist*maxi(0,step-1)/steps)
+				break
 	var segments:=maxi(1,ceili(dist/1.1)) if terrain else 1
 	var start:=ground_point(at)+Vector3.UP*.52
 	for n in segments:
@@ -341,6 +368,120 @@ func begin(action:String) -> void:
 	var duration := .17
 	recovery = .46
 	match action:
+		"cone_burst":
+			delay=.70; duration=.50; recovery=.68
+			for n in 5:
+				line(origin,facing.rotated(Vector3.UP,(n-2)*.63),4.05,.47,delay,duration,"needle")
+		"branch_shear":
+			delay=.62; duration=.42; recovery=.72
+			for side:float in [-1.,1.]:
+				line(origin-right*side*.48,facing.rotated(Vector3.UP,side*.31),3.0,.66,delay+(side+1.)*.10,.22,"seam")
+		"nectar_heal","oasis_heal","heron_heal","snow_heal","ash_heal":
+			delay=.80; duration=.38; recovery=1.8
+			if support_charges>0:
+				zone(origin,facing,3.25,0,TAU,delay,.20,"","heal")
+			if action=="nectar_heal":
+				line(origin,facing,4.4,.42,delay,duration,"needle")
+			elif action=="oasis_heal":
+				zone(target,facing,.90,0,TAU,delay,.50,"splash","pool")
+			elif action=="heron_heal":
+				line(origin,facing,3.5,.65,delay,.21,"","pull")
+			elif action=="snow_heal":
+				zone(origin,facing,2.5,1.3,PI*1.1,delay,.30,"bell")
+			else:
+				for side:float in [-1.,1.]:
+					line(origin,facing.rotated(Vector3.UP,side*.22),4.2,.42,delay,.48,"fork")
+		"log_guard","sand_guard","pine_guard":
+			delay=.85; duration=.24; recovery=.95
+			if action=="log_guard":
+				zone(origin,facing,2.30,0,PI*1.18,delay,duration,"wave","shove")
+			elif action=="sand_guard":
+				line(origin,facing,3.3,1.25,delay,.55,"stone","shove")
+			else:
+				zone(origin,facing,2.65,.55,PI*.95,delay,duration,"root")
+		"owl_swoop","bone_pounce","water_skim","hare_skate":
+			var length:=minf(reach+.5,origin.distance_to(target)+.75)
+			delay=.68 if action=="owl_swoop" else (.45 if action=="bone_pounce" else .59)
+			duration=maxf(.24,length/(8.5 if action=="water_skim" else 7.2))
+			dash_speed=length/duration
+			recovery=.85
+			line(origin,facing,length,hit_radius*1.7+.33,delay,duration,"","dash")
+			if action=="hare_skate":
+				zone(origin,facing,.85,0,TAU,delay+.16,1.15,"splash","pool")
+			elif action=="owl_swoop":
+				zone(target,facing,1.0,.30,TAU,delay+duration,.20,"bell")
+		"crosswind":
+			delay=.72; duration=.55; recovery=.70
+			for side:float in [-1.,1.]:
+				line(origin+right*side*.80,facing.rotated(Vector3.UP,-side*.14),5.2,.68,delay,duration,"moth","shove")
+		"sand_clock":
+			delay=.70; duration=1.25; recovery=.78
+			for n in 3:
+				zone(target-facing*(n-1)*1.20,facing,.85+n*.14,0,TAU,delay+n*.40,.25,"splash","pool")
+		"grave_volley","reed_fan","icicle_fan":
+			delay=.69; duration=.66; recovery=.82
+			for n in 3:
+				var spread:float=.12 if action=="grave_volley" else (.31 if action=="reed_fan" else .43)
+				var stagger:float=n*.16 if action=="grave_volley" else (n*.08 if action=="icicle_fan" else 0.)
+				line(origin,facing.rotated(Vector3.UP,(n-1)*spread),reach+.45,.45,delay+stagger,.52,"shard" if action=="icicle_fan" else "needle")
+		"coffin_latch":
+			delay=.96; duration=.36; recovery=1.10
+			line(origin,facing,3.0,1.55,delay,duration,"hammer","pull")
+		"dirge":
+			delay=.78; duration=.24; recovery=.92
+			zone(origin,-facing,3.95,1.9,TAU-1.45,delay,duration,"bell")
+		"shroud_stitch":
+			delay=.80; duration=.58; recovery=.95
+			for side:float in [-1.,1.]:
+				line(target-right*side*2.2-facing*1.2,(right*side+facing*.55).normalized(),4.6,.55,delay+(side+1.)*.13,.25,"seam","pull")
+		"clam_snap":
+			delay=.90; duration=.22; recovery=1.15
+			zone(origin,facing,2.8,.25,PI*.72,delay,duration,"hammer","pull")
+		"snow_cross":
+			delay=.88; duration=.44; recovery=.92
+			for side:float in [-1.,1.]:
+				line(target-right*side*2.0,right*side,4.,.58,delay+(side+1.)*.14,.25,"seam")
+		"smelt":
+			delay=.78; duration=.42; recovery=.87
+			zone(origin,facing,3.8,.45,PI*.55,delay,.28,"splash")
+			zone(target+right*.75,facing,.75,0,TAU,delay+.2,1.3,"splash","pool")
+		"ember_tail":
+			delay=.67; duration=.53; recovery=.80
+			line(origin,facing,5.2,.50,delay,duration,"fork")
+			zone(target,facing,.85,.15,TAU,delay+.53,.28,"wave")
+		"eruption":
+			delay=.98; duration=.64; recovery=1.10
+			for n in 3:
+				zone(origin.lerp(target,(n+1)/3.),facing,.75,0,TAU,delay+n*.22,.24,"pillar")
+		"timber_sweep":
+			delay=1.05; duration=.68; recovery=1.4
+			zone(origin,facing,3.5,.50,PI*1.25,delay,.25,"root","shove")
+			for side:float in [-1.,1.]:
+				line(origin+right*side*1.8,facing,6.8,.90,delay+.40,.60,"stone")
+		"mirage_lanes":
+			delay=1.05; duration=1.20; recovery=1.20
+			for n in range(-2,3):
+				if n==turn_sign: continue
+				line(target-facing*3.+right*n*1.30,facing,6.5,.98,delay+absf(n)*.17,.50,"shard")
+		"requiem":
+			delay=.88; duration=.90; recovery=1.12
+			zone(origin,facing,4.9,2.7,TAU-1.4,delay,.25,"bell")
+			zone(origin,-facing,2.7,.40,TAU-1.7,delay+.64,.25,"bell")
+		"hydra_spit":
+			delay=.97; duration=.85; recovery=1.20
+			for n in range(-1,2):
+				var aim:=facing.rotated(Vector3.UP,n*.30)
+				line(origin+right*n*.70,aim,6.0,.65,delay+absf(n)*.17,.55,"moth")
+				zone(target+right*n*1.70,facing,.78,0,TAU,delay+.70,1.25,"splash","pool")
+		"glacier":
+			delay=1.1; duration=.90; recovery=1.30
+			for n in 3:
+				zone(origin+facing*(1.5+n*1.45),facing,1.25,.15,PI*1.25,delay+n*.24,.24,"pillar","shove")
+		"kiln_breath":
+			delay=1.07; duration=1.15; recovery=1.35
+			zone(origin,facing,6.4,1.0,PI*.45,delay,.45,"wave")
+			for side:float in [-1.,1.]:
+				line(origin,facing.rotated(Vector3.UP,side*.61),6.2,.9,delay+.62,.47,"fork")
 		"bite","flank","juke","haunt","shove","shield","sidestep","carapace","cleave","split","claw_l","claw_r":
 			var arc := deg_to_rad(108.)
 			var length := reach+.22
@@ -485,8 +626,12 @@ func place_pillar(at:Vector3) -> void:
 	pillar_ttl=3.8
 
 func support(effect:String) -> void:
+	if effect=="heal":
+		if support_charges<=0:
+			return
+		support_charges-=1
 	for ally in get_tree().get_nodes_in_group("enemies"):
-		if ally.hp<=0 or global_position.distance_squared_to(ally.global_position)>10.57:
+		if ally==self or ally.hp<=0 or global_position.distance_squared_to(ally.global_position)>10.57:
 			continue
 		if effect=="heal":
 			ally.hp=mini(ally.max_hp,ally.hp+maxi(2,roundi(ally.max_hp*.08)))
@@ -497,7 +642,7 @@ func take_hit(amount:int, pull:Vector3=Vector3.ZERO, incoming:Vector3=Vector3.ZE
 	if hp<=0 or amount<=0:
 		return 0
 	var damage:=amount
-	if behavior in ["shield","carapace","shove","sidestep"] and phase!="recover":
+	if behavior in GUARDS and phase!="recover":
 		var toward_source := flat(-incoming)
 		if incoming.is_zero_approx() and is_instance_valid(hero):
 			toward_source = flat(hero.global_position - global_position)
@@ -517,6 +662,8 @@ func take_hit(amount:int, pull:Vector3=Vector3.ZERO, incoming:Vector3=Vector3.ZE
 		return dealt
 	if kind=="normal" and not pull.is_zero_approx():
 		var motion:=flat(pull).limit_length(2.0)
+		if terrain and terrain.has_method("constrain_motion"):
+			motion=terrain.constrain_motion(global_position,motion,hit_radius)
 		if not is_safe(global_position+motion):
 			move_and_collide(motion)
 	if behavior=="split" and hp*2<=max_hp and not split:

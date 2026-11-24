@@ -26,8 +26,8 @@ func check_height_grid(region:int) -> void:
 		check(not World.Height.is_flat(Rect2(World.Layout.bridge_at(region),Vector2.ONE),region),"평지 위 다리 상판 보존")
 	var error:=0.
 	var unsafe:=0
-	for z in range(-60,60,5):
-		for x in range(-69,69,5):
+	for z in range(-114,115,7):
+		for x in range(-130,131,7):
 			for uv:Vector2 in [Vector2(.13,.74),Vector2(.68,.65)]:
 				var base:=Vector2(x,z)
 				var weights:=Vector3(1-uv.x-uv.y, uv.x, uv.y)
@@ -71,6 +71,14 @@ func run() -> void:
 			world.set_traveler_visible(true)
 		else:
 			check(locations.size()>=25,"고난도 등장 후보")
+			for i in world.sites.size():
+				var anchor:Vector2=world._site_anchors[i]
+				var local:=world.axes.to_local(world.sites[i])
+				var start:=Vector2(local.x,local.z)
+				for j in 9:
+					var approach:=world._floor_point(start.lerp(anchor,float(j)/8))
+					query.transform=Transform3D(Basis.IDENTITY,approach+Vector3.UP*.82)
+					check(state.intersect_shape(query,1).is_empty(),"모든 출현점의 길 연결 %s %s %s"%[region,i,approach])
 			locations.append(world.boss_point())
 		for service:String in services:
 			check(world.service_near(services[service])==service,"시설 상호작용 %s"%service)
@@ -82,7 +90,21 @@ func run() -> void:
 			check(state.intersect_shape(query,1).is_empty(),"진입 지점 충돌 %s %s"%[region,p])
 		if region>=0:
 			check_height_grid(region)
-			check(data.bounds.size==Vector2(128,112) and data.landmarks.size()==4,"필드 크기와 랜드마크 %s"%region)
+			check(data.bounds.size==Vector2(256,224) and data.landmarks.size()==5,"필드 크기와 랜드마크 %s"%region)
+			check(data.districts.size()==5 and data.caches.size()==3,"다섯 소지역과 보물함 %s"%region)
+			for district in world.district_points():
+				check(world.district_at(district.pos)==district.id,"소지역 중심 일치 %s"%district.id)
+				check(world.surface_at(district.pos).walkable,"소지역 중심 통행 %s"%district.id)
+			for cache in world.cache_points():
+				check(World.Layout.valid_cache(region,cache.id) and world.cache_near(cache.pos)==cache.id,"보물 ID와 접근 %s"%cache.id)
+				check(world.surface_at(cache.pos).walkable,"보물함의 보행면 %s"%cache.id)
+				query.transform=Transform3D(Basis.IDENTITY,cache.pos+Vector3.UP*.8)
+				check(state.intersect_shape(query,1).is_empty(),"보물함 접근 충돌 %s"%cache.id)
+				var chest:Vector3=cache.pos+world.axes.global_basis*Vector3(0,0,-1.4)
+				chest.y=world.ground_at(chest)
+				query.transform=Transform3D(Basis.IDENTITY,chest+Vector3.UP*.8)
+				check(not state.intersect_shape(query,1).is_empty(),"보물함 실물과 충돌 높이 %s"%cache.id)
+			check_water(world,state,region)
 			check(world.entry_point().distance_to(world.boss_point())>85.0,"보스까지 실제 거리")
 			for spot in data.landmarks:
 				var anchor:=world.axes.to_global(Vector3(spot.pos.x,0,spot.pos.y))
@@ -103,7 +125,7 @@ func run() -> void:
 						var uv:=World.Layout.road_at(branch,index,float(j)/steps)
 						var point:=world._floor_point(uv)
 						var floor_hit:=ray(state,point)
-						check(not floor_hit.is_empty() and floor_hit.normal.y>.91,"갈림길 경사 %s %s"%[region,uv])
+						check(not floor_hit.is_empty() and floor_hit.normal.y>.91,"갈림길 경사 %s %s hit=%s"%[region,uv,floor_hit])
 						if floor_hit.is_empty(): continue
 						query.transform=Transform3D(Basis.IDENTITY,floor_hit.position+Vector3.UP*.82)
 						check(state.intersect_shape(query,1).is_empty(),"갈림길 충돌 %s %s"%[region,uv])
@@ -127,3 +149,42 @@ func run() -> void:
 	await process_frame
 	print("world: %s checks, %s failures"%[checks,failures])
 	quit(1 if failures else 0)
+
+func check_water(world:World,state:PhysicsDirectSpaceState3D,region:int) -> void:
+	# 렌더된 수면 정점까지 검사해 지형 원점 높이를 두 번 더하는 오류를 잡는다.
+	var water_color:=Color(["376f79","507f81","376f79","376f79","548caa","466965"][region])
+	var rendered:=world.axes.get_node("Water_%d_river/Paint_0_0_0"%region) as MeshInstance3D
+	var arrays:=rendered.mesh.surface_get_arrays(0)
+	var vertices:PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
+	var colors:PackedColorArray=arrays[Mesh.ARRAY_COLOR]
+	var error:=0.0
+	var count:=0
+	for i in vertices.size():
+		if not colors[i].is_equal_approx(water_color): continue
+		count+=1
+		var v:=vertices[i]
+		error=maxf(error,absf(v.y-World.Height.altitude(Vector2(v.x,v.z),region)-.052))
+	check(count>100 and error<.00001,"렌더 수면과 지형 원점 일치 %s %s"%[region,error])
+	var center:=World.Layout.deep_rect(region).get_center()
+	var deep:=world._floor_point(Vector2(center.x,0))
+	var shallow:=world._floor_point(Vector2(center.x+6,0))
+	check(world.surface_at(deep).kind=="deep" and not world.surface_at(deep).walkable,"깊은물 통행 금지 %s"%region)
+	check(world.surface_at(shallow).kind=="shallow" and is_equal_approx(world.surface_at(shallow).speed,.7),"얕은물 70퍼센트 %s"%region)
+	for z:float in [-34,51]:
+		var start:=world._floor_point(Vector2(center.x+9,z))
+		var delta:=world.axes.global_basis*Vector3(-18,0,0)
+		var actual:Vector3=world.constrain_motion(start,delta,.34)
+		check(actual.distance_to(delta)<.005,"다리와 여울 통행 %s %s"%[region,z])
+		var hit:=ray(state,world._floor_point(Vector2(center.x,z)))
+		check(not hit.is_empty() and absf(hit.position.y-world.ground_at(world._floor_point(Vector2(center.x,z))))<.014,"새 다리와 여울 높이 %s %s"%[region,z])
+	var origin:=world._floor_point(Vector2(center.x+9,0))
+	var movement:=world.axes.global_basis*Vector3(-22,0,0)
+	var clipped:Vector3=world.constrain_motion(origin,movement,.34)
+	check(clipped.length()<4.0 and world.surface_at(origin+clipped).walkable,"큰 돌진과 넉백의 수변 차단 %s"%region)
+	var across:=PhysicsRayQueryParameters3D.create(origin+Vector3.UP*.8,origin+movement+Vector3.UP*.8,1)
+	check(not state.intersect_ray(across).is_empty(),"깊은물 실제 정적 충돌 %s"%region)
+	var recovery:=world.drop_point(deep)
+	check(world.surface_at(recovery).walkable and recovery.distance_to(deep)<9,"물속 구형 전리품 복원 %s"%region)
+	if region==3:
+		var swamp:=world._floor_point(Vector2(70,20))
+		check(world.surface_at(swamp).kind=="swamp" and is_equal_approx(world.surface_at(swamp).speed,.6),"늪 60퍼센트")

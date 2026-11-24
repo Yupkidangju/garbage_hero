@@ -21,7 +21,7 @@ func _initialize() -> void:
 	data.routes[18].cleared = true
 	Book.initialize(data)
 	var entries := Book.views(data)
-	check(entries.size() == 18 and data.claimed.size() == entries.size(), "append new claim flags")
+	check(entries.size() == Book.COUNT and data.claimed.size() == entries.size(), "append new claim flags")
 	check(entries[3].claimed and not entries[4].claimed, "preserve legacy claim identity")
 	check(entries[1].progress == 1 and not entries[1].eligible and not entries[1].prerequisite.is_empty(), "prior clear on another difficulty awaits first claim")
 	for entry: Dictionary in entries:

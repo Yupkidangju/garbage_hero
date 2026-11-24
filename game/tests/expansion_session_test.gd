@@ -68,7 +68,7 @@ func write_bytes(path: String, bytes: PackedByteArray) -> bool:
 
 
 func banks(folder: String, schema: int) -> Array:
-	var stem := "slot-%d.sav" if schema == 1 else "slot-v2-%d.sav"
+	var stem := "slot-%d.sav" if schema == 1 else "slot-v3-%d.sav"
 	var result := []
 	for i in 2:
 		var path := folder.path_join(stem % i)
@@ -101,7 +101,7 @@ func old_town() -> Dictionary:
 
 func verify_migrated(old: Dictionary) -> void:
 	var live: Dictionary = session._data
-	check(live.schema == 2 and live.seq == old.seq + 1, "exactly one migration commit")
+	check(live.schema == 3 and live.seq == old.seq + 1, "exactly one migration commit")
 	for key in ["coins", "next_id", "equipped", "bag", "chest", "auto", "first_merge", "forest_kills",
 			"bonus_stage", "routes", "rng", "normal_receipts"]:
 		check(live[key] == old[key], "preserve legacy " + key)
@@ -114,7 +114,7 @@ func verify_migrated(old: Dictionary) -> void:
 	var expected_traveler: Dictionary = old.traveler
 	var pending: int = old.pending_traveler
 	if old.active_route >= 0 and pending >= 0:
-		expected_traveler = {"available":true, "sold":false, "region":pending, "price":18}
+		expected_traveler = {"available":true, "sold":false, "region":pending, "price":18, "visit":old.routes[int(old.active_route / 6) * 6 + pending].cycle}
 		pending = -1
 	check(live.traveler == expected_traveler and live.pending_traveler == pending, "preserve traveler contract on return")
 
@@ -133,16 +133,16 @@ func _migration_and_play() -> void:
 	if not write_bytes(folder.path_join("slot-1.sav"), legacy_bytes(older)):
 		return
 	var originals := banks(folder, 1)
-	var obstacle := folder.path_join("slot-v2-0.sav.tmp")
+	var obstacle := folder.path_join("slot-v3-0.sav.tmp")
 	if not check(DirAccess.make_dir_absolute(obstacle) == OK, "block first v2 migration write"):
 		return
 	new_session()
 	check(not session.start_slot(folder) and session.last_error == Loot.caption("SAVE_FAILED"), "migration surfaces actual write failure")
-	check(banks(folder, 1) == originals and banks(folder, 2) == [PackedByteArray(), PackedByteArray()], "failed migration leaves both old files intact and no new bank")
+	check(banks(folder, 1) == originals and banks(folder, 3) == [PackedByteArray(), PackedByteArray()], "failed migration leaves both old files intact and no new bank")
 	if not check(DirAccess.remove_absolute(obstacle) == OK and session.start_slot(folder), "same session retries migration from disk"):
 		return
 	verify_migrated(newest)
-	check(decode(banks(folder, 2)[0]) == session._data, "new canonical v2 bank matches committed state")
+	check(decode(banks(folder, 3)[0]) == session._data, "new canonical v2 bank matches committed state")
 	var state: Dictionary = session.ui_state()
 	check(state.equipped.id == 8 and state.equipment.weapon.id == 8 and state.equipped.locked and state.stats.atk == 19, "old equipped sword activates actual slot and attack")
 	check(state.bag[0].id == 14 and state.chest[0].id == 23 and state.chest[0].locked, "bag and chest retain distinct identities and locks")
@@ -164,15 +164,15 @@ func _kills_and_spending(folder: String) -> void:
 		if not check(session.record_kill(0, 0, "normal", "after-migration-%d" % i, Vector3.ZERO), "new kill %d" % i):
 			return
 	var before: Dictionary = session._data.duplicate(true)
-	var committed := banks(folder, 2)
+	var committed := banks(folder, 3)
 	var messages: Array[String] = []
 	session.notice.connect(func(msg: String): messages.append(msg))
-	var obstacle := folder.path_join("slot-v2-%d.sav.tmp" % (1 - session._slot.active_bank))
+	var obstacle := folder.path_join("slot-v3-%d.sav.tmp" % (1 - session._slot.active_bank))
 	if not check(DirAccess.make_dir_absolute(obstacle) == OK, "block level-up kill's next save bank"):
 		return
 	const FIFTH := "after-migration-4"
 	check(not session.record_kill(0, 0, "normal", FIFTH, Vector3.ZERO), "write failure rejects level-up kill")
-	check(before.progression.xp == 24 and before.progression.level == 1 and session._data == before and banks(folder, 2) == committed, "failed kill preserves XP, points, coin, RNG, drops, receipt and both disk banks")
+	check(before.progression.xp == 24 and before.progression.level == 1 and session._data == before and banks(folder, 3) == committed, "failed kill preserves XP, points, coin, RNG, drops, receipt and both disk banks")
 	check(messages == [Loot.caption("SAVE_FAILED")], "failed kill emits only the save error")
 	messages.clear()
 	if not check(DirAccess.remove_absolute(obstacle) == OK and session.record_kill(0, 0, "normal", FIFTH, Vector3.ZERO), "retry commits formerly failed kill"):
@@ -196,7 +196,7 @@ func _kills_and_spending(folder: String) -> void:
 	var armor: Dictionary = session.ui_state().bag.back()
 	check(armor.slot == "armor" and armor.id >= 35, "new armor has fresh unique ID")
 	var unspent: Dictionary = session._data.duplicate(true)
-	obstacle = folder.path_join("slot-v2-%d.sav.tmp" % (1 - session._slot.active_bank))
+	obstacle = folder.path_join("slot-v3-%d.sav.tmp" % (1 - session._slot.active_bank))
 	if not check(DirAccess.make_dir_absolute(obstacle) == OK, "block management transaction bank"):
 		return
 	for request in [["allocate_stat", {"stat":"strength"}], ["learn_skill", {"skill":"volley"}], ["equip", {"id":armor.id}]]:
@@ -222,8 +222,8 @@ func _recovery_after_migration(folder: String) -> void:
 	if not check(session.act("auto", {"enabled":not saved.auto}), "create distinguishable newest v2 bank"):
 		return
 	var active: int = session._slot.active_bank
-	var files := banks(folder, 2)
-	var path := folder.path_join("slot-v2-%d.sav" % active)
+	var files := banks(folder, 3)
+	var path := folder.path_join("slot-v3-%d.sav" % active)
 	var damaged: PackedByteArray = files[active].duplicate()
 	damaged[-1] = damaged[-1] ^ 0xff
 	if not write_bytes(path, damaged):
@@ -231,13 +231,13 @@ func _recovery_after_migration(folder: String) -> void:
 	new_session()
 	if not check(session.start_slot(folder) and session._data == saved, "recover previous paid v2 state in presence of intact original v1 banks"):
 		return
-	path = folder.path_join("slot-v2-%d.sav" % (1 - active))
+	path = folder.path_join("slot-v3-%d.sav" % (1 - active))
 	if not write_bytes(path, "interrupted".to_ascii_buffer()):
 		return
-	var damaged_banks := banks(folder, 2)
+	var damaged_banks := banks(folder, 3)
 	new_session()
 	check(not session.start_slot(folder) and session.last_error == Loot.caption("LOAD_FAILED"), "two damaged v2 banks do not resurrect obsolete v1 progression")
-	check(not session.act("auto", {"enabled":true}) and banks(folder, 2) == damaged_banks, "unreadable v2 banks remain available for recovery")
+	check(not session.act("auto", {"enabled":true}) and banks(folder, 3) == damaged_banks, "unreadable v2 banks remain available for recovery")
 
 
 func _archived_campaign() -> void:

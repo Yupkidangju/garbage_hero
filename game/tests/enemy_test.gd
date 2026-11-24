@@ -44,13 +44,13 @@ func population() -> void:
 	var patterns:=0
 	for r in 6:
 		for kind in ["normal","mini","boss"]:
-			for i in Book.NORMAL[r].size() if kind=="normal" else 1:
+			for i in Book.NORMAL[r].size() if kind=="normal" else (2 if kind=="mini" else 1):
 				var actor=spawn(r,3,kind,i)
 				names[actor.display_name]=true
 				expect(actor.is_in_group("enemies") and not actor.display_name.is_empty(),"Registered "+str(actor.species))
 				expect(actor.hp==roundi(Book.species(r,kind,i)[2]*(1.+.05*(r*3+54))),"Scaled health")
 				expect(actor.visual.body.get_child_count()>0,"Mesh for "+str(actor.species))
-				if r==0:
+				if r==0 and actor.species in ["mouse","bee","boar","scarab","drummer","deer","treant"]:
 					expect(actor.visual.animator!=null,"Blender rig "+str(actor.species))
 					if actor.visual.animator:
 						for clip in ["Idle","Run","Windup","Attack","Recover","Hit","Death"]:
@@ -81,7 +81,7 @@ func population() -> void:
 				actor.take_hit(100000,Vector3.ZERO)
 				expect(deaths.size()==prev+1 and not actor.is_in_group("enemies"),"One reward "+str(actor.species))
 				actor.free()
-	expect(names.size()==45,"45 individually named species")
+	expect(names.size()==78,"78 individually named species")
 	print("species=",names.size()," attacks=",patterns)
 
 func invariant_checks() -> void:
@@ -138,7 +138,36 @@ func invariant_checks() -> void:
 	var mud=spawn(3,0,"normal",5)
 	mud.take_hit(ceili(mud.max_hp*.53),Vector3.ZERO)
 	expect(mud.split and mud.twin!=null and mud.is_in_group("enemies"),"Mud splits and shares one kill")
+	expect(mud.collider.shape is CylinderShape3D and absf(mud.hit_radius-.61)<.001 and absf(mud.collider.shape.radius-.61)<.001,"Mud split widens its cylinder radius by 0.14m")
+	expect(absf(mud.collider.shape.height-.987)<.001 and absf(mud.collider.position.y-.4935)<.001,"Mud split preserves its original full height and center")
 	mud.free()
+	for r in 6:
+		var defender=spawn(r,0,"normal",Book.GROUPS[r].x)
+		defender.turn(Vector3.FORWARD)
+		expect(defender.take_hit(10,Vector3.ZERO,Vector3.BACK)==4,"Regional defender blocks a frontal hit")
+		expect(defender.take_hit(10,Vector3.ZERO,Vector3.FORWARD)==10,"Regional defender exposes its rear")
+		defender.free()
+	var healer=spawn(2,0,"normal",3)
+	var ally=spawn(2,0,"normal",2)
+	ally.hp=1
+	for n in 100:
+		healer.support("heal")
+	expect(ally.hp==13,"A living support has only three healing pulses; it cannot regenerate a group forever")
+	healer.free()
+	ally.free()
+
+func collider_edge_check() -> void:
+	for kind in ["normal","mini","boss"]:
+		var actor=spawn(0,0,kind,0)
+		var radius:float=actor.hit_radius
+		await physics_frame
+		await physics_frame
+		var from:Vector3=actor.global_position+Vector3(radius*.92,.52,-radius*2.)
+		var toward:Vector3=actor.global_position+Vector3(radius*.92,.52,radius*2.)
+		var query:=PhysicsRayQueryParameters3D.create(from,toward,4)
+		var contact:Dictionary=stage.get_world_3d().direct_space_state.intersect_ray(query)
+		expect(not contact.is_empty() and contact.collider==actor,"Low projectile retains the cylinder outer hit edge for "+kind)
+		actor.free()
 
 func pursuit_check() -> void:
 	for rank in 4:
@@ -217,6 +246,29 @@ func hill_check() -> void:
 			deck_count+=1
 		expect(center.y>floor_y+.01,"Bridge deck and ramps keep telegraphs above their walking surface")
 	expect(deck_count>=5 and bridge_shot.length>5.6,"Unobstructed cast crosses bridge deck")
+	var bank:=world._floor_point(Vector2(-66,0))
+	var inward:=Vector3(-18,0,0).rotated(Vector3.UP,PI*.25)
+	bee.global_position=bank
+	bee.velocity=inward/.2
+	bee.bound_motion(.2)
+	var next:Vector3=bank+Vector3(bee.velocity.x,0,bee.velocity.z)*.2
+	expect(world.surface_at(next).walkable and next.distance_to(bank)<7.,"Enemy movement cannot tunnel across deep water")
+	bee.zone(bank,Vector3.FORWARD,6.5,0,TAU,.5,.4,"wave")
+	var bank_mark:Node=zones(bee).back()
+	var deep:=world._floor_point(Vector2(-73,0))
+	expect(not bank_mark.contains_point(deep),"Deep water cannot be a ground attack hit area")
+	var shore_vertices:PackedVector3Array=bank_mark.carpet.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var wet_vertices:=0
+	for vertex in shore_vertices:
+		if not world.surface_at(bank_mark.to_global(vertex)).walkable:
+			wet_vertices+=1
+	expect(wet_vertices==0,"Ground warnings stop at the actual shoreline")
+	bee.global_position=world._floor_point(Vector2(-74,51))
+	bee.phase="seek"
+	bee.cooldown=1.0
+	hunter.position=bee.global_position+Vector3.RIGHT.rotated(Vector3.UP,PI*.25)*6.35
+	bee._physics_process(1./60.)
+	expect(absf(Vector2(bee.velocity.x,bee.velocity.z).length()-1.47)<.01,"Lightweight surface query preserves the wasp's 70 percent ford speed")
 	bee.free()
 	world.free()
 
@@ -228,6 +280,7 @@ func run() -> void:
 	await physics_frame
 	population()
 	invariant_checks()
+	await collider_edge_check()
 	pursuit_check()
 	await hill_check()
 	print("MONSTER_TEST failures=",failed)

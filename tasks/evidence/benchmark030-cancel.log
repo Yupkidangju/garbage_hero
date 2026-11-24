@@ -1,0 +1,5 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+BENCHMARK_CANCEL paused=true actors=41 prior_samples=10
+FIELD_PERFORMANCE {"error":"benchmark interrupted by a menu or pause"}
+Paused benchmark rejected after collecting active samples.

@@ -6,14 +6,19 @@ static var _meshes := {}
 var _direction: Vector3
 var _speed: float
 var _remaining: float
+var preview_mode := false
+var _pierce_remaining := 0
+var _excluded: Array[RID] = []
 
 
-func launch(style: String, origin: Vector3, direction: Vector3, speed: float, reach: float) -> void:
+func launch(style: String, origin: Vector3, direction: Vector3, speed: float, reach: float, pierce := 0, excluded: Array[RID] = []) -> void:
 	top_level = true
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_direction = direction.normalized()
 	_speed = speed
 	_remaining = reach
+	_pierce_remaining = clampi(pierce,0,3)
+	_excluded = excluded.duplicate()
 	global_position = origin
 	look_at(origin + _direction)
 	if not _meshes.has(style):
@@ -22,19 +27,33 @@ func launch(style: String, origin: Vector3, direction: Vector3, speed: float, re
 
 
 func _physics_process(delta: float) -> void:
+	advance(delta)
+
+
+func advance(delta: float) -> void:
 	var step := minf(_remaining, _speed * delta)
 	var destination := global_position + _direction * step
 	# 한 물리 프레임보다 얇은 벽과 빠르게 접근하는 적도 가장 가까운 충돌에서 멈춘다.
-	var query := PhysicsRayQueryParameters3D.create(global_position, destination, 1 | 4)
-	query.hit_from_inside = true
-	var hit := get_world_3d().direct_space_state.intersect_ray(query)
-	if not hit.is_empty():
-		global_position = hit.position
-		var enemy := hit.collider as Node3D
-		if enemy != null and enemy.is_in_group("enemies"):
+	if not preview_mode:
+		var cursor := global_position
+		for contact in 4:
+			var query := PhysicsRayQueryParameters3D.create(cursor, destination, 1 | 4, _excluded)
+			query.hit_from_inside = true
+			var hit := get_world_3d().direct_space_state.intersect_ray(query)
+			if hit.is_empty():
+				break
+			global_position = hit.position
+			var enemy := hit.collider as Node3D
+			if enemy == null or not enemy.is_in_group("enemies"):
+				queue_free()
+				return
+			_excluded.append(hit.rid)
 			struck.emit(enemy)
-		queue_free()
-		return
+			if _pierce_remaining <= 0:
+				queue_free()
+				return
+			_pierce_remaining -= 1
+			cursor = hit.position
 	global_position = destination
 	_remaining -= step
 	if _remaining <= 0.0:

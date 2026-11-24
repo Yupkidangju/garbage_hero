@@ -1,0 +1,45 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Player exposes the functional terrain boundary
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/combat_expansion_test.gd:53)
+       [1] _run (res://tests/combat_expansion_test.gd:99)
+       [2] ticks (res://tests/combat_expansion_test.gd:57)
+ERROR: Fractional lifesteal accumulates without rounding each hit up
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/combat_expansion_test.gd:53)
+       [1] _run (res://tests/combat_expansion_test.gd:128)
+       [2] ticks (res://tests/combat_expansion_test.gd:57)
+ERROR: A defeated target grants no lifesteal
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/combat_expansion_test.gd:53)
+       [1] _run (res://tests/combat_expansion_test.gd:132)
+       [2] ticks (res://tests/combat_expansion_test.gd:57)
+ERROR: A committed area bonus survives an equipment change and reaches both spin beats
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/combat_expansion_test.gd:53)
+       [1] _run (res://tests/combat_expansion_test.gd:141)
+       [2] ticks (res://tests/combat_expansion_test.gd:57)
+ERROR: Removing area gear restores the next cast radius
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/combat_expansion_test.gd:53)
+       [1] _run (res://tests/combat_expansion_test.gd:144)
+       [2] ticks (res://tests/combat_expansion_test.gd:57)
+ERROR: A committed piercing shot hits exactly three distinct targets
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/combat_expansion_test.gd:53)
+       [1] _run (res://tests/combat_expansion_test.gd:153)
+       [2] ticks (res://tests/combat_expansion_test.gd:57)
+ERROR: Player exposes isolated real-action preview hooks
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/combat_expansion_test.gd:53)
+       [1] _run (res://tests/combat_expansion_test.gd:166)
+       [2] ticks (res://tests/combat_expansion_test.gd:57)
+Combat expansion checks: 7 failure(s)

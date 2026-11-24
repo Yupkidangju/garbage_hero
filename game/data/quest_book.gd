@@ -26,6 +26,12 @@ const QUESTS := [
 	{"kind":"survey", "reward":18, "region":3, "target":2},
 	{"kind":"survey", "reward":20, "region":4, "target":2},
 	{"kind":"survey", "reward":22, "region":5, "target":2},
+	{"kind":"treasure", "reward":18, "region":0},
+	{"kind":"treasure", "reward":20, "region":1},
+	{"kind":"treasure", "reward":22, "region":2},
+	{"kind":"treasure", "reward":24, "region":3},
+	{"kind":"treasure", "reward":26, "region":4},
+	{"kind":"treasure", "reward":28, "region":5},
 ]
 static var COUNT: int:
 	get: return QUESTS.size()
@@ -37,6 +43,8 @@ static func initialize(data: Dictionary) -> void:
 		data.claimed.append(false)
 	if not data.has("quest_history"):
 		data.quest_history = {"ranged":false, "armor_slots":{}, "landmarks":{}}
+	if not data.quest_history.has("caches"):
+		data.quest_history.caches = {}
 
 static func record_equip(data: Dictionary, slot: String, family: String) -> void:
 	var history: Dictionary = data.quest_history
@@ -61,7 +69,7 @@ static func valid_landmark(region: int, key: String) -> bool:
 	if region < 0 or region >= FieldLayout.TITLES.size():
 		return false
 	var prefix := "%d:" % region
-	return key.begins_with(prefix) and key.trim_prefix(prefix) in FieldLayout.TITLES[region]
+	return key.begins_with(prefix) and (key.trim_prefix(prefix) in FieldLayout.TITLES[region] or key == prefix + "grotto")
 
 static func valid_history(history: Variant) -> bool:
 	if not history is Dictionary or not history.get("ranged") is bool:
@@ -81,6 +89,15 @@ static func valid_history(history: Variant) -> bool:
 		for key in marks:
 			if not key is String or not valid_landmark(region, key) or not is_same(marks[key], true):
 				return false
+	var caches: Variant = history.get("caches", {})
+	if not caches is Dictionary:
+		return false
+	for key in caches:
+		if not key is String or not is_same(caches[key], true):
+			return false
+		var region: int = key.get_slice(":", 0).to_int()
+		if not FieldLayout.valid_cache(region, key):
+			return false
 	return true
 
 static func _progress(data: Dictionary, quest: Dictionary) -> int:
@@ -108,6 +125,10 @@ static func _progress(data: Dictionary, quest: Dictionary) -> int:
 			return data.quest_history.armor_slots.size()
 		"survey":
 			return data.quest_history.landmarks.get(str(quest.region), {}).size()
+		"treasure":
+			for key: String in data.quest_history.get("caches", {}):
+				if key.begins_with(str(quest.region) + ":"):
+					return 1
 	return 0
 
 static func _name(quest: Dictionary) -> String:
@@ -116,7 +137,9 @@ static func _name(quest: Dictionary) -> String:
 			return HUD_TEXT.get_message("quest_first")
 		"boss":
 			return HUD_TEXT.get_message("quest_hunt") % HUD_TEXT.get_message("boss%d" % quest.region)
-		"survey":
+		"survey", "treasure":
+			if quest.kind == "treasure":
+				return TEXT.get_message("treasure_name") % HUD_TEXT.get_message("region%d" % quest.region)
 			return TEXT.get_message("survey_name") % HUD_TEXT.get_message("region%d" % quest.region)
 	return TEXT.get_message(quest.kind + "_name")
 
@@ -128,6 +151,8 @@ static func _description(quest: Dictionary) -> String:
 			return HUD_TEXT.get_message("quest_boss_goal") % [HUD_TEXT.get_message("region%d" % quest.region), HUD_TEXT.get_message("boss%d" % quest.region)]
 		"survey":
 			return TEXT.get_message("survey_goal") % [HUD_TEXT.get_message("region%d" % quest.region), quest.target]
+		"treasure":
+			return TEXT.get_message("treasure_goal") % HUD_TEXT.get_message("region%d" % quest.region)
 		"level", "mastery":
 			return TEXT.get_message(quest.kind + "_goal") % quest.target
 	return TEXT.get_message(quest.kind + "_goal")

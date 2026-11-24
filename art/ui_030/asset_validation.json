@@ -1,0 +1,1405 @@
+{
+  "item_count": 88,
+  "illustration_count": 18,
+  "triangles_min": 404,
+  "triangles_max": 8764,
+  "triangles_total": 240084,
+  "items": [
+    {
+      "id": 0,
+      "kind": "sword",
+      "shape": "notched_cleaver",
+      "triangles": 3148,
+      "icon_bounds": [
+        111,
+        35,
+        254,
+        347
+      ],
+      "icon_sha256": "fbed5e693a495fe77af05a1bc7fa663f27c589e2e7eb4ea26b76f94294f2e0ce",
+      "model_sha256": "bebb555cfe7f226876374debee695002a1af067d2f019936ced79c3017c9aac6"
+    },
+    {
+      "id": 1,
+      "kind": "sword",
+      "shape": "thorn_hook",
+      "triangles": 2704,
+      "icon_bounds": [
+        116,
+        34,
+        254,
+        346
+      ],
+      "icon_sha256": "d91dc7ee4fbbaf60f6f4018568425e9d1b879cb438f980c3658cb4f635474380",
+      "model_sha256": "48cdeff45208ae0c0eed6dc11e75b8db717e4d1be1b721dbe0207b67f74a746b"
+    },
+    {
+      "id": 2,
+      "kind": "sword",
+      "shape": "glass_saw",
+      "triangles": 2632,
+      "icon_bounds": [
+        114,
+        37,
+        263,
+        342
+      ],
+      "icon_sha256": "22d8be52124b4e2cb262a339a60195c25d68dff9d4cec9106a98783c264d1687",
+      "model_sha256": "f25a928f296fc05d66941631a34664e4318ebaa4c2cdbb3038054144725a13ae"
+    },
+    {
+      "id": 3,
+      "kind": "sword",
+      "shape": "bell_counterweight",
+      "triangles": 3500,
+      "icon_bounds": [
+        135,
+        37,
+        266,
+        343
+      ],
+      "icon_sha256": "e6e4d4d050c89cd5d3c5f4aa56c6d7b4f37f39e112aa8ec1c3e75b82435db2f2",
+      "model_sha256": "5a015a87a3ae652d03ec4c64343c3b77555c0ca6b02ef4065884075ab049447c"
+    },
+    {
+      "id": 4,
+      "kind": "sword",
+      "shape": "reed_sickle",
+      "triangles": 2592,
+      "icon_bounds": [
+        110,
+        39,
+        236,
+        346
+      ],
+      "icon_sha256": "dc34528f4644b4b82bd551a8ee2ba3f158d67954ab77b5125122051b4f3743a8",
+      "model_sha256": "40444f1b0846983f6459b56f18be9a1f6a7d3a8dd21302a64ddb70aee930e764"
+    },
+    {
+      "id": 5,
+      "kind": "sword",
+      "shape": "frost_saw",
+      "triangles": 2904,
+      "icon_bounds": [
+        108,
+        35,
+        255,
+        345
+      ],
+      "icon_sha256": "ef3e6edad91c44cd827527818ae87e1d4549b26aa492f46bad7cde7a23c8a591",
+      "model_sha256": "938fb0cbb52425fca6e81c251ae6e483e51ed54c66235c231ab03b9f0d6b2444"
+    },
+    {
+      "id": 6,
+      "kind": "sword",
+      "shape": "crucible_falchion",
+      "triangles": 2848,
+      "icon_bounds": [
+        110,
+        34,
+        246,
+        345
+      ],
+      "icon_sha256": "433dfe00b8895651a2e6e86db7773386dda56a7cf24c20049160bfa9eba8b9c0",
+      "model_sha256": "09cb2952799b09f6a23ec80213b301ab121f1ce897fe3f2eef4ce47d3257a9cc"
+    },
+    {
+      "id": 7,
+      "kind": "bow",
+      "shape": "laundry_flatbow",
+      "triangles": 4092,
+      "icon_bounds": [
+        134,
+        45,
+        248,
+        351
+      ],
+      "icon_sha256": "1ad9e9b792ee4421be30242e6db73e725b0a74e4a1806412cb789d0ea3ea56fc",
+      "model_sha256": "84c3bbe5f5ef520d4dcd06b3d0d98f1c8d7cbc4e437f9c301ef4538612578a3b"
+    },
+    {
+      "id": 8,
+      "kind": "staff",
+      "shape": "lightbulb_crook",
+      "triangles": 2732,
+      "icon_bounds": [
+        114,
+        43,
+        218,
+        349
+      ],
+      "icon_sha256": "91e9db82a34f594df6df3a4ee66557573c8b9105a89cc9da9fd5d49867da90a7",
+      "model_sha256": "47b0faba06315b8d7f565e7e339a40f4f380baf9883d908177aec1f2174fefa1"
+    },
+    {
+      "id": 9,
+      "kind": "spear",
+      "shape": "fork_rake",
+      "triangles": 3004,
+      "icon_bounds": [
+        118,
+        35,
+        249,
+        350
+      ],
+      "icon_sha256": "846a1a781418616f6cbeae2fc799a930dc65b3b1ff97db2701925cd28fba543e",
+      "model_sha256": "90d993dea980ab50b01200c534ed476130f354b8e0506b63cc8834c910ebeb70"
+    },
+    {
+      "id": 10,
+      "kind": "mace",
+      "shape": "hex_nut_club",
+      "triangles": 2320,
+      "icon_bounds": [
+        97,
+        43,
+        251,
+        340
+      ],
+      "icon_sha256": "c73e73634728f255940fb3561a19c2c573c3d158c41dda1ae9a2554f6a1409de",
+      "model_sha256": "e1e956ecec5ef0b9f8a5a82c5350eb69346d109a3cf5e417394348509b521a6b"
+    },
+    {
+      "id": 11,
+      "kind": "armor",
+      "shape": "tin_apron",
+      "triangles": 1264,
+      "icon_bounds": [
+        74,
+        41,
+        298,
+        348
+      ],
+      "icon_sha256": "f969c9a631e6458a6d1785a4905ac4e1d2e326a50d9f478285736398787f7c6d",
+      "model_sha256": "3969e015234c5725763f9d5cdcfc04a9daee2687f489fb8bee311229e73f27cb"
+    },
+    {
+      "id": 12,
+      "kind": "shield",
+      "shape": "pot_lid",
+      "triangles": 1336,
+      "icon_bounds": [
+        62,
+        55,
+        330,
+        325
+      ],
+      "icon_sha256": "1a95173f07bd3ba294c492f353e27af44595db11694dffa12e2f47739aa2f9be",
+      "model_sha256": "26496bf17af4a3ef18a9df8f309ce48145f79b4475d3c14141d121a77be66e1b"
+    },
+    {
+      "id": 13,
+      "kind": "boots",
+      "shape": "patched_workboots",
+      "triangles": 1604,
+      "icon_bounds": [
+        72,
+        39,
+        317,
+        349
+      ],
+      "icon_sha256": "5c5d87c30ce1b7d82a95ea2921f38eae3ab3daacce9ad47a5d1c79bc83c03b63",
+      "model_sha256": "81deaf5f61e443afbd659999be92a1cefb2b6bae9541c11ab8a19bf8177efa41"
+    },
+    {
+      "id": 14,
+      "kind": "helmet",
+      "shape": "kettle_helm",
+      "triangles": 1408,
+      "icon_bounds": [
+        62,
+        117,
+        324,
+        288
+      ],
+      "icon_sha256": "48cddf4b8c378bdc1302a3f27974123a081b23073167ef1dcecb941a31dbf876",
+      "model_sha256": "4dded69867df6e09c9a34b0d0f1e77f9b7be399354434e033256e93b79688195"
+    },
+    {
+      "id": 15,
+      "kind": "ring",
+      "shape": "wire_loop",
+      "triangles": 1304,
+      "icon_bounds": [
+        73,
+        58,
+        327,
+        322
+      ],
+      "icon_sha256": "1584a5995d86c59ec9d9ab5d8c092b3518f4edad2b9209ddcb386bd180f34d4c",
+      "model_sha256": "0334fea59e2ae0ed67c7689868491c447da57377d1067f6efd2afa9def86cc54"
+    },
+    {
+      "id": 16,
+      "kind": "necklace",
+      "shape": "pulley_pendant",
+      "triangles": 2232,
+      "icon_bounds": [
+        109,
+        42,
+        277,
+        340
+      ],
+      "icon_sha256": "068184bb837e0fead0a8a529cc27f81330e5b299af5c43890bdf8ddefa5fd69e",
+      "model_sha256": "49f856840272441754a0550e6d32d557efad13eb4fb56f16300a776b68f5d575"
+    },
+    {
+      "id": 17,
+      "kind": "bow",
+      "shape": "pine_recurve",
+      "triangles": 5224,
+      "icon_bounds": [
+        131,
+        42,
+        253,
+        347
+      ],
+      "icon_sha256": "7b4a9d8ba2abe6dca3cf9cfbeefca17cbb467623f8f0314082e8b9b51025ae79",
+      "model_sha256": "9e72be70de28cc1a074076af7e79372b902ee96fe2923d0ddd07c8c7c57d0a1c"
+    },
+    {
+      "id": 18,
+      "kind": "staff",
+      "shape": "glass_sun",
+      "triangles": 3312,
+      "icon_bounds": [
+        103,
+        44,
+        246,
+        346
+      ],
+      "icon_sha256": "e9a9ce5277adc746943e408fad8b68c1c55a044e26faaaad85c65b22c0cd5036",
+      "model_sha256": "f4d939c4c16fb6ad8dd290aeb783f97e347d3cfe9c20f9e50fd7752b04ad5bb4"
+    },
+    {
+      "id": 19,
+      "kind": "mace",
+      "shape": "funeral_bell",
+      "triangles": 2952,
+      "icon_bounds": [
+        128,
+        56,
+        248,
+        333
+      ],
+      "icon_sha256": "4283ed7b620e711f7339cdb6ddcce6d9a16081767f4a4532e5013406d7e90763",
+      "model_sha256": "51f7f0fa01b5e0a1bd2cee88b75615a9867ac41dac162c6cbab317144d2d6da5"
+    },
+    {
+      "id": 20,
+      "kind": "spear",
+      "shape": "reed_lance",
+      "triangles": 2880,
+      "icon_bounds": [
+        137,
+        34,
+        249,
+        351
+      ],
+      "icon_sha256": "a95336d8c08cfefb8648422e8aac54be66ee114ef73e47d832c434b67de94326",
+      "model_sha256": "ea53a500595198fa8cf38e3b80ccf84e03c1bc76eec3d06303929c8327607199"
+    },
+    {
+      "id": 21,
+      "kind": "bow",
+      "shape": "frost_compound",
+      "triangles": 4272,
+      "icon_bounds": [
+        146,
+        44,
+        237,
+        351
+      ],
+      "icon_sha256": "fcd1c8f2701d8d43aa9628c495695a3f4bd46e9fe1eded5fbb7c3e178fb06a81",
+      "model_sha256": "bb8f192c669c247146bc0322477d54801748566ed8da6c12840253d072605dc4"
+    },
+    {
+      "id": 22,
+      "kind": "mace",
+      "shape": "ember_anvil",
+      "triangles": 2456,
+      "icon_bounds": [
+        67,
+        36,
+        258,
+        332
+      ],
+      "icon_sha256": "c9a938d4500f634bfdf8f2d3effe2a50e2cf910eb9856c88dc64df03933cb4e1",
+      "model_sha256": "b491f82cb85ec362b3ebc02a60eaf24ef1afcfc47668758825d17cfdd2b2d149"
+    },
+    {
+      "id": 23,
+      "kind": "boots",
+      "shape": "pineleaf_runners",
+      "triangles": 1988,
+      "icon_bounds": [
+        100,
+        49,
+        303,
+        342
+      ],
+      "icon_sha256": "0833e9c173a45cbb1fe08103415772eec5b0be936a17e533ec901d05b9104cbd",
+      "model_sha256": "444339dd0af557519e5a55945657f8ad105b138b75b8df2a67800076fedb1f99"
+    },
+    {
+      "id": 24,
+      "kind": "ring",
+      "shape": "scorpion_ring",
+      "triangles": 1224,
+      "icon_bounds": [
+        81,
+        53,
+        303,
+        334
+      ],
+      "icon_sha256": "3a95d2b8949d2fe1d5ff9c0b233e32aec89f4a0e8b30166d148517464eef91fe",
+      "model_sha256": "4b26491937c2ad5cad74d1e5e0c8583bfa041c8ddb1b29562382a40a721c2360"
+    },
+    {
+      "id": 25,
+      "kind": "helmet",
+      "shape": "bellkeeper_helm",
+      "triangles": 1712,
+      "icon_bounds": [
+        66,
+        106,
+        318,
+        315
+      ],
+      "icon_sha256": "83acd153476c438ec1b836843a385067315626ed4a7a378ab74944b0368975d1",
+      "model_sha256": "406330783dd7b1658b5bcc79eb9d4af453a8279b7bec02d486e109d516b1390f"
+    },
+    {
+      "id": 26,
+      "kind": "necklace",
+      "shape": "lily_seed_pendant",
+      "triangles": 2312,
+      "icon_bounds": [
+        108,
+        42,
+        283,
+        339
+      ],
+      "icon_sha256": "0bd86a46c41fdda6ba0c5d84d24967ae8702eb654b07fb4a9fe97761cbe049b8",
+      "model_sha256": "d5c76e5523e22ceabc94b1fd8c0929eaf3244f2ce6383d30de3dc3a8639d7599"
+    },
+    {
+      "id": 27,
+      "kind": "armor",
+      "shape": "patched_parka",
+      "triangles": 4588,
+      "icon_bounds": [
+        75,
+        45,
+        312,
+        333
+      ],
+      "icon_sha256": "a13b01a83e0476d80e52d28d6695f7b8c264d4fbb406ceddfcf3f9947cde9030",
+      "model_sha256": "69f3d2ac08771bc51d8ac9e74e20773cd84a8b3baab1530ac5382db8fc41d0a5"
+    },
+    {
+      "id": 28,
+      "kind": "shield",
+      "shape": "slag_tower",
+      "triangles": 780,
+      "icon_bounds": [
+        86,
+        49,
+        313,
+        339
+      ],
+      "icon_sha256": "8cc28e699a0dff7fe8ae4a2d1f1bc212148ed598b8d076508297907b3db83e10",
+      "model_sha256": "854d3fde2b562524bb9600b665c6ff079cdb45fc6e153c4d8b5b7aa28a929395"
+    },
+    {
+      "id": 29,
+      "kind": "sword",
+      "shape": "starwheel_longsword",
+      "triangles": 4244,
+      "icon_bounds": [
+        136,
+        40,
+        255,
+        344
+      ],
+      "icon_sha256": "82fcab61449fa990c54ee370a9fd3de54b1f4e9b86dd6b18ad1d69defcccb6b6",
+      "model_sha256": "8ad1130c41b32dc7aaaf5015675f93391b953ef77e2f03f892b15b5a6b43d478"
+    },
+    {
+      "id": 30,
+      "kind": "bow",
+      "shape": "hourglass_longbow",
+      "triangles": 4400,
+      "icon_bounds": [
+        138,
+        42,
+        245,
+        349
+      ],
+      "icon_sha256": "432847019c052911fe51579d039aa7c9cc3ef12e47aba7587f47410c714649b0",
+      "model_sha256": "910824177d692d19367f2d604734deb83b945d0f3e75d517042a285d8d10432f"
+    },
+    {
+      "id": 31,
+      "kind": "bow",
+      "shape": "bell_shortbow",
+      "triangles": 5568,
+      "icon_bounds": [
+        111,
+        38,
+        272,
+        332
+      ],
+      "icon_sha256": "afad0da5c4eb75f0e69ccb4f779c316bc950badbc3829f1873478db58b1fe383",
+      "model_sha256": "ba9864440a31dbcc569e3a4638202920ab2110ad45a0c6c4b5e5c61b415b7f34"
+    },
+    {
+      "id": 32,
+      "kind": "bow",
+      "shape": "lily_foldingbow",
+      "triangles": 4252,
+      "icon_bounds": [
+        125,
+        45,
+        258,
+        347
+      ],
+      "icon_sha256": "081761581615be22f43a6eb95863348a9723dceebf8d96a6395e00c55dbbf0fb",
+      "model_sha256": "2b33f8f0757b05d228052a37e08ce4a147ccb43afd52b3d5ff164dede4db90a8"
+    },
+    {
+      "id": 33,
+      "kind": "bow",
+      "shape": "bellows_pulleybow",
+      "triangles": 8764,
+      "icon_bounds": [
+        145,
+        40,
+        239,
+        348
+      ],
+      "icon_sha256": "72a67d1d6dc7ee17006110fce76ba4768ef83061f6cf660f066d096c6bf3000c",
+      "model_sha256": "7bfd0b5f906e3083e47bea307a070da1ad335288ef0578f17d62d2e4a98e5653"
+    },
+    {
+      "id": 34,
+      "kind": "bow",
+      "shape": "comet_orbitbow",
+      "triangles": 5736,
+      "icon_bounds": [
+        122,
+        38,
+        262,
+        340
+      ],
+      "icon_sha256": "f95ddb576398ac4e75cea5b34245e63c09acc2d2e59f50ba0841fe4145e6327d",
+      "model_sha256": "1145805143ddb15b7bf7b492a61ecef8000d9f4dfa8034b6f260068d90756c6c"
+    },
+    {
+      "id": 35,
+      "kind": "staff",
+      "shape": "acorn_lantern",
+      "triangles": 4616,
+      "icon_bounds": [
+        121,
+        43,
+        247,
+        343
+      ],
+      "icon_sha256": "42cc4568ce1faac36cb7583f4bcf074bcdf0fd6a0fc56572bf62c736edb55fe5",
+      "model_sha256": "513aab73db49e47b4dc740dcf11e4f2c4087ee497bb04fc3e21334d097b14e75"
+    },
+    {
+      "id": 36,
+      "kind": "staff",
+      "shape": "funeral_candelabrum",
+      "triangles": 3412,
+      "icon_bounds": [
+        113,
+        41,
+        249,
+        347
+      ],
+      "icon_sha256": "a0e0b25a24e44b6ccbb560b927d39f02536955635a00205d4d2799463c784775",
+      "model_sha256": "fdb5a6c3bb82e39ffd902d48b123eb1d1ca8ad17477428d175d84b5827a3cf81"
+    },
+    {
+      "id": 37,
+      "kind": "staff",
+      "shape": "lily_sluice",
+      "triangles": 5556,
+      "icon_bounds": [
+        105,
+        36,
+        244,
+        339
+      ],
+      "icon_sha256": "5da65bc23492f008d7a3ea08a4c52f4036d93210e06cb42ae95f2afd95c80437",
+      "model_sha256": "a7ed40c8c7d5be27e2e708ed4a5fd42597bef2ce12cde9afd473adfbad52b09f"
+    },
+    {
+      "id": 38,
+      "kind": "staff",
+      "shape": "icicle_baton",
+      "triangles": 2368,
+      "icon_bounds": [
+        124,
+        41,
+        248,
+        346
+      ],
+      "icon_sha256": "c40ee23e5ea7742ca3ec106fd4ad8cc2b4f6efcabcd3a332d99d559ac0a35f3c",
+      "model_sha256": "2c55d52ee06e33525bbd6385174177a5dcb5360de4837dfc18138ac8580d0a30"
+    },
+    {
+      "id": 39,
+      "kind": "staff",
+      "shape": "furnace_blower",
+      "triangles": 4616,
+      "icon_bounds": [
+        114,
+        44,
+        247,
+        341
+      ],
+      "icon_sha256": "f4d70e538899be66ff5b40994f14f780e9f472ec003abd32cb376c5073b0f4cf",
+      "model_sha256": "291f72593770f6a39a837b798a04644734a7bb4f7c5d821b455892b2bdd6eea2"
+    },
+    {
+      "id": 40,
+      "kind": "staff",
+      "shape": "armillary_compass",
+      "triangles": 4048,
+      "icon_bounds": [
+        114,
+        45,
+        245,
+        336
+      ],
+      "icon_sha256": "5e56dc4520357ce613ae65c89b1d7d10256fceb804ae618f2376f2330039ac58",
+      "model_sha256": "3de6994bf58375c391d5b5d5b603f979dd717b781eaca526e5a7ebea1b7d5809"
+    },
+    {
+      "id": 41,
+      "kind": "spear",
+      "shape": "pine_fork",
+      "triangles": 2940,
+      "icon_bounds": [
+        117,
+        36,
+        248,
+        348
+      ],
+      "icon_sha256": "fbe272fa0f02a8a22e7d58c6c74d2a72f702dc5f8cea356437600874ddda2186",
+      "model_sha256": "43efd148c9a528e5785c4eff82d047cddc2da285682dbe2bd91f05f5bc208eaf"
+    },
+    {
+      "id": 42,
+      "kind": "spear",
+      "shape": "scorpion_tail",
+      "triangles": 3248,
+      "icon_bounds": [
+        126,
+        39,
+        245,
+        349
+      ],
+      "icon_sha256": "0d4ebf987654d85088f65cc674fd9be6b8ffccf55f6da4bc8a66428296e82fbc",
+      "model_sha256": "8fb098d734e183583d34f279a6086257a02803753ce323dffc0b4929d109ca70"
+    },
+    {
+      "id": 43,
+      "kind": "spear",
+      "shape": "tomb_banner",
+      "triangles": 2304,
+      "icon_bounds": [
+        112,
+        37,
+        231,
+        350
+      ],
+      "icon_sha256": "298261b3eaacbb98b6e6d097467d27a1efe6e45fb870ff539236523f287f4e2e",
+      "model_sha256": "ebc1cce6a3ac4b02974ac6c82db65734609a9c3837d25819d2f774debed8ff66"
+    },
+    {
+      "id": 44,
+      "kind": "spear",
+      "shape": "goat_horn_pike",
+      "triangles": 2792,
+      "icon_bounds": [
+        117,
+        40,
+        248,
+        347
+      ],
+      "icon_sha256": "cc69c91fd887d922bfb78da29adc0cc5e4ed5bedcccb69180eaca5530314cb12",
+      "model_sha256": "17233ab4c1cb68a08bce54e836aff751d8e771fd92ff871abc6f05758e82aa8b"
+    },
+    {
+      "id": 45,
+      "kind": "spear",
+      "shape": "chimney_awl",
+      "triangles": 2852,
+      "icon_bounds": [
+        142,
+        35,
+        249,
+        350
+      ],
+      "icon_sha256": "ae92b5823e64de4dc790a1e0eee4161dd2f5463899dcb4fb99aafbb1b10729f3",
+      "model_sha256": "fb0d8ecc4efdd2e61d9d317321acd3538b7007dc4750f2f59439e1499b336857"
+    },
+    {
+      "id": 46,
+      "kind": "spear",
+      "shape": "ford_trident",
+      "triangles": 5112,
+      "icon_bounds": [
+        113,
+        39,
+        248,
+        348
+      ],
+      "icon_sha256": "346f5de3f5c62f085ea75f323a57664656a48e0a018018b8cb1db3e5e57344b2",
+      "model_sha256": "0fba5e8e890f83a29d633dc362cae53bcfd54fcd4b17fcdb509542b29562256f"
+    },
+    {
+      "id": 47,
+      "kind": "mace",
+      "shape": "acorn_mallet",
+      "triangles": 3632,
+      "icon_bounds": [
+        107,
+        48,
+        248,
+        333
+      ],
+      "icon_sha256": "0fc4c1744a81e34a59002f47d176db6261294438ac769f10f563c591254c52c2",
+      "model_sha256": "2a51b4a8a1a71707eecd673b5e8ca99aae1159d127f46845d6f8fc475e6917ee"
+    },
+    {
+      "id": 48,
+      "kind": "mace",
+      "shape": "glass_mortar",
+      "triangles": 2752,
+      "icon_bounds": [
+        106,
+        51,
+        249,
+        339
+      ],
+      "icon_sha256": "38f6c572928d9d2200971f6512d6064c0c17571f6b72e0a3999ecb0e7cc07718",
+      "model_sha256": "c8da33acfad2d0823f07137b373d3c0569758def357e8fca7eaa669ec39c4b28"
+    },
+    {
+      "id": 49,
+      "kind": "mace",
+      "shape": "sluice_cog",
+      "triangles": 4496,
+      "icon_bounds": [
+        78,
+        50,
+        256,
+        339
+      ],
+      "icon_sha256": "9ccc51c254739319086ecd11fa5883f46afd724cacd2cf7059e1ae6204600de9",
+      "model_sha256": "12c8ec054b3f8ec18eb5c6debc21eb9af3caba155a1aa4865cf21f959695954e"
+    },
+    {
+      "id": 50,
+      "kind": "mace",
+      "shape": "glacier_pendulum",
+      "triangles": 2420,
+      "icon_bounds": [
+        101,
+        43,
+        250,
+        338
+      ],
+      "icon_sha256": "4691af67c12c70405a2cc4e007f9b47e94f7f98624d982da551b162f24361bca",
+      "model_sha256": "d77d6a37c78b56e168b25d8fd55a77d2826f52edbbf45568a98339b693504343"
+    },
+    {
+      "id": 51,
+      "kind": "mace",
+      "shape": "oscillator_hammer",
+      "triangles": 2972,
+      "icon_bounds": [
+        67,
+        29,
+        252,
+        334
+      ],
+      "icon_sha256": "b1d35c43aa1750e34c91a5ae17ac08e85ad834751fb85f7f95930007c2e30637",
+      "model_sha256": "9b9a524bceefb79ff4891d0383ca17c4f39543a15bef9d456f9e9802dcd4dbf1"
+    },
+    {
+      "id": 52,
+      "kind": "armor",
+      "shape": "bark_lamellar",
+      "triangles": 5144,
+      "icon_bounds": [
+        57,
+        73,
+        313,
+        344
+      ],
+      "icon_sha256": "37b116b8fb7fa8c13d3207c360542b491b8492ed87b0c310dcb9b751bdbecbab",
+      "model_sha256": "da01991b67f6eab1fb3e1dbc70bd7965dd4ec3a986a20dba93a9762e5f1ce2cb"
+    },
+    {
+      "id": 53,
+      "kind": "armor",
+      "shape": "sunshade_breastplate",
+      "triangles": 1508,
+      "icon_bounds": [
+        51,
+        76,
+        338,
+        304
+      ],
+      "icon_sha256": "ccaae66a557736e35c44a56d68212b4dc80974be07a397e59d401ce8ba28d358",
+      "model_sha256": "a9dbd1db3b366e45d310252c99107eb988cca44663105e8d74368efd19083cf9"
+    },
+    {
+      "id": 54,
+      "kind": "armor",
+      "shape": "tomb_oathplate",
+      "triangles": 916,
+      "icon_bounds": [
+        69,
+        64,
+        292,
+        347
+      ],
+      "icon_sha256": "c6358356b0afa521098a783b7dca99b28a66fbf3239050e0620c0ea63876f4e3",
+      "model_sha256": "8f7dc4cbb04d090bb992b13df2a5ff3733ee809e684a1bd31b18da36f8d682b7"
+    },
+    {
+      "id": 55,
+      "kind": "armor",
+      "shape": "sluice_scalemail",
+      "triangles": 1540,
+      "icon_bounds": [
+        73,
+        49,
+        298,
+        333
+      ],
+      "icon_sha256": "6f96d8423dadee076842ed09773acd67fc093d009ffc4a526462f5634200dee4",
+      "model_sha256": "b0cf6087bb4e89145680878715596e5e6d47e894eaf58ebbd0665110367a863a"
+    },
+    {
+      "id": 56,
+      "kind": "armor",
+      "shape": "crucible_heatplate",
+      "triangles": 1900,
+      "icon_bounds": [
+        53,
+        79,
+        334,
+        298
+      ],
+      "icon_sha256": "5e5b249b6b6f612b2509c1980e5383edc43296dacb4f9a9e16f698f9708210a0",
+      "model_sha256": "43fa6ea47e5826bfe0702194561bd887cd97f63a6e5411cc8d1e3a8982611d90"
+    },
+    {
+      "id": 57,
+      "kind": "armor",
+      "shape": "engine_heartplate",
+      "triangles": 2192,
+      "icon_bounds": [
+        70,
+        58,
+        304,
+        323
+      ],
+      "icon_sha256": "55db89272413b06525f473a6a912eeba80ab2fc71e60a48ba5bea27482e528c0",
+      "model_sha256": "a2acb08296f914d97d8d13764a3fb5afde83c330232fa3b76b87d183e95b9365"
+    },
+    {
+      "id": 58,
+      "kind": "shield",
+      "shape": "pinecone_buckler",
+      "triangles": 3412,
+      "icon_bounds": [
+        59,
+        56,
+        328,
+        328
+      ],
+      "icon_sha256": "3bda7204bc1e28eac1017c52bb90c8fe6fe634f7f90237187f8b2775df0f050d",
+      "model_sha256": "d501a250cd556d081430c6231fa0716a0dc4db3c600f30d201ec61b15a492a96"
+    },
+    {
+      "id": 59,
+      "kind": "shield",
+      "shape": "scorpion_kite",
+      "triangles": 404,
+      "icon_bounds": [
+        69,
+        43,
+        313,
+        324
+      ],
+      "icon_sha256": "74d35be4c444a98a419ff94abb601ad670af51e85deeb1d7364019250e9add09",
+      "model_sha256": "ace3d7619727b1111591a7f4729adfd4de758c97299ffb799fc5baf32ea6231b"
+    },
+    {
+      "id": 60,
+      "kind": "shield",
+      "shape": "funeral_cross",
+      "triangles": 856,
+      "icon_bounds": [
+        79,
+        38,
+        313,
+        339
+      ],
+      "icon_sha256": "397eb957e45b0e53dde72c701b48db41eb7a25a3c9a75cd5ee73c04fea746931",
+      "model_sha256": "f0b8648f5a9c05a83272bd197e304ed68e076840005a95361b31f197c5f55e54"
+    },
+    {
+      "id": 61,
+      "kind": "shield",
+      "shape": "sluice_crescent",
+      "triangles": 736,
+      "icon_bounds": [
+        75,
+        44,
+        304,
+        336
+      ],
+      "icon_sha256": "e5faf0fab41de69bccd7dcb70e68d6ef6f4cb94c62074eaf6105cb35a947fddf",
+      "model_sha256": "443f6f5ac3b0f8be957798142419143a10cb5a63c1442267ade69fcafb2c5e0e"
+    },
+    {
+      "id": 62,
+      "kind": "shield",
+      "shape": "frost_hexagon",
+      "triangles": 484,
+      "icon_bounds": [
+        50,
+        38,
+        347,
+        335
+      ],
+      "icon_sha256": "33d3a4cbd268c4d2b69cd475a86e282b2a86ecf15846418edc9320b735fb194e",
+      "model_sha256": "968fa0a48f96bf0708238cec76ab859cc62367203ce356048815018a503c22c6"
+    },
+    {
+      "id": 63,
+      "kind": "shield",
+      "shape": "wheel_spoke_guard",
+      "triangles": 2888,
+      "icon_bounds": [
+        59,
+        50,
+        332,
+        328
+      ],
+      "icon_sha256": "924f51807d8be7b60823aa4be813f3cd46f22d0cf41847ec2a2e63ad8199bd3a",
+      "model_sha256": "cabc760dbb01abba3dd6b1d1a34f6c980e8a1fce2e1b2ff28c657e4d43df6c36"
+    },
+    {
+      "id": 64,
+      "kind": "boots",
+      "shape": "sand_sail_boots",
+      "triangles": 1516,
+      "icon_bounds": [
+        97,
+        41,
+        324,
+        345
+      ],
+      "icon_sha256": "866ad426649868af32fe68ee1eb65699b3d462ffb0dfbe2f9bfc01cb9dbc2daa",
+      "model_sha256": "fd56b8049d3b6e83b83c039110a6d437ab0e277dcdac0703fe0742ee39e5adff"
+    },
+    {
+      "id": 65,
+      "kind": "boots",
+      "shape": "bell_pilgrim_shoes",
+      "triangles": 2572,
+      "icon_bounds": [
+        79,
+        44,
+        315,
+        341
+      ],
+      "icon_sha256": "da3abbe05509621fd1a5c45795ab12c0d9b8ae6f23914d31f2bb8875adf843fa",
+      "model_sha256": "fb6770ec185b592972ba2b622424f082e331bea5db05cb51519049f16a0e3961"
+    },
+    {
+      "id": 66,
+      "kind": "boots",
+      "shape": "reed_floatboots",
+      "triangles": 2712,
+      "icon_bounds": [
+        47,
+        46,
+        339,
+        348
+      ],
+      "icon_sha256": "f5b788026b537799f95bb22144aef7249274f967105a25f69a3f33bc128e7bda",
+      "model_sha256": "5fdcb05073ae9a6013a1f410600a791e60ef5c73fbdd69fa66517e502ff9c5db"
+    },
+    {
+      "id": 67,
+      "kind": "boots",
+      "shape": "icicle_crampons",
+      "triangles": 2756,
+      "icon_bounds": [
+        93,
+        41,
+        295,
+        337
+      ],
+      "icon_sha256": "04a5cc2943db510492b1b3a589913c0cd8db78e8ff887af09c5f13d1318f78e6",
+      "model_sha256": "aae2d61a9967d9518206c31d668f25820fb5684f70c9e20003e9e679283b5ba8"
+    },
+    {
+      "id": 68,
+      "kind": "boots",
+      "shape": "ember_bellows_shoes",
+      "triangles": 2100,
+      "icon_bounds": [
+        74,
+        52,
+        347,
+        343
+      ],
+      "icon_sha256": "0225194c79077fa9e61803ed44c37ad21b8a1daed0a66d156947a853c0c57d86",
+      "model_sha256": "cf3cbd6c7b50fed11f53de5bd086866145bd2ed3141b5229e974c754ee973530"
+    },
+    {
+      "id": 69,
+      "kind": "boots",
+      "shape": "axle_walking_boots",
+      "triangles": 2340,
+      "icon_bounds": [
+        64,
+        39,
+        318,
+        347
+      ],
+      "icon_sha256": "9cd042c20734eef090311e02fb09162a8340135395be4e9d11632c68d8de6806",
+      "model_sha256": "35150f73614658e6ea4abfb461a1664a943f1d0f5706986ee4ff92aa3be2afd3"
+    },
+    {
+      "id": 70,
+      "kind": "helmet",
+      "shape": "acorn_watchcap",
+      "triangles": 3740,
+      "icon_bounds": [
+        68,
+        83,
+        316,
+        342
+      ],
+      "icon_sha256": "c3c98c1cdf7a1ee3010cd91b77a5e4631adc2380e3d5cfc615a68fe8c98f0f07",
+      "model_sha256": "857978651808470517131912819e221607225b336d32155d92e0ac822425d4f6"
+    },
+    {
+      "id": 71,
+      "kind": "helmet",
+      "shape": "brass_sunhat",
+      "triangles": 1300,
+      "icon_bounds": [
+        66,
+        136,
+        318,
+        275
+      ],
+      "icon_sha256": "6db98a9ae23ffc80c977df90910d2369f7cdd61a1355c94fa1b7360dab93f70c",
+      "model_sha256": "5a380c121281ed5712df22439dedd4e8aa1d0b5c9fdd39f707fbfac0d83a7927"
+    },
+    {
+      "id": 72,
+      "kind": "helmet",
+      "shape": "lily_gate_helm",
+      "triangles": 2328,
+      "icon_bounds": [
+        54,
+        50,
+        308,
+        336
+      ],
+      "icon_sha256": "3f6a186cb0bc7c5318f87d1422fb07023373897e5424f486d263c870d1870044",
+      "model_sha256": "dbb4e71c3879401c64af4c30a7532efa345248e89975bef9c59d908154d9797a"
+    },
+    {
+      "id": 73,
+      "kind": "helmet",
+      "shape": "horned_fur_helm",
+      "triangles": 2812,
+      "icon_bounds": [
+        66,
+        96,
+        331,
+        297
+      ],
+      "icon_sha256": "b3c3076fedbecc431cc51d6d4898dc33f8258c8f7a679cc7b7e4e0d8f0f07372",
+      "model_sha256": "ee76d79db4f93b2ef7bacd04a0185bf2bdc583dfc20d95bd682207cdbb73106f"
+    },
+    {
+      "id": 74,
+      "kind": "helmet",
+      "shape": "chimney_welder",
+      "triangles": 1280,
+      "icon_bounds": [
+        73,
+        76,
+        303,
+        348
+      ],
+      "icon_sha256": "ece8e1f82399afcd58dfce0c3d93067d3f2580888ba7972238b911d196a30152",
+      "model_sha256": "4d515fd21ce5f20a4f8cd51540122ac1f4127612b28fda4441e2e2adea06e76e"
+    },
+    {
+      "id": 75,
+      "kind": "helmet",
+      "shape": "star_lens_helm",
+      "triangles": 2100,
+      "icon_bounds": [
+        72,
+        97,
+        316,
+        304
+      ],
+      "icon_sha256": "6ce0e7c1b0593079084b306f2951ed8ee8730b206418bb3393e1ced067be143f",
+      "model_sha256": "70043ec3b153ff76562f553a6be5cd7372d8199fc439f05574b37c642edaf564"
+    },
+    {
+      "id": 76,
+      "kind": "ring",
+      "shape": "pine_knot_ring",
+      "triangles": 2028,
+      "icon_bounds": [
+        89,
+        52,
+        302,
+        328
+      ],
+      "icon_sha256": "4375afb30a63502259dedeb5098d94cc714014f82c42032909ccb82ca1f67f9f",
+      "model_sha256": "9167d488628452ab4b41566efc4a06637a4a5893d3074ad9681d8540f22764cd"
+    },
+    {
+      "id": 77,
+      "kind": "ring",
+      "shape": "funeral_signet",
+      "triangles": 736,
+      "icon_bounds": [
+        79,
+        43,
+        305,
+        320
+      ],
+      "icon_sha256": "e1738ad1163cfb0bad75dd3836e90534b357af71651d9990b877fa8cd61645d4",
+      "model_sha256": "c3c8b8b063fd9cc668d6f3800109ad90601ef790d1d1f26f602a8d7b8bdac838"
+    },
+    {
+      "id": 78,
+      "kind": "ring",
+      "shape": "leech_coil_ring",
+      "triangles": 1260,
+      "icon_bounds": [
+        61,
+        58,
+        325,
+        323
+      ],
+      "icon_sha256": "ae4dca5e3f454be0aded2cfaa8a7ec0535d1a8549dcb303bb2fdc16613ad5246",
+      "model_sha256": "ddb0bed26484ab3da6bda914af83e6449b284b94dae6250e2c719eb087632b09"
+    },
+    {
+      "id": 79,
+      "kind": "ring",
+      "shape": "snowflake_ring",
+      "triangles": 2908,
+      "icon_bounds": [
+        97,
+        44,
+        291,
+        337
+      ],
+      "icon_sha256": "c26aacae31a2b7d10465c91c005d49f0ef25766defbb2394cfb575a913254455",
+      "model_sha256": "5205fdd84edaed3a7fac56dddd8b1f937cf1598599172b8032edd12cecd2ae4e"
+    },
+    {
+      "id": 80,
+      "kind": "ring",
+      "shape": "ember_crucible_ring",
+      "triangles": 1696,
+      "icon_bounds": [
+        81,
+        55,
+        303,
+        321
+      ],
+      "icon_sha256": "2a3a2051bd1af47b69829e699a5c6e0ebe478d19901781777828d95388c43bd4",
+      "model_sha256": "82b1e3eec1597c291c4501857a08e08bf55ce7ace76945b6114ef4f0b1a602d3"
+    },
+    {
+      "id": 81,
+      "kind": "ring",
+      "shape": "heartbeat_ring",
+      "triangles": 2528,
+      "icon_bounds": [
+        82,
+        39,
+        302,
+        332
+      ],
+      "icon_sha256": "9b528d575ee29de671c21cd64917ceb006eb90fe0c9d44e68e94fbad4bd4b736",
+      "model_sha256": "067425387cf774e90b6171bf6d110851b92318010ef974ff942aefb27e968c8d"
+    },
+    {
+      "id": 82,
+      "kind": "necklace",
+      "shape": "acorn_whistle",
+      "triangles": 1828,
+      "icon_bounds": [
+        105,
+        48,
+        279,
+        335
+      ],
+      "icon_sha256": "10612557f9e7a0da2a97cb4701e14aba75189e594164a5897c8c869153dff770",
+      "model_sha256": "0255a51cf993855e0f3bca79aaa998f21eaee409f2c3cbd6e3f54ce57b601d10"
+    },
+    {
+      "id": 83,
+      "kind": "necklace",
+      "shape": "hourglass_pendant",
+      "triangles": 1360,
+      "icon_bounds": [
+        113,
+        45,
+        271,
+        336
+      ],
+      "icon_sha256": "b0c9406a9a47ddaf5a939e52b766fc4b6e5af99c1320958693cf4bbfb868a329",
+      "model_sha256": "27303dc104a99af5d4ddefbc3b3274d19fd6865ce4c81a1d0c6e8b2742853a6a"
+    },
+    {
+      "id": 84,
+      "kind": "necklace",
+      "shape": "funeral_chime",
+      "triangles": 1776,
+      "icon_bounds": [
+        109,
+        52,
+        275,
+        332
+      ],
+      "icon_sha256": "c238a3d39b14af3e24d87865f87139c6f851aa051c7896ec840430371994ee15",
+      "model_sha256": "6a2a9c4ece9bae1c6ee2652be4584d171959db5b43318bfa4311b01f55f40053"
+    },
+    {
+      "id": 85,
+      "kind": "necklace",
+      "shape": "icicle_teardrop",
+      "triangles": 988,
+      "icon_bounds": [
+        110,
+        47,
+        274,
+        336
+      ],
+      "icon_sha256": "c4356b515d55ebd5aec9b035e177c5c2a954a3fa2b4d80eb5be714a9b382bd06",
+      "model_sha256": "e36a5a3678b9fe90e2e8795211cd3f2b79c907ab2fd8029b14ef03e6b3889cc3"
+    },
+    {
+      "id": 86,
+      "kind": "necklace",
+      "shape": "bellows_heart",
+      "triangles": 2220,
+      "icon_bounds": [
+        106,
+        45,
+        280,
+        341
+      ],
+      "icon_sha256": "3234be8b09bc6c8dcec69b0044bc3802f404bfddb03f68a3369e7e990cbad830",
+      "model_sha256": "3816590e27c15cb6a866958d171a1256091aebff03289c4b0ff09ae59ba12550"
+    },
+    {
+      "id": 87,
+      "kind": "necklace",
+      "shape": "sixroad_compass",
+      "triangles": 2796,
+      "icon_bounds": [
+        111,
+        42,
+        274,
+        345
+      ],
+      "icon_sha256": "6fb7607dbc628ca1e554e1a6fbc6c2d61180377d911063d8395876aeb8cdb1d3",
+      "model_sha256": "e23f0b11c9b83f69cd4fccc8bf024db92490e31d6bf7825e0621ae120c17c23e"
+    }
+  ],
+  "illustrations": [
+    {
+      "name": "portraits/hero",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "e2d779442fcd4f1cbd99d47f07925a8f151a7d5be493f71a05ea7fae06c91303"
+    },
+    {
+      "name": "portraits/shop",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "b61caf2a82661e26b2e0aa4f16f21bcfd6c84f5c32b0bffa1d86e692913a409e"
+    },
+    {
+      "name": "portraits/traveler",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "a4a4d77983498263c0cb306d2ec611c1b07e501740207b3c65ef5c0c3dd4d3d3"
+    },
+    {
+      "name": "portraits/elder",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "d90a1f1eb71aba108fc5b1a4a2ec3d24b81b26b3384a94e1a252d1ed3dc12bb0"
+    },
+    {
+      "name": "skills/hook",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "b1dfb58ccce9a6eadb35875b931baaf218c23894d00299dda9451f367a3c03a3"
+    },
+    {
+      "name": "skills/spin",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "dc67eeb9458d24040e60bc6246cef77b2e22207fbc89321d72771c74c95efd30"
+    },
+    {
+      "name": "skills/slam",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "c4ad92ae8d50b584e2593aefbd55913e120fd2866825f225080b03791fa5a94c"
+    },
+    {
+      "name": "skills/volley",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "25cbdac252e4f21b9cfb56d58695fe0106f22e7387856ce99b10777bd16ce64e"
+    },
+    {
+      "name": "skills/nova",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "3249ccd5fc29f13ca4dd5d6f957f9826bd22c46121649bc93e3ac0187444954c"
+    },
+    {
+      "name": "skills/rush",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "fda5e18a4190acd45dcedb98396d9f37468942ab4643203d1fe05f7ccb17fb9a"
+    },
+    {
+      "name": "regions/forest",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "sha256": "398f675c754d7a2c0ad8f1094904a1e2c58250abb2d376546e24adcd9fabdac5"
+    },
+    {
+      "name": "regions/desert",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "sha256": "1d36090ce8645e1f43b5f19b5683763ed3ad7ab936edaece8f97efb72c0fa69a"
+    },
+    {
+      "name": "regions/graveyard",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "sha256": "a24d9dc6d8473b465a5299d7fe5822a5e53196a31223da0c61d70e8bea295b99"
+    },
+    {
+      "name": "regions/swamp",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "sha256": "7c6e73db0b990687b64e242e153a8c9d5b7e1b52e0cef7e0ce01e90f851013b9"
+    },
+    {
+      "name": "regions/snow",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "sha256": "cb3948acc1b5873c773749664bd2d04b61ccbc70eac1115e9b7f9d169a9f7a18"
+    },
+    {
+      "name": "regions/volcano",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "sha256": "5c76cfa9bfb9d57a09bb80a85867391b42ccc0d6f5d35ea8303efb769c9442b3"
+    },
+    {
+      "name": "workshop_panel",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "a5ead08fe4995a7984a2239fadd771feb6017531f20098df85d153c63c129559"
+    },
+    {
+      "name": "workshop_frame",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "a7972a2a85f3c56f388e9b1b209a04db5db556d9fcac491036adf34d044618ae"
+    }
+  ]
+}

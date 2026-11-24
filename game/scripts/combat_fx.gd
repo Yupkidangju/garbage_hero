@@ -73,13 +73,13 @@ func hook(origin: Vector3, direction: Vector3, length: float) -> void:
 	_effect("hook", origin, direction, 0.27, length, MINT)
 
 
-func spin(origin: Vector3, direction: Vector3, beat: int) -> void:
-	_effect("spin", origin, direction, 0.23, 2.4, MINT, beat)
+func spin(origin: Vector3, direction: Vector3, beat: int, reach := 2.4) -> void:
+	_effect("spin", origin, direction, 0.23, reach, MINT, beat)
 
 
-func slam(origin: Vector3, direction: Vector3) -> void:
-	_effect("ring", origin + direction * 1.55 + Vector3.UP * 0.08, direction, 0.36, 1.4, AMBER)
-	_effect("sparks", origin + direction * 1.5 + Vector3.UP * 0.08, direction, 0.32, 1.1, CREAM)
+func slam(origin: Vector3, direction: Vector3, reach := 2.8) -> void:
+	_effect("ring", origin + direction * reach*0.55 + Vector3.UP * 0.08, direction, 0.36, reach*0.5, AMBER)
+	_effect("sparks", origin + direction * reach*0.54 + Vector3.UP * 0.08, direction, 0.32, reach*0.39, CREAM)
 
 
 func thrust(origin: Vector3, direction: Vector3, reach: float) -> void:
@@ -93,6 +93,15 @@ func nova(origin: Vector3, direction: Vector3, reach: float) -> void:
 
 func dust(origin: Vector3, direction: Vector3) -> void:
 	_effect("sparks", origin + Vector3.UP * 0.09, direction, 0.24, 0.56, MINT)
+
+
+func footfall(origin: Vector3, direction: Vector3, surface: String, wet: bool) -> void:
+	if surface == "shallow":
+		_effect("ripple",origin+Vector3.UP*0.055,direction,0.62,0.45,Color("#b8dfd8",0.48))
+	elif surface == "swamp":
+		_effect("footprint",origin+Vector3.UP*0.04,direction,1.15,0.12,Color("#354d35",0.55))
+	elif wet:
+		_effect("footprint",origin+Vector3.UP*0.04,direction,0.85,0.085,Color("#516c68",0.34))
 
 
 func impact(origin: Vector3, direction: Vector3, amount: int, critical: bool, hurt := false) -> void:
@@ -206,6 +215,16 @@ func _draw_effect(e: Dictionary) -> void:
 	var radius := float(e.radius)
 	var color := _tint(e.color, pow(1.0-t, 0.7))
 	match e.kind:
+		"ripple":
+			var r := 0.07+t*radius
+			for i in 24:
+				var a := direction.rotated(Vector3.UP,float(i)*TAU/24.0)
+				var b := direction.rotated(Vector3.UP,float(i+1)*TAU/24.0)
+				_quad(origin+a*r,origin+b*r,origin+b*(r+0.016),origin+a*(r+0.016),color)
+		"footprint":
+			var toe := origin+direction*radius
+			var heel := origin-direction*radius*0.7
+			_quad(heel-right*radius*0.4,toe-right*radius*0.52,toe+right*radius*0.52,heel+right*radius*0.4,color)
 		"thrust":
 			var tip := origin + direction * (0.7 + t*0.3) * radius
 			var mid := tip - direction * (1.0-t)*radius*0.55

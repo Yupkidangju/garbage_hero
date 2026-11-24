@@ -67,7 +67,7 @@ func send(cmd:String) -> void:
 func banks(path:String) -> String:
 	var sum:=""
 	for i in 2:
-		var bank:=path.path_join("slot-v2-%d.sav"%i)
+		var bank:=path.path_join("slot-v3-%d.sav"%i)
 		if FileAccess.file_exists(bank): sum+=FileAccess.get_sha256(bank)
 	return sum
 

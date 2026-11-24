@@ -9,6 +9,7 @@ const AUTUMN := ["946f51","ad875c","c3a16e","d1ac72"]
 const ROCKS := ["89917a","c2916c","8a8c8d","71897e","8dabad","695956"]
 var area:int
 var terrain:Terrain
+var cache_lids:Dictionary={}
 
 func _init(painter:Painter,id:int,ground:Terrain) -> void:
 	super(painter)
@@ -353,6 +354,9 @@ func landmarks() -> void:
 	# 표식 중심은 길 위에 두고 목표물은 옆에 세워 접근 공간을 확보한다.
 	for i in spots.size():
 		var center:Vector2=spots[i].pos
+		if i==4:
+			grotto(center)
+			continue
 		var side:Vector2=[Vector2(-5.7,0),Vector2(5.5,0),Vector2(-5,-4.2),Vector2(-2,-5.5)][i]
 		g.origin=Vector3(center.x+side.x,0,center.y+side.y)
 		match i:
@@ -440,6 +444,64 @@ func landmarks() -> void:
 		g.origin=Vector3.ZERO
 		beacon_flag(Vector3(center.x+2.1,0,center.y+2.2),"c99554")
 
+func grotto(center:Vector2) -> void:
+	var tone:String=ROCKS[area]
+	g.at(Vector3(center.x,0,center.y),0,1.0,true)
+	for side:float in [-1.,1.]:
+		g.blob(Vector3(side*3.2,1.7,-1.5),Vector3(1.3,2.1,3.0),tone,9,.12)
+		g.solid(Vector3(side*3.2,1.5,-1.5),Vector3(1.8,3,4.4))
+	g.blob(Vector3(0,3.65,-2.1),Vector3(3.7,1.0,2.1),tone,10,.10)
+	g.block(Vector3(0,1.65,-4.5),Vector3(5.6,3.3,.8),tone)
+	g.solid(Vector3(0,1.65,-4.5),Vector3(5.6,3.3,.8))
+	g.solid(Vector3(0,3.65,-2.6),Vector3(5.6,.8,3.0))
+	lantern(Vector3(-2,1.0,1.0),1.2)
+	g.at(Vector3(center.x,0,center.y+3.0))
+	g.patch(0,0,2.4,1.1,"b7b393",.045,12,.12)
+
+func treasure_caches() -> void:
+	for cache in terrain.layout.caches:
+		var p:Vector2=cache.pos
+		var holder:=Node3D.new()
+		holder.name="Cache_"+cache.id.replace(":","_")
+		holder.position=Vector3(p.x,HeightMap.altitude(p+Vector2(0,-1.4),area),p.y-1.4)
+		g.node.add_child(holder)
+		var chest:=Painter.new(holder,924+area)
+		chest.at(Vector3.ZERO)
+		chest.shadow(0,0,.73,.52,.34)
+		chest.block(Vector3(0,.28,0),Vector3(1.12,.56,.68),"779281")
+		for x:float in [-.47,.47]:
+			chest.block(Vector3(x,.29,0),Vector3(.10,.58,.72),BRASS)
+		chest.block(Vector3(0,.31,.36),Vector3(.18,.22,.065),IRON)
+		chest.finish()
+		var lid:=Node3D.new()
+		lid.position=Vector3(0,.57,-.34)
+		holder.add_child(lid)
+		var top:=Painter.new(lid,824+area)
+		top.at(Vector3.ZERO)
+		top.block(Vector3(0,.055,.34),Vector3(1.16,.11,.74),"a0b096")
+		for x:float in [-.47,.47]:
+			top.block(Vector3(x,.12,.34),Vector3(.10,.05,.74),BRASS)
+		top.ring(Vector3(0,.13,.34),Vector3.UP,.17,.043,BRASS,8)
+		top.finish()
+		cache_lids[cache.id]=lid
+		g.at(Vector3(holder.position.x,0,holder.position.z))
+		g.solid(Vector3(0,.3,0),Vector3(1.12,.6,.68))
+
+func outer_ruins() -> void:
+	var spot:Vector2=terrain.layout.sideareas[1].pos
+	for side:float in [-1.,1.]:
+		var p:=Vector3(spot.x+side*5.5,0,spot.y-4)
+		ruin(p,1.25,area in [2,4])
+		rocks(Vector3(spot.x+side*6,0,spot.y+2),1.3,ROCKS[area])
+	var lookout:Vector2=terrain.layout.sideareas[2].pos
+	beacon_flag(Vector3(lookout.x-4,0,lookout.y-2),"bc8061",1)
+	beacon_flag(Vector3(lookout.x+4,0,lookout.y-2),"6c9e96")
+	for district in terrain.layout.districts:
+		var p:Vector2=district.pos
+		for j in 4:
+			var offset:=Vector2.from_angle(j*TAU/4+.3)*8.0
+			flora(Vector3(p.x+offset.x,0,p.y+offset.y),1.45,j)
+
 func flora(pos:Vector3,sc:float,index:int) -> void:
 	match area:
 		0:
@@ -500,12 +562,14 @@ func _groves() -> void:
 	for i in water.size()-1:
 		var steps:=ceili(water[i].distance_to(water[i+1])/1.7)
 		for k in steps: banks.append(Layout.road_at(water,i,float(k)/steps))
-	for z in range(-62,65,5):
-		for x in range(-71,73,5):
+	for z in range(-118,119,5):
+		for x in range(-134,135,5):
 			var center:=Vector2(x+g.rng.randf_range(-2.2,2.2),z+g.rng.randf_range(-2.2,2.2))
 			var grove:=g.rng.randi_range(0,3)
 			for j in 4:
 				var p:=center+Vector2(g.rng.randf_range(-2,2),g.rng.randf_range(-2,2))
+				var surface:Dictionary=terrain.layout.surface_at(p)
+				if not surface.walkable or surface.kind=="bridge": continue
 				var uv:=(p-terrain.texture_bounds.position)/terrain.texture_bounds.size
 				var cell_xy:=Vector2i(uv*Vector2(terrain.tracks.get_size())).clamp(Vector2i.ZERO,terrain.tracks.get_size()-Vector2i.ONE)
 				if terrain.tracks.get_pixelv(cell_xy).r>.015: continue
@@ -547,6 +611,8 @@ func _groves() -> void:
 func _beside_landmark(point:Vector2) -> bool:
 	for spot in terrain.layout.landmarks:
 		if point.distance_squared_to(spot.pos)<52: return true
+	for spot in terrain.layout.caches:
+		if point.distance_squared_to(spot.pos)<52: return true
 	return false
 
 func _boundary_posts() -> void:
@@ -577,5 +643,7 @@ func generate() -> void:
 	trailhead()
 	g.origin=Vector3.ZERO
 	arena_marks()
+	outer_ruins()
+	treasure_caches()
 	_boundary_posts()
 	_groves()

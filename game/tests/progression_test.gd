@@ -37,7 +37,7 @@ func _levels_and_stats() -> void:
 	check(not Growth.allocate(p, "luck") and p == before_invalid, "unknown attribute preserves points")
 	check(Growth.allocate(p, "strength") and Growth.allocate(p, "vitality") and Growth.allocate(p, "agility"), "spend earned attributes")
 	var base := Growth.stats(p, {})
-	check(base == {"atk":6, "defense":0, "crit":1, "max_hp":110, "speed":5.0}, "unarmed hero with three allocated stats")
+	check(base == {"atk":6, "defense":0, "crit":1, "max_hp":110, "speed":5.0, "effects":{}}, "unarmed hero with three allocated stats")
 	var geared := Growth.stats(p, {"atk":13, "crit":100, "defense":2, "max_hp":20, "speed":0.35})
 	check(geared.atk == 15 and geared.crit == 100 and geared.defense == 2 and geared.max_hp == 130 and is_equal_approx(geared.speed, 5.35), "equipment totals and critical cap")
 	var overlapped := Growth.fresh()

@@ -9,11 +9,16 @@ const CombatFX = preload("res://scripts/combat_fx.gd")
 const Projectile = preload("res://scripts/hero_projectile.gd")
 const Growth = preload("res://data/progression.gd")
 const CharacterInk = preload("res://scripts/character_ink.gd")
+const Wardrobe = preload("res://scripts/hero_equipment.gd")
 const HERO_PATH := "res://assets/models/hero.glb"
 const BASE_HP := 100
 const SPEED := 5.0
 const SCREEN_RIGHT := Vector3(0.70710678, 0.0, -0.70710678)
 const SCREEN_DOWN := Vector3(0.70710678, 0.0, 0.70710678)
+const BODY_RADIUS := 0.34
+
+var preview_mode := false
+var terrain_world: Node3D
 
 var hp := BASE_HP
 var max_hp := BASE_HP
@@ -30,6 +35,17 @@ var _visible_grade := 0
 var _visible_weapon := "sword"
 var _ranks := {"hook":1}
 var _loadout: Array = ["hook","",""]
+var _gear: Dictionary = {}
+var _equipment: Dictionary = {}
+var _effects: Dictionary = {}
+var _strike_effects: Dictionary = {}
+var _lifesteal_fraction := 0.0
+var _surface := {"kind":"ground", "speed":1.0, "walkable":true}
+var _wet_time := 0.0
+var _foot_distance := 0.0
+var _foot_side := 1
+var _preview_accumulator := 0.0
+var _blocked_surface_time := 0.0
 var _timers := {"dodge":0.0, "hook":0.0, "spin":0.0, "slam":0.0, "volley":0.0, "nova":0.0, "rush":0.0}
 
 var _move := ""
@@ -67,19 +83,25 @@ var _hold_impact_pose := false
 var _shake := 0.0
 var _shake_age := 0.0
 var _shake_enabled := true
+var _wardrobe := Wardrobe.new()
+var _modeled_slots: Dictionary = {}
 
 
 func _ready() -> void:
-	add_to_group("player")
-	collision_layer = 2
-	collision_mask = 1 | 4
+	if not preview_mode:
+		add_to_group("player")
+	collision_layer = 0 if preview_mode else 2
+	collision_mask = 0 if preview_mode else 1 | 4
 	floor_snap_length = 0.35
+	floor_constant_speed = true
+	floor_block_on_wall = true
 	var body_shape := CollisionShape3D.new()
 	var capsule := CapsuleShape3D.new()
 	capsule.height = 1.52
-	capsule.radius = 0.34
+	capsule.radius = BODY_RADIUS
 	body_shape.shape = capsule
 	body_shape.position.y = capsule.height * 0.5
+	body_shape.disabled = preview_mode
 	add_child(body_shape)
 	_pivot.name = "Facing"
 	add_child(_pivot)
@@ -101,15 +123,20 @@ func _ready() -> void:
 	_camera.size = 15.0
 	_camera.near = 0.12
 	_camera.far = 100.0
-	add_child(_camera)
+	if not preview_mode:
+		add_child(_camera)
 	var axis := SCREEN_DOWN*cos(deg_to_rad(38.0)) + Vector3.UP*sin(deg_to_rad(38.0))
 	_camera.position = Vector3.UP*0.65 + axis*24.0
 	_camera.basis = Basis.looking_at(-axis)
-	_camera.current = true
+	_camera.current = not preview_mode
 	_fx.name = "AttackEffects"
 	_fx.top_level = true
 	add_child(_fx)
 	_fx.global_transform = Transform3D.IDENTITY
+	if preview_mode:
+		set_process_input(false)
+		set_physics_process(false)
+		_fx.set_process(false)
 	health_changed.emit(hp, max_hp)
 
 
@@ -129,6 +156,9 @@ func configure_build(gear: Dictionary, stats: Dictionary, progression: Dictionar
 	hp = mini(hp, max_hp) if _build_configured else max_hp
 	_build_configured = true
 	_weapon_type = str(gear.get("weapon_type", "sword"))
+	_gear = gear.duplicate(true)
+	_equipment = equipment.duplicate(true)
+	_effects = stats.get("effects", {}).duplicate(true)
 	_grade = int(gear.get("grade", -1))
 	var shield: Dictionary = equipment.get("shield", {})
 	_has_shield = not shield.is_empty() and _weapon_type in ["sword", "mace"]
@@ -140,9 +170,67 @@ func configure_build(gear: Dictionary, stats: Dictionary, progression: Dictionar
 		health_changed.emit(hp, max_hp)
 
 
+func bind_terrain(world: Node3D) -> void:
+	terrain_world = null if preview_mode else world
+
+
+func terrain_state() -> Dictionary:
+	var state := _surface.duplicate()
+	state.wet_seconds = _wet_time
+	state.blocked_kind = "deep" if _blocked_surface_time > 0.0 else ""
+	return state
+
+
+func preview_cast(action: String) -> bool:
+	if not preview_mode or not MoveBook.MOVES.has(action):
+		return false
+	position = Vector3.ZERO
+	velocity = Vector3.ZERO
+	_move = ""
+	_hurt_lock = 0.0
+	_hitstop = 0
+	_hold_impact_pose = false
+	_preview_accumulator = 0.0
+	_fx.interrupt()
+	for child in get_children():
+		if child is Projectile:
+			child.queue_free()
+	_start_move(action, Vector3.FORWARD)
+	return true
+
+
+func preview_tick(delta: float) -> void:
+	if not preview_mode or delta <= 0.0:
+		return
+	_preview_accumulator += minf(delta, 0.25)
+	while _preview_accumulator >= 1.0/60.0:
+		_preview_accumulator -= 1.0/60.0
+		for key in _timers:
+			_timers[key] = maxf(0.0, float(_timers[key])-1.0/60.0)
+		if not _move.is_empty():
+			_tick_move(1.0/60.0)
+		_animate(1.0/60.0)
+		_sample_blade()
+		_advance_action_frame()
+		for child in get_children():
+			if child is Projectile and not child.is_queued_for_deletion():
+				child.advance(1.0/60.0)
+	_fx._process(delta)
+
+
 func set_feedback(shake_enabled: bool, reduced_flash: bool) -> void:
 	_shake_enabled = shake_enabled
 	_fx.reduced_flash = reduced_flash
+
+
+func _emit_cue(kind: String) -> void:
+	if not preview_mode:
+		cue.emit(kind)
+
+
+func _exit_tree() -> void:
+	if is_instance_valid(_camera) and not _camera.is_inside_tree():
+		_camera.free()
 
 
 func cooldowns() -> Dictionary:
@@ -162,6 +250,8 @@ func _notification(what: int) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if preview_mode:
+		return
 	if event is InputEventMouseMotion:
 		if event.relative.length_squared() > 0.1:
 			_pointer_aim = true
@@ -172,6 +262,9 @@ func _input(event: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if preview_mode:
+		return
+	_refresh_surface(delta)
 	for key in _timers:
 		_timers[key] = maxf(0.0, float(_timers[key])-delta)
 	_hurt_grace = maxf(0.0, _hurt_grace-delta)
@@ -198,20 +291,28 @@ func _physics_process(delta: float) -> void:
 			motion = walk * _speed
 			var aim := _aim(walk)
 			if not aim.is_zero_approx():
-				_turn_to(facing.slerp(aim, 1.0-exp(-22.0*delta)) if facing.dot(aim)>-0.98 else aim)
+				_turn_to(facing.lerp(aim.normalized(), 1.0-exp(-22.0*delta)) if facing.dot(aim)>-0.98 else aim)
 		else:
 			motion = _tick_move(delta)
 		if _tree != null:
 			_tree.set("parameters/Locomotion/blend_position", minf(1.0, motion.length()/SPEED))
-	velocity.x = motion.x
-	velocity.z = motion.z
+	var safe_motion := _constrained_motion(motion * delta, true)/delta
+	velocity.x = safe_motion.x
+	velocity.z = safe_motion.z
 	velocity.y = minf(0.0, velocity.y) if is_on_floor() else maxf(-30.0, velocity.y-22.0*delta)
+	var before := global_position
 	move_and_slide()
+	_surface_feedback(global_position-before)
 	_animate(delta)
+	_sample_blade()
+	_advance_action_frame()
+
+
+func _sample_blade() -> void:
 	if (_fx.ribbon_live or _visible_grade >= 5) and _base_bone >= 0 and _tip_bone >= 0:
 		var base := _bone_world(_base_bone)
 		var tip := _bone_world(_tip_bone)
-		if _visible_weapon in MoveBook.WEAPON_ATTACKS and _grip_bone >= 0:
+		if (_visible_weapon in MoveBook.WEAPON_ATTACKS or _modeled_slots.get("weapon",false)) and _grip_bone >= 0:
 			base = _bone_world(_grip_bone)
 			if _visible_weapon == "bow" and _nock_bone >= 0:
 				tip = _bone_world(_nock_bone)
@@ -219,10 +320,46 @@ func _physics_process(delta: float) -> void:
 				tip = base.direction_to(tip) * _weapon_tip_length() + base
 		_fx.blade_sample(base, tip)
 		_fx.enchanted_blade(_visible_grade, base, tip)
+
+
+func _advance_action_frame() -> void:
 	if not _move.is_empty():
 		_frame += 1
 		if _frame >= int(_spec.windup)+int(_spec.active)+int(_spec.recovery):
 			_finish_move()
+
+
+func _refresh_surface(delta: float) -> void:
+	_wet_time = maxf(0.0, _wet_time-delta)
+	_blocked_surface_time = maxf(0.0,_blocked_surface_time-delta)
+	_surface = terrain_world.call("surface_at", global_position) if is_instance_valid(terrain_world) else {"kind":"ground", "speed":1.0, "walkable":true}
+	if _surface.get("kind", "ground") in ["shallow", "swamp"]:
+		_wet_time = 3.5
+
+
+func _constrained_motion(displacement: Vector3, slow: bool) -> Vector3:
+	if not is_instance_valid(terrain_world):
+		return displacement
+	if slow:
+		displacement *= clampf(float(_surface.get("speed",1.0)),0.0,1.0)
+	var adjusted: Vector3 = terrain_world.call("constrain_motion", global_position, displacement, BODY_RADIUS)
+	if adjusted.distance_squared_to(displacement)>0.000001:
+		var intended: Dictionary = terrain_world.call("surface_at",global_position+displacement+displacement.normalized()*BODY_RADIUS)
+		if str(intended.get("kind","")) == "deep":
+			_blocked_surface_time = 0.8
+	return adjusted
+
+
+func _surface_feedback(displacement: Vector3) -> void:
+	if not is_on_floor() or hp <= 0:
+		return
+	_foot_distance += Vector2(displacement.x,displacement.z).length()
+	if _foot_distance < 0.62:
+		return
+	_foot_distance = fmod(_foot_distance,0.62)
+	_foot_side *= -1
+	var at := global_position + facing.cross(Vector3.UP)*float(_foot_side)*0.14
+	_fx.footfall(at, facing, str(_surface.get("kind","ground")), _wet_time > 0.0)
 
 
 func _handle_controls(walk: Vector3, attack_pressed: bool) -> void:
@@ -277,7 +414,16 @@ func _start_move(action: String, direction: Vector3) -> void:
 	if action == "attack1" and _weapon_type in MoveBook.WEAPON_ATTACKS:
 		action = _weapon_type
 	_move = action
-	_spec = MoveBook.MOVES[action]
+	_spec = MoveBook.for_gear(action,_gear)
+	_strike_effects = {
+		"pierce":clampi(int(_effects.get("pierce",0)),0,3),
+		"lifesteal":clampf(float(_effects.get("lifesteal",0.0)),0.0,0.12),
+		"area":clampf(float(_effects.get("area",0.0)),0.0,0.35),
+	}
+	if action in ["hook","spin","slam","nova","rush"]:
+		_spec.range *= 1.0+float(_strike_effects.area)
+		if _spec.has("width"):
+			_spec.width *= 1.0+float(_strike_effects.area)
 	_strike_power = _power * float(_spec.get("power", 0.0)) * Growth.damage_multiplier(int(_ranks.get(action, 1)))
 	_strike_critical = _critical
 	_frame = 0
@@ -288,7 +434,7 @@ func _start_move(action: String, direction: Vector3) -> void:
 		_timers[action] = _spec.cooldown
 	_play(_spec.clip, (float(_spec.windup)+float(_spec.active)+float(_spec.recovery))/60.0)
 	if action == "dodge":
-		cue.emit("dodge")
+		_emit_cue("dodge")
 
 
 func _tick_move(delta: float) -> Vector3:
@@ -315,11 +461,11 @@ func _tick_move(delta: float) -> Vector3:
 		"nova":
 			if tick == 0:
 				_fx.nova(global_position, facing, _spec.range)
-				cue.emit("nova")
+				_emit_cue("nova")
 				_sector_hits()
 		"rush":
 			if tick == 0:
-				cue.emit("rush")
+				_emit_cue("rush")
 			if tick % 3 == 0:
 				_fx.dust(global_position, -facing)
 			_sector_hits()
@@ -328,28 +474,28 @@ func _tick_move(delta: float) -> Vector3:
 			if tick == 0:
 				_fx.begin_ribbon()
 				if _move == "mace":
-					_fx.slam(global_position, facing)
+					_fx.slam(global_position, facing, _spec.range)
 				else:
 					_fx.thrust(global_position, facing, _spec.range)
-				cue.emit(_move)
+				_emit_cue(_move)
 			_sector_hits()
 		"spin":
 			if tick == 0 or tick == 9:
 				_hit_ids.clear()
 				_fx.begin_ribbon()
-				_fx.spin(global_position, facing, tick/9)
-				cue.emit("spin")
+				_fx.spin(global_position, facing, tick/9, _spec.range)
+				_emit_cue("spin")
 				_sector_hits()
 		_:
 			if tick == 0:
 				_fx.begin_ribbon()
 				if _move == "slam":
-					_fx.slam(global_position, facing)
-					cue.emit("slam")
+					_fx.slam(global_position, facing, _spec.range)
+					_emit_cue("slam")
 				else:
 					var step := _move.right(1).to_int()
 					_fx.strike(global_position, facing, step, _spec.range)
-					cue.emit("swing%d" % step)
+					_emit_cue("swing%d" % step)
 			_sector_hits()
 	return Vector3.ZERO
 
@@ -375,6 +521,8 @@ func _target_radius(enemy: Node3D) -> float:
 
 
 func _sector_hits() -> void:
+	if preview_mode:
+		return
 	var radius := float(_spec.range)
 	var half_angle := deg_to_rad(float(_spec.angle)*0.5)
 	for candidate in get_tree().get_nodes_in_group("enemies"):
@@ -409,36 +557,54 @@ func _has_clear_path(enemy: Node3D) -> bool:
 func _release_projectiles() -> void:
 	var chest := global_position + Vector3.UP * 0.72
 	var origin := _bone_world(_grip_bone) if _grip_bone >= 0 else chest
+	var pierce := int(_strike_effects.pierce)
+	var excluded: Array[RID] = []
 	if _move == "staff" and _tip_bone >= 0:
 		origin += origin.direction_to(_bone_world(_tip_bone)) * _weapon_tip_length()
 	# 무기 끝이 이미 벽이나 적 너머에 있을 때도 첫 장애물이 투사체를 받아낸다.
-	if not origin.is_equal_approx(chest):
+	if not preview_mode and not origin.is_equal_approx(chest):
 		var query := PhysicsRayQueryParameters3D.create(chest, origin, 1 | 4)
 		query.hit_from_inside = true
 		var contact := get_world_3d().direct_space_state.intersect_ray(query)
 		if not contact.is_empty():
 			var body := contact.collider as Node3D
 			if body != null and body.is_in_group("enemies"):
-				_projectile_hit(body, _strike_power, _strike_critical, chest.direction_to(origin))
-			cue.emit(_move)
-			return
+				if body is CollisionObject3D:
+					excluded.append(body.get_rid())
+				_projectile_hit(body, _strike_power, _strike_critical, chest.direction_to(origin), _strike_effects)
+				if pierce > 0:
+					pierce -= 1
+					origin = contact.position
+				else:
+					_emit_cue(_move)
+					return
+			else:
+				_emit_cue(_move)
+				return
 	var reach := maxf(0.05, float(_spec.range)-origin.distance_to(chest))
 	var spread := [-17.0, 0.0, 17.0] if _move == "volley" else [0.0]
 	for degrees in spread:
 		var heading := facing.rotated(Vector3.UP, deg_to_rad(degrees))
-		var direction := _shot_direction(origin, chest, heading, _spec.range)
+		var direction := _shot_direction(origin, chest, heading, _spec.range, excluded)
 		var shot := Projectile.new()
+		shot.preview_mode = preview_mode
 		add_child(shot)
-		shot.struck.connect(_projectile_hit.bind(_strike_power, _strike_critical, direction))
-		shot.launch(_move, origin, direction, _spec.speed, reach)
-	cue.emit(_move)
+		shot.struck.connect(_projectile_hit.bind(_strike_power, _strike_critical, direction, _strike_effects.duplicate()))
+		shot.launch(_move, origin, direction, _spec.speed, reach, pierce, excluded)
+		if preview_mode:
+			shot.set_physics_process(false)
+	_emit_cue(_move)
 
 
-func _shot_direction(origin: Vector3, chest: Vector3, heading: Vector3, reach: float) -> Vector3:
+func _shot_direction(origin: Vector3, chest: Vector3, heading: Vector3, reach: float, excluded: Array[RID] = []) -> Vector3:
+	if preview_mode:
+		return heading
 	# 조준 방향을 유지하면서 경사 위 작은 몬스터의 실제 몸통 높이를 겨눈다.
 	var nearest := reach
 	var destination := chest + heading * reach
 	for enemy: Node3D in get_tree().get_nodes_in_group("enemies"):
+		if enemy.is_queued_for_deletion() or (enemy is CollisionObject3D and enemy.get_rid() in excluded):
+			continue
 		var offset := enemy.global_position - chest
 		var along := offset.dot(heading)
 		if along <= 0.02 or along > nearest:
@@ -453,6 +619,8 @@ func _shot_direction(origin: Vector3, chest: Vector3, heading: Vector3, reach: f
 
 
 func _weapon_tip_length() -> float:
+	if _modeled_slots.get("weapon",false):
+		return _wardrobe.weapon_length
 	match _visible_weapon:
 		"spear": return 1.52
 		"staff": return 1.17
@@ -460,13 +628,16 @@ func _weapon_tip_length() -> float:
 	return 1.04
 
 
-func _projectile_hit(enemy: Node3D, power: float, crit: int, direction: Vector3) -> void:
-	_deal_hit(enemy, Vector3.ZERO, power, crit, direction, true)
+func _projectile_hit(enemy: Node3D, power: float, crit: int, direction: Vector3, effects: Dictionary = {}) -> void:
+	_deal_hit(enemy, Vector3.ZERO, power, crit, direction, true, effects)
 
 
 func _hook() -> void:
 	var reach := float(_spec.range)
 	var origin := global_position + Vector3.UP * 0.72
+	if preview_mode:
+		_fx.hook(origin, facing, reach)
+		return
 	var wall_query := PhysicsRayQueryParameters3D.create(origin, origin+facing*reach, 1)
 	var wall := get_world_3d().direct_space_state.intersect_ray(wall_query)
 	if not wall.is_empty():
@@ -490,7 +661,7 @@ func _hook() -> void:
 		if contact <= travel and _has_clear_path(enemy):
 			closest = enemy
 			travel = contact
-	cue.emit("hook")
+	_emit_cue("hook")
 	_fx.hook(origin, facing, minf(travel + (0.28 if closest != null else 0.0), reach))
 	if closest != null:
 		var pull := Vector3.ZERO
@@ -503,12 +674,14 @@ func _hook() -> void:
 
 func _hit(enemy: Node3D, pull: Vector3) -> void:
 	_hit_ids[enemy.get_instance_id()] = true
-	if _deal_hit(enemy, pull, _strike_power, _strike_critical, facing) and _move in ["slam", "mace", "attack3"]:
+	if _deal_hit(enemy, pull, _strike_power, _strike_critical, facing, false, _strike_effects) and _move in ["slam", "mace", "attack3"]:
 		_hold_impact_pose = true
 		_shake = maxf(_shake, 0.10 if _move == "slam" else 0.05)
 
 
-func _deal_hit(enemy: Node3D, pull: Vector3, power: float, crit: int, direction: Vector3, projectile := false) -> bool:
+func _deal_hit(enemy: Node3D, pull: Vector3, power: float, crit: int, direction: Vector3, projectile := false, effects: Dictionary = {}) -> bool:
+	if preview_mode or not is_instance_valid(enemy) or enemy.is_queued_for_deletion():
+		return false
 	var critical := _rng.randf()*100.0 < crit
 	var damage := maxi(1, roundi(power*(1.5 if critical else 1.0)))
 	var at := enemy.global_position + Vector3.UP*clampf(_target_radius(enemy)*1.4,0.55,1.55)
@@ -521,13 +694,22 @@ func _deal_hit(enemy: Node3D, pull: Vector3, power: float, crit: int, direction:
 		damage = result
 	if damage <= 0:
 		return false
-	cue.emit("hit")
+	if hp > 0 and hp < max_hp:
+		_lifesteal_fraction += damage * clampf(float(effects.get("lifesteal",0.0)),0.0,0.12)
+		var healing := floori(_lifesteal_fraction+0.00001)
+		if healing > 0:
+			_lifesteal_fraction -= healing
+			hp = mini(max_hp, hp+healing)
+			health_changed.emit(hp,max_hp)
+			if hp == max_hp:
+				_lifesteal_fraction = 0.0
+	_emit_cue("hit")
 	_fx.impact(at, direction, damage, critical)
 	return true
 
 
 func take_damage(amount: int) -> bool:
-	if hp <= 0 or amount <= 0 or _dodge_safe or _hurt_grace > 0.0:
+	if preview_mode or hp <= 0 or amount <= 0 or _dodge_safe or _hurt_grace > 0.0:
 		return false
 	amount = maxi(1, amount - _defense)
 	hp = maxi(0, hp-amount)
@@ -543,18 +725,46 @@ func take_damage(amount: int) -> bool:
 	if hp <= 0:
 		_death_time = 0.62
 		_play("Death", _death_time)
-		cue.emit("death")
+		_emit_cue("death")
 	else:
 		_hurt_grace = 0.48
 		_hurt_lock = 0.17
 		_play("Hit", _hurt_lock)
-		cue.emit("hurt")
+		_emit_cue("hurt")
 	return true
 
 
 func apply_knockback(displacement: Vector3) -> void:
-	if hp > 0 and not _dodge_safe:
-		move_and_collide(Vector3(displacement.x, 0.0, displacement.z))
+	if preview_mode or hp <= 0 or _dodge_safe:
+		return
+	_refresh_surface(0.0)
+	var motion := _constrained_motion(Vector3(displacement.x,0.0,displacement.z),true)
+	var count := maxi(1,ceili(motion.length()/0.20))
+	var step := motion/float(count)
+	for i in count:
+		var grounded := step
+		if is_instance_valid(terrain_world):
+			var next: Dictionary = terrain_world.call("surface_at",global_position+step)
+			var lift := float(next.get("height",global_position.y))-global_position.y
+			# 지면보다 가파른 수직 차이는 넉백으로 올라탈 수 없다.
+			if lift > step.length()+0.03:
+				break
+			grounded.y = lift
+		var blocked := false
+		for slide in 4:
+			if grounded.is_zero_approx():
+				break
+			var collision := move_and_collide(grounded)
+			if collision == null:
+				break
+			if collision.get_normal().dot(Vector3.UP) < cos(floor_max_angle):
+				blocked = true
+				break
+			grounded = collision.get_remainder().slide(collision.get_normal())
+		if blocked:
+			break
+	apply_floor_snap()
+	velocity.y = minf(0.0,velocity.y)
 
 
 func _install_art() -> void:
@@ -580,22 +790,25 @@ func _install_art() -> void:
 		_nock_bone = _skeleton.find_bone("BowNock")
 		_base_bone = _skeleton.find_bone("SwordBase")
 		_tip_bone = _skeleton.find_bone("SwordTip")
+		_wardrobe.install(_skeleton)
 	var players := model.find_children("*", "AnimationPlayer", true, false)
 	if not players.is_empty():
 		_install_animations(players[0])
+	_update_gear_mesh()
 
 
 func _update_gear_mesh() -> void:
 	_visible_weapon = _weapon_type
 	_visible_grade = _grade
+	_modeled_slots = _wardrobe.refresh(_gear,_equipment,_has_shield)
 	if _visible_grade < 5:
 		_fx.enchanted_blade(_visible_grade, Vector3.ZERO, Vector3.ZERO)
 	for item in _grade_nodes:
 		var label := str(item.name)
 		var rank := label.substr(5,1).to_int() if label.begins_with("Grade") else 0
-		item.visible = _weapon_type == "sword" and _grade >= rank
+		item.visible = _weapon_type == "sword" and _grade >= rank and (not _modeled_slots.get("weapon",false) or (rank > 0 and int(_gear.get("design",-1)) == 0))
 	for key in _equipment_meshes:
-		_equipment_meshes[key].visible = _has_shield if key == "shield" else key == _weapon_type
+		_equipment_meshes[key].visible = (_has_shield and not _modeled_slots.get("shield",false)) if key == "shield" else (key == _weapon_type and not _modeled_slots.get("weapon",false))
 
 
 func _install_animations(player: AnimationPlayer) -> void:

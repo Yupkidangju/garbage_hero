@@ -86,7 +86,11 @@ func _hero(x: float, y: float) -> void:
 	draw_colored_polygon(outer,S.RAISED)
 	outer.append(outer[0])
 	draw_polyline(outer,S.BRASS,2,true)
-	S.icon(self,"attack",center-Vector2(17,17),34,S.GOLD)
+	var portrait := S.texture("res://assets/ui/portraits/hero.png")
+	if portrait:
+		draw_texture_rect(portrait,Rect2(center-Vector2(21,23),Vector2(42,46)),false)
+	else:
+		S.icon(self,"attack",center-Vector2(17,17),34,S.GOLD)
 	var left := x+72
 	var width := w-88
 	var growth: Dictionary = info.get("progression",{})
@@ -121,7 +125,7 @@ func _location(margin: float, narrow: bool) -> void:
 	var x := view.x-margin-w
 	var y := margin
 	var world: Dictionary = info.get("world",{})
-	var h := (79 if region < 0 else 109)*text_scale
+	var h := (79 if region < 0 else 135)*text_scale
 	var accent: Color = S.GOLD if region < 0 else S.GEO[clampi(region,0,5)]
 	_plate(Rect2(x,y,w,h),S.DEEP,S.LINE)
 	_rule(Vector2(x+w*0.55,y),Vector2(x+w,y),accent)
@@ -149,6 +153,14 @@ func _location(margin: float, narrow: bool) -> void:
 	var marks := clampi(int(world.get("minis",0)),0,2)
 	_type("%s %d/12" % [S.t("track"),trace],x+14,y+68*text_scale,13,S.MUTED,w*0.55)
 	_type("%s %d/2" % [S.t("mini_marks"),marks],x+w*0.5,y+68*text_scale,13,accent,w*0.5-14,HORIZONTAL_ALIGNMENT_RIGHT)
+	var surface: Dictionary = info.get("terrain",{})
+	var terrain := str(surface.get("kind","ground"))
+	var blocked := str(surface.get("blocked_kind",""))=="deep"
+	if blocked: terrain = "deep"
+	var ground_label := S.t("terrain_"+terrain)
+	var district := str(info.get("district",""))
+	if not district.is_empty(): ground_label = district+"  ·  "+ground_label
+	_type(ground_label,x+14,y+95*text_scale,13,S.HOT if blocked else (S.MINT if float(surface.get("speed",1.0))>=1 else S.GOLD),w-28)
 	var seg := (w-38)/12
 	for i in range(12):
 		draw_rect(Rect2(x+14+i*seg,y+h-10,seg-2.2,3.0),accent if i < trace else S.LINE)
@@ -195,7 +207,11 @@ func _skills() -> void:
 		_plate(Rect2(x,y,width,h),S.INK if locked else S.DEEP,S.LINE if locked else S.BRASS,5)
 		if not locked:
 			_rule(Vector2(x+6,y),Vector2(x+width-5,y),tint)
-		S.icon(self,"skills" if locked else id,Vector2(x+width*0.5-12,y+8),30,tint.darkened(0.35) if locked else tint)
+		var illustration := S.skill_art(id) if not locked else null
+		if illustration:
+			draw_texture_rect(illustration,Rect2(x+width*0.5-19,y+5,38,38),false)
+		else:
+			S.icon(self,"skills" if locked else id,Vector2(x+width*0.5-12,y+8),30,tint.darkened(0.35) if locked else tint)
 		var key: String = keys.get(action,"")
 		var cap_w := minf(width*0.51,maxf(18,body_font.get_string_size(key,HORIZONTAL_ALIGNMENT_LEFT,-1,13).x+6))
 		draw_rect(Rect2(x+4,y+4,cap_w,17),S.RAISED)

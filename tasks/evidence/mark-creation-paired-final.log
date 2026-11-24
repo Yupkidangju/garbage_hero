@@ -1,0 +1,21 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+MARK_PAIR_WORST {"action":"bellows","after_median_ms":12.77,"after_p95_ms":14.101,"after_vertices":8757,"before_median_ms":12.747,"before_p95_ms":13.967,"before_vertices":8757,"samples":42,"site":"riverbank","species":"furnace"}
+MARK_PAIR_WORST {"action":"bellows","after_median_ms":8.357,"after_p95_ms":10.071,"after_vertices":11832,"before_median_ms":8.046,"before_p95_ms":9.898,"before_vertices":11832,"samples":42,"site":"hill_center","species":"furnace"}
+MARK_PAIR_WORST {"action":"bellows","after_median_ms":7.627,"after_p95_ms":8.35,"after_vertices":10662,"before_median_ms":7.973,"before_p95_ms":9.399,"before_vertices":11832,"samples":42,"site":"hill_foot","species":"furnace"}
+MARK_PAIR_WORST {"action":"ash_heal","after_median_ms":3.895,"after_p95_ms":5.518,"after_vertices":2670,"before_median_ms":3.958,"before_p95_ms":5.499,"before_vertices":2670,"samples":42,"site":"riverbank","species":"ashpriest"}
+MARK_PAIR_WORST {"action":"bellows","after_median_ms":4.912,"after_p95_ms":5.472,"after_vertices":5244,"before_median_ms":7.95,"before_p95_ms":8.715,"before_vertices":11832,"samples":42,"site":"arena","species":"furnace"}
+MARK_PAIR_WORST {"action":"seismic","after_median_ms":4.184,"after_p95_ms":4.631,"after_vertices":2865,"before_median_ms":4.199,"before_p95_ms":4.747,"before_vertices":2865,"samples":42,"site":"riverbank","species":"slaggolem"}
+MARK_PAIR_WORST {"action":"kiln_breath","after_median_ms":3.457,"after_p95_ms":3.836,"after_vertices":2244,"before_median_ms":3.578,"before_p95_ms":4.17,"before_vertices":2244,"samples":42,"site":"riverbank","species":"basalt_drake"}
+MARK_PAIR_WORST {"action":"eruption","after_median_ms":3.399,"after_p95_ms":3.669,"after_vertices":3060,"before_median_ms":3.341,"before_p95_ms":3.671,"before_vertices":3060,"samples":42,"site":"hill_foot","species":"obsidianspire"}
+MARK_PAIR_WORST {"action":"seismic","after_median_ms":2.812,"after_p95_ms":3.588,"after_vertices":2958,"before_median_ms":2.796,"before_p95_ms":3.561,"before_vertices":2958,"samples":42,"site":"arena","species":"slaggolem"}
+MARK_PAIR_WORST {"action":"hammer","after_median_ms":3.251,"after_p95_ms":3.573,"after_vertices":3672,"before_median_ms":3.219,"before_p95_ms":3.597,"before_vertices":3672,"samples":42,"site":"hill_center","species":"smith"}
+MARK_PAIR_WORST {"action":"hammer","after_median_ms":2.891,"after_p95_ms":3.488,"after_vertices":3366,"before_median_ms":3.147,"before_p95_ms":3.471,"before_vertices":3366,"samples":42,"site":"hill_foot","species":"smith"}
+MARK_PAIR_WORST {"action":"eruption","after_median_ms":2.807,"after_p95_ms":3.324,"after_vertices":3060,"before_median_ms":2.771,"before_p95_ms":3.034,"before_vertices":3060,"samples":42,"site":"hill_center","species":"obsidianspire"}
+MARK_PAIR_WORST {"action":"follow","after_median_ms":2.672,"after_p95_ms":3.086,"after_vertices":2346,"before_median_ms":2.596,"before_p95_ms":3.058,"before_vertices":2346,"samples":42,"site":"hill_center","species":"furnace"}
+MARK_PAIR_WORST {"action":"kiln_breath","after_median_ms":2.645,"after_p95_ms":2.941,"after_vertices":2832,"before_median_ms":2.575,"before_p95_ms":2.943,"before_vertices":2832,"samples":42,"site":"hill_foot","species":"basalt_drake"}
+MARK_PAIR_WORST {"action":"ash_heal","after_median_ms":2.64,"after_p95_ms":2.916,"after_vertices":3048,"before_median_ms":2.608,"before_p95_ms":2.813,"before_vertices":3048,"samples":42,"site":"hill_center","species":"ashpriest"}
+MARK_PAIR_WORST {"action":"ash_heal","after_median_ms":2.62,"after_p95_ms":2.866,"after_vertices":3048,"before_median_ms":2.595,"before_p95_ms":2.869,"before_vertices":3048,"samples":42,"site":"hill_foot","species":"ashpriest"}
+MARK_PAIR_WORST {"action":"seismic","after_median_ms":2.511,"after_p95_ms":2.803,"after_vertices":2958,"before_median_ms":2.512,"before_p95_ms":2.679,"before_vertices":2958,"samples":42,"site":"hill_center","species":"slaggolem"}
+MARK_PAIR_WORST {"action":"ash_heal","after_median_ms":2.286,"after_p95_ms":2.715,"after_vertices":2760,"before_median_ms":2.31,"before_p95_ms":2.531,"before_vertices":2760,"samples":42,"site":"arena","species":"ashpriest"}
+MARK_PAIR_COMPLETE patterns=68

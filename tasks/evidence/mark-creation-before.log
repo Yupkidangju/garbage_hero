@@ -1,0 +1,23 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+MARK_CREATION_WORST {"action":"bellows","max_marks":2,"max_ms":17.642,"max_vertices":8757,"median_ms":12.829,"p95_ms":17.642,"samples":14,"site":"riverbank","species":"furnace"}
+MARK_CREATION_WORST {"action":"bellows","max_marks":2,"max_ms":9.6,"max_vertices":11832,"median_ms":8.195,"p95_ms":9.6,"samples":14,"site":"arena","species":"furnace"}
+MARK_CREATION_WORST {"action":"bellows","max_marks":2,"max_ms":8.485,"max_vertices":11832,"median_ms":8.162,"p95_ms":8.485,"samples":14,"site":"hill_center","species":"furnace"}
+MARK_CREATION_WORST {"action":"bellows","max_marks":2,"max_ms":8.206,"max_vertices":11832,"median_ms":8.064,"p95_ms":8.206,"samples":14,"site":"hill_foot","species":"furnace"}
+MARK_CREATION_WORST {"action":"ash_heal","max_marks":3,"max_ms":5.601,"max_vertices":2670,"median_ms":3.888,"p95_ms":5.601,"samples":14,"site":"riverbank","species":"ashpriest"}
+MARK_CREATION_WORST {"action":"hammer","max_marks":3,"max_ms":4.993,"max_vertices":3672,"median_ms":3.408,"p95_ms":4.993,"samples":14,"site":"hill_center","species":"smith"}
+MARK_CREATION_WORST {"action":"seismic","max_marks":1,"max_ms":4.713,"max_vertices":2865,"median_ms":4.242,"p95_ms":4.713,"samples":14,"site":"riverbank","species":"slaggolem"}
+MARK_CREATION_WORST {"action":"seismic","max_marks":1,"max_ms":4.366,"max_vertices":2958,"median_ms":2.831,"p95_ms":4.366,"samples":14,"site":"hill_center","species":"slaggolem"}
+MARK_CREATION_WORST {"action":"ash_heal","max_marks":3,"max_ms":4.306,"max_vertices":3048,"median_ms":2.717,"p95_ms":4.306,"samples":14,"site":"hill_foot","species":"ashpriest"}
+MARK_CREATION_WORST {"action":"seismic","max_marks":1,"max_ms":4.201,"max_vertices":2958,"median_ms":2.611,"p95_ms":4.201,"samples":14,"site":"hill_foot","species":"slaggolem"}
+MARK_CREATION_WORST {"action":"ash_heal","max_marks":3,"max_ms":3.391,"max_vertices":3048,"median_ms":2.953,"p95_ms":3.391,"samples":14,"site":"hill_center","species":"ashpriest"}
+MARK_CREATION_WORST {"action":"kiln_breath","max_marks":3,"max_ms":3.287,"max_vertices":2244,"median_ms":3.21,"p95_ms":3.287,"samples":14,"site":"riverbank","species":"basalt_drake"}
+MARK_CREATION_WORST {"action":"eruption","max_marks":3,"max_ms":3.021,"max_vertices":3060,"median_ms":2.823,"p95_ms":3.021,"samples":14,"site":"hill_foot","species":"obsidianspire"}
+MARK_CREATION_WORST {"action":"kiln_breath","max_marks":3,"max_ms":2.943,"max_vertices":2832,"median_ms":2.662,"p95_ms":2.943,"samples":14,"site":"hill_foot","species":"basalt_drake"}
+MARK_CREATION_WORST {"action":"eruption","max_marks":3,"max_ms":2.896,"max_vertices":3060,"median_ms":2.793,"p95_ms":2.896,"samples":14,"site":"hill_center","species":"obsidianspire"}
+MARK_CREATION_WORST {"action":"hammer","max_marks":3,"max_ms":2.854,"max_vertices":3366,"median_ms":2.717,"p95_ms":2.854,"samples":14,"site":"hill_foot","species":"smith"}
+MARK_CREATION_WORST {"action":"seismic","max_marks":1,"max_ms":2.799,"max_vertices":2958,"median_ms":2.507,"p95_ms":2.799,"samples":14,"site":"arena","species":"slaggolem"}
+MARK_CREATION_WORST {"action":"kiln_breath","max_marks":3,"max_ms":2.759,"max_vertices":2832,"median_ms":2.567,"p95_ms":2.759,"samples":14,"site":"hill_center","species":"basalt_drake"}
+MARK_CREATION_WORST {"action":"ash_heal","max_marks":3,"max_ms":2.495,"max_vertices":2760,"median_ms":2.372,"p95_ms":2.495,"samples":14,"site":"arena","species":"ashpriest"}
+MARK_CREATION_WORST {"action":"kiln_breath","max_marks":3,"max_ms":2.417,"max_vertices":2244,"median_ms":2.307,"p95_ms":2.417,"samples":14,"site":"arena","species":"basalt_drake"}
+MARK_CREATION_SUMMARY {"p95_of_cast_p95_ms":8.206,"patterns":68,"worst_cast_ms":17.642}

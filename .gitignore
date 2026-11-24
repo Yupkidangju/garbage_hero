@@ -9,3 +9,4 @@ __pycache__/
 /.tools/
 /game/override.cfg
 /game/export_credentials.cfg
+/artifacts/
